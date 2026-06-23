@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OpenSolve
 
-## Getting Started
+A platform aggregating real funded problems (YC Requests for Startups, Indian government innovation challenges, industry-posted problems). Students submit public, verifiable solutions. Organizations view ranked submissions, see student profiles, and contact top performers.
 
-First, run the development server:
+Built for the AWS + Vercel H0 Hackathon.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Tech Stack
+- Next.js 14 (App Router)
+- React, Tailwind CSS, Framer Motion
+- AWS DynamoDB (AWS SDK v3)
+- TypeScript
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup & Running Locally
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Set up environment variables (`.env.local`):
+   ```env
+   # AWS Credentials for DynamoDB
+   AWS_REGION=us-east-1
+   AWS_ACCESS_KEY_ID=your_key
+   AWS_SECRET_ACCESS_KEY=your_secret
 
-## Learn More
+   # Table Names (Optional, defaults exist)
+   DYNAMODB_TABLE_PROBLEMS=OpenSolve_Problems
+   DYNAMODB_TABLE_SUBMISSIONS=OpenSolve_Submissions
+   DYNAMODB_TABLE_ORGANIZATIONS=OpenSolve_Organizations
+   DYNAMODB_TABLE_QATHREADS=OpenSolve_QAThreads
+   DYNAMODB_TABLE_PROFILES=OpenSolve_Profiles
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. Run the application:
+   ```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Seed the database with mock data (if running a local DynamoDB instance or wanting to populate a dev table):
+   ```bash
+   node scripts/seed.js
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Hackathon Simplifications
+- **Auth**: Uses a mocked "Magic Link" claim system. In production, this would use NextAuth or Clerk.
+- **Database**: Schemas are simplified single-table-design concepts mapped across multiple tables for hackathon velocity.
+- **Rate Limiting**: Currently uses an in-memory JS map. Production would use Redis.
+- **Ingestion Pipeline**: Currently simulated via `scripts/seed.js`. See `docs/ingestion-pipeline-design.md` for the full architecture.
 
-## Deploy on Vercel
+## Automated Ingestion
+OpenSolve includes an automated problem-ingestion scraper pipeline designed to run as a background Vercel Cron Job. 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Schedule**: Runs every 6 hours (`0 */6 * * *`). This interval is intentionally polite and slow to avoid aggressively hitting source sites.
+- **Scrapers**: 
+  - YC Requests for Startups
+  - UK Innovation Funding
+  - SPRIND
+- **Deduplication**: The scraper uses a `sourceUrl-index` Global Secondary Index in DynamoDB to check if a problem has already been ingested, preventing duplicates.
+- **Verification**: Ingested problems are explicitly marked as `verified: false` and attributed to an `aggregated` system user. Organizations can claim their listings to add the verified badge.
+- **Security**: The ingestion endpoint (`/api/cron/ingest`) is protected via the `CRON_SECRET` environment variable, which Vercel Cron Jobs securely pass as a Bearer token.
+- **Limitations**: HTML scraping is inherently fragile. If the source sites update their layout significantly, the cheerio parsers will gracefully log an error and skip ingestion rather than crashing. A more robust production version would utilize official APIs when available.
