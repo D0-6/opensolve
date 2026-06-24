@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 export function CustomCursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isClicked, setIsClicked] = useState(false);
+  const [clickParticles, setClickParticles] = useState<Array<{id: number; x: number; y: number}>>([]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -13,6 +14,15 @@ export function CustomCursor() {
 
     const handleMouseDown = () => {
       setIsClicked(true);
+      const newParticle = {
+        id: Date.now(),
+        x: position.x,
+        y: position.y,
+      };
+      setClickParticles((prev) => [...prev, newParticle]);
+      setTimeout(() => {
+        setClickParticles((prev) => prev.filter((p) => p.id !== newParticle.id));
+      }, 800);
     };
 
     const handleMouseUp = () => {
@@ -28,17 +38,7 @@ export function CustomCursor() {
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, []);
-
-  // 8-point star SVG
-  const StarIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <path
-        d="M12 2L14.5 8.5H21.5L16 12.5L18.5 19L12 15L5.5 19L8 12.5L2.5 8.5H9.5L12 2Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
+  }, [position]);
 
   return (
     <>
@@ -46,13 +46,26 @@ export function CustomCursor() {
         * {
           cursor: none !important;
         }
+
+        @keyframes star-burst {
+          0% {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+          }
+          100% {
+            opacity: 0;
+            transform: scale(2) rotate(360deg);
+          }
+        }
+
+        .star-particle {
+          animation: star-burst 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
       `}</style>
 
       {/* Main cursor */}
       <div
-        className={`fixed pointer-events-none z-[9999] transition-all duration-100 ${
-          isClicked ? 'scale-125' : 'scale-100'
-        }`}
+        className="fixed pointer-events-none z-[9999]"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
@@ -61,66 +74,54 @@ export function CustomCursor() {
       >
         {isClicked ? (
           // Yellow 8-point star when clicked
-          <div className="animate-star-burst">
-            <div className="w-6 h-6 text-yellow-400 drop-shadow-lg">
-              <StarIcon />
-            </div>
-          </div>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="text-yellow-400 drop-shadow-lg"
+            style={{
+              animation: 'star-burst 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            }}
+          >
+            <path
+              d="M12 2L14.5 8.5H21.5L16 12.5L18.5 19L12 15L5.5 19L8 12.5L2.5 8.5H9.5L12 2Z"
+              fill="currentColor"
+            />
+          </svg>
         ) : (
           // White square when not clicking
-          <div className="w-5 h-5 border-2 border-white bg-white/10 rounded-sm shadow-lg backdrop-blur-sm"></div>
+          <div className="w-5 h-5 border-2 border-white bg-white/10 rounded-sm shadow-lg" />
         )}
       </div>
 
-      {/* Cursor trail effect */}
-      {isClicked && (
+      {/* Click particles */}
+      {clickParticles.map((particle) => (
         <div
-          className="fixed pointer-events-none w-4 h-4 text-yellow-300/60 opacity-0 animate-fade-out z-[9998]"
+          key={particle.id}
+          className="fixed pointer-events-none z-[9998] star-particle"
           style={{
-            left: `${position.x}px`,
-            top: `${position.y}px`,
+            left: `${particle.x}px`,
+            top: `${particle.y}px`,
             transform: `translate(-50%, -50%)`,
           }}
         >
-          <div className="w-full h-full">
-            <StarIcon />
-          </div>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="text-yellow-300"
+          >
+            <path
+              d="M12 2L14.5 8.5H21.5L16 12.5L18.5 19L12 15L5.5 19L8 12.5L2.5 8.5H9.5L12 2Z"
+              fill="currentColor"
+            />
+          </svg>
         </div>
-      )}
-
-      {/* Add animations to globals */}
-      <style>{`
-        @keyframes star-burst {
-          0% {
-            transform: scale(1) rotate(0deg);
-          }
-          50% {
-            transform: scale(1.2) rotate(45deg);
-          }
-          100% {
-            transform: scale(1) rotate(360deg);
-          }
-        }
-
-        @keyframes fade-out {
-          0% {
-            opacity: 0.8;
-            transform: translate(-50%, -50%) scale(1);
-          }
-          100% {
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0.5);
-          }
-        }
-
-        .animate-star-burst {
-          animation: star-burst 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        .animate-fade-out {
-          animation: fade-out 0.8s ease-out forwards;
-        }
-      `}</style>
+      ))}
     </>
   );
 }
