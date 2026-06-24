@@ -51,7 +51,7 @@ Built for the AWS + Vercel H0 Hackathon.
 ## Automated Ingestion
 OpenSolve includes an automated problem-ingestion scraper pipeline designed to run as a background Vercel Cron Job. 
 
-- **Schedule**: Runs every 6 hours (`0 */6 * * *`). This interval is intentionally polite and slow to avoid aggressively hitting source sites.
+- **Schedule**: Runs daily at midnight (`0 0 * * *`). This complies with Vercel's Hobby tier limits and avoids aggressively hitting source sites.
 - **Scrapers**: 
   - YC Requests for Startups
   - UK Innovation Funding
