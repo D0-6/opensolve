@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
 import { Lightbulb } from "lucide-react";
-import { CustomCursor } from "@/components/CustomCursor";
+import { CursorWrapper } from "@/components/CursorWrapper";
 
 export const metadata: Metadata = {
   title: "OpenSolve | Real Problems, Real Solutions",
@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-background">
       <body className="font-sans antialiased">
-        <CustomCursor />
+        <CursorWrapper />
         <nav className="w-full border-b border-border sticky top-0 z-50 py-5 px-6">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 group">
