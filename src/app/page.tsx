@@ -45,7 +45,60 @@ export default async function Home({
 
   return (
     <div className="space-y-16">
-      <div className="text-center space-y-6 py-8">
+      <style>{`
+        @keyframes float-in {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slide-up {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-float-in {
+          animation: float-in 0.8s ease-out;
+        }
+
+        .animate-slide-up {
+          animation: slide-up 0.6s ease-out;
+        }
+
+        .cta-card {
+          position: relative;
+          overflow: hidden;
+        }
+
+        .cta-card::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(circle, rgba(212, 163, 115, 0.1) 0%, transparent 70%);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .cta-card:hover::before {
+          opacity: 1;
+        }
+      `}</style>
+
+      <div className="text-center space-y-6 py-8 animate-float-in">
         <h1 className="font-serif text-5xl md:text-6xl text-foreground leading-tight">
           Connect talent with<br />
           <span className="text-primary">real opportunities</span>
@@ -55,19 +108,19 @@ export default async function Home({
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mt-12">
-          <Link href="/organizations/new" className="group card-base p-8 rounded-xl hover:shadow-md transition-all duration-300 hover:-translate-y-0.5">
-            <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-5 group-hover:bg-primary-light transition-colors">
+          <Link href="/organizations/new" className="group card-base p-8 rounded-xl hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 cta-card animate-slide-up">
+            <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-5 group-hover:bg-primary-light transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
               <Building className="w-6 h-6 text-white" />
             </div>
-            <h2 className="text-xl font-serif font-semibold mb-2 text-foreground">Post a Problem</h2>
+            <h2 className="text-xl font-serif font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">Post a Problem</h2>
             <p className="text-sm text-text-secondary">Fund solutions and connect with talented developers ready to solve your challenges.</p>
           </Link>
 
-          <a href="#problems" className="group card-base p-8 rounded-xl hover:shadow-md transition-all duration-300 hover:-translate-y-0.5">
-            <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-5 group-hover:bg-primary-light transition-colors">
+          <a href="#problems" className="group card-base p-8 rounded-xl hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 cta-card animate-slide-up" style={{ animationDelay: '0.1s' }}>
+            <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-5 group-hover:bg-primary-light transition-all duration-300 group-hover:scale-110 group-hover:-rotate-6">
               <Code className="w-6 h-6 text-white" />
             </div>
-            <h2 className="text-xl font-serif font-semibold mb-2 text-foreground">Solve Problems</h2>
+            <h2 className="text-xl font-serif font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">Solve Problems</h2>
             <p className="text-sm text-text-secondary">Browse real funded challenges and showcase your expertise to earn rewards.</p>
           </a>
         </div>
@@ -87,23 +140,26 @@ export default async function Home({
             <p>No problems found yet. Check back soon!</p>
           </div>
         ) : (
-          problems.map((problem) => (
-            <Link href={`/problems/${problem.problemId}`} key={problem.problemId} className="group block h-full">
-              <div className="card-base p-6 rounded-xl h-full flex flex-col hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
-                <div className="flex justify-between items-start gap-3 mb-4">
-                  <SourceBadge source={problem.source} verified={problem.verified} />
-                  <Deadline date={problem.deadline} />
-                </div>
-                <h3 className="text-lg font-semibold mb-3 group-hover:text-primary transition-colors line-clamp-2 text-foreground">{problem.title}</h3>
-                <p className="text-sm text-text-secondary mb-6 flex-grow line-clamp-3">
-                  {problem.description}
-                </p>
-                <div className="flex items-center justify-between pt-4 border-t border-border">
-                  <div className="flex items-center gap-2 text-sm font-semibold text-accent">
-                    <Zap className="w-4 h-4" />
-                    {problem.prizeAmount > 0 ? `$${problem.prizeAmount.toLocaleString()}` : "Varies"}
+          problems.map((problem, index) => (
+            <Link href={`/problems/${problem.problemId}`} key={problem.problemId} className="group block h-full animate-slide-up" style={{ animationDelay: `${index * 0.08}s` }}>
+              <div className="card-base p-6 rounded-xl h-full flex flex-col hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <div className="relative z-10">
+                  <div className="flex justify-between items-start gap-3 mb-4">
+                    <SourceBadge source={problem.source} verified={problem.verified} />
+                    <Deadline date={problem.deadline} />
                   </div>
-                  <div className="text-xs text-text-secondary">{problem.domain}</div>
+                  <h3 className="text-lg font-semibold mb-3 group-hover:text-primary transition-colors line-clamp-2 text-foreground">{problem.title}</h3>
+                  <p className="text-sm text-text-secondary mb-6 flex-grow line-clamp-3">
+                    {problem.description}
+                  </p>
+                  <div className="flex items-center justify-between pt-4 border-t border-border">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-accent group-hover:text-primary transition-colors">
+                      <Zap className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
+                      {problem.prizeAmount > 0 ? `$${problem.prizeAmount.toLocaleString()}` : "Varies"}
+                    </div>
+                    <div className="text-xs text-text-secondary">{problem.domain}</div>
+                  </div>
                 </div>
               </div>
             </Link>
