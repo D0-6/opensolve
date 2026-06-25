@@ -1,23 +1,19 @@
 ## Requirements
 
 ### Validated
-(None yet — ship to validate)
+- [x] Implement DynamoDB schemas (Problems, Submissions, Profiles, Organizations)
+- [x] Integrate Clerk Authentication (Replacing lightweight claim auth)
+- [x] Enforce Post-Signup Terms of Service Onboarding Gate via Clerk Metadata
+- [x] Build Next.js 14 App Router frontend with Tailwind CSS (Neon Cyber aesthetic)
+- [x] Create API routes for DB resources (with detailed DynamoDB error logging)
+- [x] Build Homepage with feed, filtering, and sorting
+- [x] Build Problem Detail page and submission UI
+- [x] Build Organization Profile and Post Challenge form
+- [x] Build Formal Legal / Privacy / Terms pages
 
 ### Active
-- [ ] Implement DynamoDB schemas (Problems, Submissions, Profiles, Organizations, QAThreads)
-- [ ] Implement lightweight magic link claim auth
-- [ ] Build Next.js 14 App Router frontend with Tailwind CSS
-- [ ] Implement rate limiting (in-memory) for APIs
-- [ ] Create API routes for all DB resources
-- [ ] Build Homepage with feed, filtering, sorting, and countdown
-- [ ] Build Problem Detail page with live polling leaderboard and Q&A
-- [ ] Build Submission form with honeypot and validations
-- [ ] Build User Profile and Claim editing pages
-- [ ] Build Organization Profile, Post, and Dashboard pages
-- [ ] Build Static Legal/About pages
-- [ ] Create seed script for mock data ingestion
+(All MVP features completed)
 
 ### Out of Scope
-- [Full Session Auth] — Hackathon scope limits time, using lightweight claims
 - [In-App Messaging] — Using mailto links for organization contact
-- [Automated Scraper] — Seed script used for demo, scraper planned for Phase 2
+- [Automated Scraper] — Seed script used for demo

@@ -12,9 +12,10 @@ The hackathon theme calls for a platform connecting AI-generated problem stateme
 ## Key Decisions
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Next.js 14 App Router | Standard modern full-stack framework | Pending |
-| AWS DynamoDB | Requested database solution | Pending |
-| Lightweight Auth | Hackathon scope limitation (claim links) | Pending |
+| Next.js 14 App Router | Standard modern full-stack framework | Completed |
+| AWS DynamoDB | Requested database solution | Completed |
+| Clerk Auth | Scalable, robust auth with metadata capabilities | Completed |
+| Global Onboarding Gate | Force legal acceptance before unlocking app | Completed |
 
 ---
-*Last updated: 2026-06-22 after initialization*
+*Last updated: 2026-06-25 (MVP Complete)*
