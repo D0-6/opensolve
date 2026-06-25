@@ -4,6 +4,7 @@ import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { redirect } from "next/navigation";
 import { Briefcase, Users, FileText, ExternalLink, Mail, CheckCircle2, Award } from "lucide-react";
 import Link from "next/link";
+import EvaluationActions from "./EvaluationActions";
 
 const PROBLEMS_TABLE = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
 const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
@@ -94,15 +95,13 @@ export default async function OrgDashboard() {
                             </div>
                           </div>
 
-                          <div className="flex flex-col gap-2 w-full md:w-auto">
-                            {/* Actions - The Hiring Pipeline Magic */}
-                            <button className="bg-[#a078ff] text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-[#b08cff] transition-colors flex items-center justify-center gap-2">
-                              <CheckCircle2 size={16}/> {problem.prizeType === "HIRING" ? "Extend Hire Offer" : "Offer Contract"}
-                            </button>
-                            <button className="bg-transparent border border-white/20 text-[#dce1fb] px-6 py-2 rounded-lg font-bold text-sm hover:bg-white/5 transition-colors flex items-center justify-center gap-2">
-                              <Mail size={16}/> Request Interview
-                            </button>
-                          </div>
+                          <EvaluationActions 
+                            problemId={problem.problemId} 
+                            rankKey={sub.rankKey} 
+                            prizeType={problem.prizeType} 
+                            submitterName={sub.studentName} 
+                            studentUserId={sub.userId} 
+                          />
                         </div>
                       ))}
                     </div>
