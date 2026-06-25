@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { NavBar } from "@/components/NavBar";
+import { LegalConsentBanner } from "@/components/LegalConsentBanner";
 import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -55,26 +56,21 @@ export default function RootLayout({
               </div>
 
               {/* Links Column */}
-              <div className="md:col-span-2 grid grid-cols-2 gap-4">
+              <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
                   <Link href="/about" className="font-body-md text-on-tertiary-container hover:text-primary transition-all">About Us</Link>
                   <Link href="/terms" className="font-body-md text-on-tertiary-container hover:text-primary transition-all">Terms of Service</Link>
                   <Link href="/privacy" className="font-body-md text-on-tertiary-container hover:text-primary transition-all">Privacy Policy</Link>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Link href="#" className="font-body-md text-on-tertiary-container hover:text-primary transition-all">Contact Support</Link>
-                  <Link href="#" className="font-body-md text-on-tertiary-container hover:text-primary transition-all">Documentation</Link>
-                  <Link href="#" className="font-body-md text-on-tertiary-container hover:text-primary transition-all">API Status</Link>
                 </div>
               </div>
 
               {/* Copyright */}
               <div className="md:col-span-1 flex flex-col justify-end">
                 <p className="font-body-md text-tertiary text-sm">© {new Date().getFullYear()} OpenSolve. All rights reserved. Built for the elite.</p>
-                <p className="font-body-md text-tertiary text-xs mt-2 opacity-50">Built for the AWS + Vercel H0 Hackathon.</p>
               </div>
             </div>
           </footer>
+          <LegalConsentBanner />
         </body>
       </html>
     </ClerkProvider>
