@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser, SignInButton, SignUpButton, UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { useUser, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Zap, LayoutDashboard, PlusCircle, Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -82,44 +82,48 @@ export function NavBar() {
           <NavLink href="/">Problems</NavLink>
           <NavLink href="/about">About</NavLink>
 
-          <SignedIn>
-            <NavLink href="/dashboard">
-              <LayoutDashboard size={14} style={{ display: "inline", marginRight: "4px" }} />
-              Dashboard
-            </NavLink>
-            {role === "company" && (
-              <Link
-                href="/organizations/new"
-                className="btn-primary"
-                style={{ padding: "8px 16px", borderRadius: "10px", fontSize: "0.8125rem" }}
-              >
-                <PlusCircle size={14} />
-                Post Challenge
-              </Link>
-            )}
-            <div style={{ marginLeft: "4px" }}>
-              <UserButton afterSignOutUrl="/" />
-            </div>
-          </SignedIn>
+          {isLoaded && isSignedIn && (
+            <>
+              <NavLink href="/dashboard">
+                <LayoutDashboard size={14} style={{ display: "inline", marginRight: "4px" }} />
+                Dashboard
+              </NavLink>
+              {role === "company" && (
+                <Link
+                  href="/organizations/new"
+                  className="btn-primary"
+                  style={{ padding: "8px 16px", borderRadius: "10px", fontSize: "0.8125rem" }}
+                >
+                  <PlusCircle size={14} />
+                  Post Challenge
+                </Link>
+              )}
+              <div style={{ marginLeft: "4px" }}>
+                <UserButton afterSignOutUrl="/" />
+              </div>
+            </>
+          )}
 
-          <SignedOut>
-            <SignInButton mode="modal">
-              <button
-                className="btn-secondary"
-                style={{ padding: "8px 16px", borderRadius: "10px", fontSize: "0.8125rem" }}
-              >
-                Sign In
-              </button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-              <button
-                className="btn-primary"
-                style={{ padding: "8px 16px", borderRadius: "10px", fontSize: "0.8125rem" }}
-              >
-                Get Started
-              </button>
-            </SignUpButton>
-          </SignedOut>
+          {isLoaded && !isSignedIn && (
+            <>
+              <SignInButton mode="modal">
+                <button
+                  className="btn-secondary"
+                  style={{ padding: "8px 16px", borderRadius: "10px", fontSize: "0.8125rem" }}
+                >
+                  Sign In
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button
+                  className="btn-primary"
+                  style={{ padding: "8px 16px", borderRadius: "10px", fontSize: "0.8125rem" }}
+                >
+                  Get Started
+                </button>
+              </SignUpButton>
+            </>
+          )}
         </div>
 
         {/* Mobile hamburger */}
@@ -153,17 +157,19 @@ export function NavBar() {
         >
           <MobileNavLink href="/" onClick={() => setMobileOpen(false)}>Problems</MobileNavLink>
           <MobileNavLink href="/about" onClick={() => setMobileOpen(false)}>About</MobileNavLink>
-          <SignedIn>
-            <MobileNavLink href="/dashboard" onClick={() => setMobileOpen(false)}>Dashboard</MobileNavLink>
-            {role === "company" && (
-              <MobileNavLink href="/organizations/new" onClick={() => setMobileOpen(false)}>Post a Challenge</MobileNavLink>
-            )}
-            <div style={{ paddingTop: "8px" }}>
-              <UserButton afterSignOutUrl="/" />
-            </div>
-          </SignedIn>
+          {isLoaded && isSignedIn && (
+            <>
+              <MobileNavLink href="/dashboard" onClick={() => setMobileOpen(false)}>Dashboard</MobileNavLink>
+              {role === "company" && (
+                <MobileNavLink href="/organizations/new" onClick={() => setMobileOpen(false)}>Post a Challenge</MobileNavLink>
+              )}
+              <div style={{ paddingTop: "8px" }}>
+                <UserButton afterSignOutUrl="/" />
+              </div>
+            </>
+          )}
           
-          <SignedOut>
+          {isLoaded && !isSignedIn && (
             <div style={{ display: "flex", gap: "8px", paddingTop: "8px" }}>
               <SignInButton mode="modal">
                 <button className="btn-secondary" style={{ flex: 1, padding: "10px", borderRadius: "10px" }}>Sign In</button>
@@ -172,7 +178,7 @@ export function NavBar() {
                 <button className="btn-primary" style={{ flex: 1, padding: "10px", borderRadius: "10px" }}>Sign Up</button>
               </SignUpButton>
             </div>
-          </SignedOut>
+          )}
         </div>
       )}
     </nav>
