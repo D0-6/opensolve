@@ -82,6 +82,8 @@ export async function POST(request: Request) {
       postedByOrgId: userId, // server-side from Clerk — not client-provided
       verified: false,
       status: "OPEN",
+      resourceLinks: body.resourceLinks || [],
+      notificationSent: false,
     };
 
     await docClient.send(new PutCommand({

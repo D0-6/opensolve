@@ -74,6 +74,8 @@ export async function POST(request: Request) {
       upvotes: 0,
       submittedAt,
       score,
+      teamId: body.teamId || null,
+      evaluationStatus: "PENDING", // PENDING, CONTRACT_OFFERED, HIRED, REJECTED, PRIZE_AWARDED
     };
 
     await docClient.send(new PutCommand({ TableName: TABLE_NAME, Item: newSubmission }));
