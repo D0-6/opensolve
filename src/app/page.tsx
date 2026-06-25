@@ -1,159 +1,93 @@
 import { getProblems } from "@/lib/data";
 import Link from "next/link";
 import { formatDistanceToNow, differenceInHours } from "date-fns";
-import {
-  BadgeCheck,
-  Clock,
-  Trophy,
-  ArrowRight,
-  Zap,
-  Users,
-  DollarSign,
-  Search,
-} from "lucide-react";
+import { HeroShader } from "@/components/HeroShader";
+import { Hero3D } from "@/components/Hero3D";
 
 export const dynamic = "force-dynamic";
 
-const SOURCE_CONFIG: Record<string, { label: string; badgeClass: string }> = {
-  YC_STARTUP: { label: "YC Startup", badgeClass: "badge-yc" },
-  GOVERNMENT: { label: "Government", badgeClass: "badge-gov" },
-  INDUSTRY: { label: "Industry", badgeClass: "badge-industry" },
+const SOURCE_CONFIG: Record<string, { label: string; bgClass: string; textClass: string }> = {
+  YC_STARTUP: { label: "YC Startup", bgClass: "bg-surface-variant", textClass: "text-on-surface-variant" },
+  GOVERNMENT: { label: "Government", bgClass: "bg-surface-variant", textClass: "text-on-surface-variant" },
+  INDUSTRY: { label: "Industry", bgClass: "bg-surface-variant", textClass: "text-on-surface-variant" },
 };
 
-function ProblemCard({ problem }: { problem: any }) {
+function ProblemCard({ problem, isFeatured }: { problem: any; isFeatured: boolean }) {
   const cfg = SOURCE_CONFIG[problem.source] || SOURCE_CONFIG.INDUSTRY;
   const hoursLeft = differenceInHours(new Date(problem.deadline), new Date());
   const isUrgent = hoursLeft > 0 && hoursLeft < 72;
   const isPast = hoursLeft <= 0;
 
-  return (
-    <Link href={`/problems/${problem.problemId}`} style={{ textDecoration: "none", display: "block", height: "100%" }}>
-      <div
-        className="glass card-hover"
-        style={{
-          borderRadius: "20px",
-          padding: "24px",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          gap: "16px",
-          cursor: "pointer",
-        }}
-      >
-        {/* Top row: badge + deadline */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
-          <span
-            className={cfg.badgeClass}
-            style={{
-              padding: "4px 10px",
-              borderRadius: "100px",
-              fontSize: "0.7rem",
-              fontWeight: 700,
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-            }}
-          >
-            {cfg.label}
-            {problem.verified && <BadgeCheck size={11} />}
-          </span>
+  let timeClass = "bg-primary/20 text-primary";
+  if (isUrgent) timeClass = "bg-error/20 text-error";
+  if (isPast) timeClass = "bg-surface-variant text-on-surface-variant";
 
-          <span
-            style={{
-              fontSize: "0.75rem",
-              fontWeight: 600,
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-              color: isPast
-                ? "rgba(255,255,255,0.25)"
-                : isUrgent
-                ? "#ef4444"
-                : "#22c55e",
-            }}
-          >
-            <Clock size={12} />
-            {isPast ? "Closed" : formatDistanceToNow(new Date(problem.deadline), { addSuffix: true })}
+  const timeText = isPast ? "Closed" : `in ${formatDistanceToNow(new Date(problem.deadline))}`;
+
+  return (
+    <Link
+      href={`/problems/${problem.problemId}`}
+      className={`glass-panel glass-card-hover rounded-xl p-6 flex flex-col gap-4 fade-in-up group relative overflow-hidden ${
+        isFeatured ? "lg:col-span-2" : ""
+      }`}
+    >
+      {isFeatured && <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent z-0"></div>}
+      
+      <div className="relative z-10 flex justify-between items-start">
+        <div className="flex gap-2 flex-wrap">
+          <span className={`px-2 py-1 rounded ${cfg.bgClass} ${cfg.textClass} font-label-mono text-label-mono flex items-center gap-1`}>
+            <span className="material-symbols-outlined text-[14px]">
+              {problem.source === "GOVERNMENT" ? "account_balance" : "domain"}
+            </span>
+            {cfg.label}
+          </span>
+          <span className={`px-2 py-1 rounded ${timeClass} font-label-mono text-label-mono flex items-center gap-1`}>
+            <span className="material-symbols-outlined text-[14px]">schedule</span>
+            {timeText}
           </span>
         </div>
+        {isFeatured && problem.prizeAmount > 0 && (
+          <span className="text-secondary font-display-lg-mobile text-2xl md:text-3xl font-bold">
+            ${problem.prizeAmount.toLocaleString()}
+          </span>
+        )}
+      </div>
 
-        {/* Title */}
-        <h3
-          style={{
-            fontSize: "1rem",
-            fontWeight: 700,
-            lineHeight: 1.4,
-            color: "var(--text-primary)",
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          }}
-        >
+      <div className="relative z-10 mt-2 flex-grow">
+        <h3 className={`${isFeatured ? "font-headline-md text-2xl md:text-3xl" : "font-body-lg text-lg font-semibold"} text-on-surface group-hover:text-primary transition-colors`}>
           {problem.title}
         </h3>
+        {problem.description && (
+          <p className={`font-body-md text-on-surface-variant mt-2 ${isFeatured ? "line-clamp-3" : "line-clamp-2"}`}>
+            {problem.description}
+          </p>
+        )}
+      </div>
 
-        {/* Description */}
-        <p
-          style={{
-            fontSize: "0.8125rem",
-            color: "var(--text-muted)",
-            lineHeight: 1.6,
-            flex: 1,
-            display: "-webkit-box",
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          }}
-        >
-          {problem.description}
-        </p>
-
-        {/* Bottom: prize + domain */}
-        <div
-          style={{
-            borderTop: "1px solid var(--border)",
-            paddingTop: "14px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <Trophy size={14} style={{ color: "#facc15" }} />
-            <span style={{ fontSize: "0.8125rem", fontWeight: 700, color: "rgba(255,255,255,0.85)" }}>
-              {problem.prizeAmount > 0
-                ? `$${problem.prizeAmount.toLocaleString()}`
-                : problem.prizeType?.replace("_", " ")}
-            </span>
-          </div>
-          <span
-            style={{
-              fontSize: "0.75rem",
-              color: "var(--text-muted)",
-              background: "var(--surface)",
-              padding: "3px 8px",
-              borderRadius: "6px",
-            }}
-          >
-            {problem.domain}
+      <div className="relative z-10 flex items-center justify-between mt-4 pt-4 border-t border-white/10">
+        {!isFeatured && problem.prizeAmount > 0 ? (
+          <span className="font-body-md text-secondary font-bold">${problem.prizeAmount.toLocaleString()}</span>
+        ) : (
+          <span className="font-label-mono text-primary border border-primary/30 px-2 py-1 rounded">
+            {problem.prizeType ? problem.prizeType.replace("_", " ") : "BOUNTY"}
           </span>
+        )}
+        <div className="flex items-center gap-2">
+          <span className="font-label-mono text-tertiary">{problem.domain}</span>
+          {isFeatured && (
+            <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-transform group-hover:translate-x-1">
+              arrow_forward
+            </span>
+          )}
         </div>
       </div>
     </Link>
   );
 }
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: { source?: string; domain?: string };
-}) {
+export default async function Home({ searchParams }: { searchParams: Promise<{ source?: string; domain?: string }> }) {
   const sp = await searchParams;
   const problems = await getProblems(sp.source, sp.domain);
-
   const totalPrize = problems.reduce((sum: number, p: any) => sum + (p.prizeAmount || 0), 0);
 
   const sources = [
@@ -164,137 +98,83 @@ export default async function Home({
   ];
 
   return (
-    <div>
-      {/* ─── HERO ─── */}
-      <section
-        style={{
-          textAlign: "center",
-          padding: "80px 0 64px",
-          position: "relative",
-        }}
-      >
-        {/* Pill badge */}
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            background: "rgba(var(--accent-rgb),0.1)",
-            border: "1px solid rgba(var(--accent-rgb),0.22)",
-            borderRadius: "100px",
-            padding: "6px 16px",
-            fontSize: "0.75rem",
-            fontWeight: 600,
-            color: "var(--accent)",
-            marginBottom: "28px",
-            letterSpacing: "0.04em",
-          }}
-        >
-          <Zap size={12} />
-          Real Challenges · Real Rewards · Real Careers
-        </div>
-
-        <h1
-          style={{
-            fontSize: "clamp(2.25rem, 6vw, 4rem)",
-            fontWeight: 900,
-            lineHeight: 1.1,
-            letterSpacing: "-0.03em",
-            marginBottom: "24px",
-            maxWidth: "800px",
-            margin: "0 auto 24px",
-          }}
-        >
-          Where Builders Meet{" "}
-          <span
-            style={{
-              background: "linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 50%, var(--accent-3) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            Real Opportunities
-          </span>
-        </h1>
-
-        <p
-          style={{
-            fontSize: "clamp(1rem, 2.5vw, 1.1875rem)",
-            color: "var(--text-muted)",
-            maxWidth: "560px",
-            margin: "0 auto 40px",
-            lineHeight: 1.7,
-          }}
-        >
-          Solve funded challenges from YC startups, government innovation programs, and top companies.
-          Build your portfolio. Get hired. Win prizes.
-        </p>
-
-        {/* CTA buttons */}
-        <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-          <a
-            href="#problems"
-            className="btn-primary"
-            style={{ padding: "14px 32px", borderRadius: "14px", fontSize: "1rem" }}
-          >
-            <Search size={18} /> Browse Problems
-          </a>
-          <Link
-            href="/organizations/new"
-            className="btn-secondary"
-            style={{ padding: "14px 32px", borderRadius: "14px", fontSize: "1rem" }}
-          >
-            Post a Challenge <ArrowRight size={18} />
-          </Link>
-        </div>
-      </section>
-
-      {/* ─── STATS BAR ─── */}
-      <section
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-          gap: "1px",
-          background: "var(--surface)",
-          borderRadius: "20px",
-          overflow: "hidden",
-          marginBottom: "64px",
-          border: "1px solid var(--border)",
-        }}
-      >
-        {[
-          { icon: <Zap size={20} style={{ color: "var(--accent)" }} />, value: `${problems.length}+`, label: "Active Challenges" },
-          { icon: <DollarSign size={20} style={{ color: "var(--accent-3)" }} />, value: totalPrize > 0 ? `$${(totalPrize / 1000).toFixed(0)}k+` : "Varied", label: "In Prizes" },
-          { icon: <Users size={20} style={{ color: "var(--accent-2)" }} />, value: "Open", label: "To All Builders" },
-          { icon: <BadgeCheck size={20} style={{ color: "#22c55e" }} />, value: "Verified", label: "Real Problems" },
-        ].map(({ icon, value, label }) => (
-          <div
-            key={label}
-            style={{
-              background: "rgba(255,255,255,0.02)",
-              padding: "28px 20px",
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "8px",
-            }}
-          >
-            {icon}
-            <div style={{ fontSize: "1.5rem", fontWeight: 800 }}>{value}</div>
-            <div style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>{label}</div>
+    <>
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center pt-24 pb-32 overflow-hidden -mt-20">
+        <HeroShader />
+        
+        <div className="px-6 max-w-7xl mx-auto w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Hero Content */}
+          <div className="lg:col-span-7 flex flex-col gap-6 fade-in-up">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel border border-primary/30 text-primary w-max">
+              <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+              <span className="font-label-mono uppercase">Real Challenges · Real Rewards · Real Careers</span>
+            </div>
+            
+            <h1 className="font-display-xl text-5xl md:text-7xl text-on-surface">
+              Where Builders Meet <br />
+              <span className="text-gradient-primary">Real Opportunities</span>
+            </h1>
+            
+            <p className="font-body-lg text-lg text-on-surface-variant max-w-2xl">
+              Solve funded challenges from YC startups, government innovation programs, and top companies. Build your portfolio. Get hired. Win prizes.
+            </p>
+            
+            <div className="flex flex-wrap gap-4 mt-4">
+              <a href="#challenges" className="btn-primary px-8 py-4 rounded-lg font-body-lg font-medium flex items-center gap-2">
+                Browse Problems
+                <span className="material-symbols-outlined">arrow_forward</span>
+              </a>
+              <Link href="/organizations/new" className="btn-secondary px-8 py-4 rounded-lg font-body-lg font-medium flex items-center gap-2">
+                Post a Challenge
+              </Link>
+            </div>
           </div>
-        ))}
+          
+          {/* Hero 3D Element */}
+          <div className="lg:col-span-5 h-[500px] relative hidden lg:block fade-in-up delay-200">
+            <Hero3D />
+          </div>
+        </div>
       </section>
 
-      {/* ─── PROBLEMS SECTION ─── */}
-      <section id="problems" style={{ scrollMarginTop: "80px" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", marginBottom: "24px", flexWrap: "wrap" }}>
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 800 }}>Active Challenges</h2>
+      {/* Stats Bar */}
+      <section className="relative z-20 -mt-32 px-6 max-w-7xl mx-auto fade-in-up delay-300">
+        <div className="glass-panel rounded-xl p-8 grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-white/10">
+          <div className="text-center px-4">
+            <h3 className="font-display-lg text-3xl md:text-5xl text-primary">{problems.length}+</h3>
+            <p className="font-label-mono text-on-surface-variant uppercase mt-2">Active Challenges</p>
+          </div>
+          <div className="text-center px-4">
+            <h3 className="font-display-lg text-3xl md:text-5xl text-secondary">
+              {totalPrize > 0 ? `$${(totalPrize / 1000).toFixed(0)}k+` : "Varied"}
+            </h3>
+            <p className="font-label-mono text-on-surface-variant uppercase mt-2">In Prizes</p>
+          </div>
+          <div className="text-center px-4">
+            <h3 className="font-display-lg text-3xl md:text-5xl text-on-surface">Open</h3>
+            <p className="font-label-mono text-on-surface-variant uppercase mt-2">To All Builders</p>
+          </div>
+          <div className="text-center px-4">
+            <h3 className="font-display-lg text-3xl md:text-5xl text-on-surface flex items-center justify-center gap-2">
+              <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
+            </h3>
+            <p className="font-label-mono text-on-surface-variant uppercase mt-2">Real Problems</p>
+          </div>
+        </div>
+      </section>
 
-          {/* Filter tabs */}
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+      {/* Active Challenges Section */}
+      <section id="challenges" className="py-32 px-6 max-w-7xl mx-auto relative">
+        <div className="atmospheric-glow top-0 left-[-200px]"></div>
+        
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 fade-in-up">
+          <div>
+            <h2 className="font-headline-md text-3xl text-on-surface">Active Challenges</h2>
+          </div>
+          
+          {/* Filters */}
+          <div className="flex gap-2 mt-6 md:mt-0 overflow-x-auto pb-2 md:pb-0">
             {sources.map(({ label, value }) => {
               const isActive = sp.source === value || (!sp.source && !value);
               const href = value ? `/?source=${value}` : "/";
@@ -302,17 +182,11 @@ export default async function Home({
                 <Link
                   key={label}
                   href={href}
-                  style={{
-                    padding: "6px 14px",
-                    borderRadius: "100px",
-                    fontSize: "0.8125rem",
-                    fontWeight: 600,
-                    textDecoration: "none",
-                    background: isActive ? "rgba(var(--accent-rgb),0.2)" : "rgba(255,255,255,0.04)",
-                    border: isActive ? "1px solid rgba(var(--accent-rgb),0.4)" : "1px solid rgba(255,255,255,0.08)",
-                    color: isActive ? "var(--accent)" : "rgba(255,255,255,0.5)",
-                    transition: "all 0.2s",
-                  }}
+                  className={`px-4 py-2 rounded-full font-label-mono whitespace-nowrap transition-colors ${
+                    isActive
+                      ? "glass-panel border-primary text-primary"
+                      : "text-on-surface-variant hover:text-on-surface hover:bg-white/5"
+                  }`}
                 >
                   {label}
                 </Link>
@@ -321,83 +195,110 @@ export default async function Home({
           </div>
         </div>
 
+        {/* Bento Grid / Cards */}
         {problems.length === 0 ? (
-          <div
-            className="glass"
-            style={{ borderRadius: "20px", padding: "60px", textAlign: "center", color: "rgba(255,255,255,0.35)" }}
-          >
-            <Search size={40} style={{ margin: "0 auto 16px", opacity: 0.3 }} />
-            <p style={{ fontWeight: 600, marginBottom: "8px" }}>No challenges found</p>
-            <p style={{ fontSize: "0.875rem" }}>Check back later or try a different filter</p>
+          <div className="glass-panel rounded-xl p-16 text-center text-on-surface-variant">
+            <span className="material-symbols-outlined text-5xl mb-4 opacity-50">search_off</span>
+            <p className="font-body-lg font-semibold mb-2 text-on-surface">No challenges found</p>
+            <p className="font-body-md">Check back later or try a different filter.</p>
           </div>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-              gap: "20px",
-            }}
-          >
-            {problems.map((problem: any) => (
-              <ProblemCard key={problem.problemId} problem={problem} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {problems.map((problem: any, idx: number) => (
+              <ProblemCard key={problem.problemId} problem={problem} isFeatured={idx === 0} />
             ))}
           </div>
         )}
       </section>
 
-      {/* ─── HOW IT WORKS ─── */}
-      <section style={{ marginTop: "96px", marginBottom: "32px" }}>
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <h2 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, marginBottom: "12px" }}>
-            How OpenSolve Works
-          </h2>
-          <p style={{ color: "var(--text-muted)", fontSize: "1rem" }}>
-            A transparent pipeline from challenge to career
-          </p>
+      {/* How It Works Section */}
+      <section className="py-32 bg-surface-container-low/50 relative border-t border-white/5 mx-[-24px] px-6">
+        <div className="atmospheric-glow bottom-0 right-[-200px]"></div>
+        
+        <div className="max-w-7xl mx-auto text-center mb-16 fade-in-up">
+          <h2 className="font-headline-md text-3xl text-on-surface">How OpenSolve Works</h2>
+          <p className="font-body-lg text-on-surface-variant mt-4 max-w-2xl mx-auto">A transparent pipeline from challenge to career</p>
         </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
-          {/* Student flow */}
-          <div className="glass" style={{ borderRadius: "20px", padding: "32px" }}>
-            <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "20px" }}>
+        
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* For Builders */}
+          <div className="fade-in-up delay-100 relative">
+            <div className="absolute left-[24px] top-12 bottom-0 w-[2px] bg-gradient-to-b from-secondary/50 to-transparent hidden md:block z-0"></div>
+            <h3 className="font-headline-md text-2xl text-secondary mb-8 flex items-center gap-3">
+              <span className="material-symbols-outlined bg-surface-variant p-2 rounded-lg">code</span>
               For Students & Builders
-            </div>
-            {[
-              { step: "01", title: "Browse Challenges", desc: "Filter by domain, prize type, or source. Find problems that match your skills." },
-              { step: "02", title: "Submit Your Solution", desc: "Share your GitHub repo + writeup. Your solution is public and verifiable." },
-              { step: "03", title: "Get Hired or Win", desc: "Top submissions get contacted directly by companies for jobs or contracts." },
-            ].map(({ step, title, desc }) => (
-              <div key={step} style={{ display: "flex", gap: "16px", marginBottom: "24px" }}>
-                <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "rgba(var(--accent-rgb),0.7)", minWidth: "28px", paddingTop: "2px" }}>{step}</div>
-                <div>
-                  <div style={{ fontWeight: 700, marginBottom: "4px", fontSize: "0.9375rem" }}>{title}</div>
-                  <div style={{ fontSize: "0.8125rem", color: "var(--text-muted)", lineHeight: 1.6 }}>{desc}</div>
+            </h3>
+            <div className="space-y-8 relative z-10">
+              {[
+                { num: "01", title: "Browse Challenges", desc: "Filter by domain, prize type, or source. Find problems that match your skills." },
+                { num: "02", title: "Submit Your Solution", desc: "Share your GitHub repo + writeup. Your solution is public and verifiable." },
+                { num: "03", title: "Get Hired or Win", desc: "Top submissions get contacted directly by companies for jobs or contracts." },
+              ].map(({ num, title, desc }) => (
+                <div key={num} className="flex gap-6">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-surface-container-highest border border-secondary/30 flex items-center justify-center font-label-mono text-secondary z-10">
+                    {num}
+                  </div>
+                  <div>
+                    <h4 className="font-body-lg font-semibold text-on-surface">{title}</h4>
+                    <p className="font-body-md text-on-surface-variant mt-2">{desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          {/* Company flow */}
-          <div className="glass" style={{ borderRadius: "20px", padding: "32px" }}>
-            <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent-2)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "20px" }}>
+          {/* For Orgs */}
+          <div className="fade-in-up delay-200 relative">
+            <div className="absolute left-[24px] top-12 bottom-0 w-[2px] bg-gradient-to-b from-primary/50 to-transparent hidden md:block z-0"></div>
+            <h3 className="font-headline-md text-2xl text-primary mb-8 flex items-center gap-3">
+              <span className="material-symbols-outlined bg-surface-variant p-2 rounded-lg">domain</span>
               For Companies & Orgs
-            </div>
-            {[
-              { step: "01", title: "Post a Challenge", desc: "Describe your problem, set a prize, and publish. We surface it to thousands of builders." },
-              { step: "02", title: "Review Submissions", desc: "All solutions are ranked by score. View GitHub repos, demos, and writeups at a glance." },
-              { step: "03", title: "Contact Top Talent", desc: "Reach out to your top performers directly. Hire, contract, or pilot their solution." },
-            ].map(({ step, title, desc }) => (
-              <div key={step} style={{ display: "flex", gap: "16px", marginBottom: "24px" }}>
-                <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "rgba(var(--accent-2-rgb),0.7)", minWidth: "28px", paddingTop: "2px" }}>{step}</div>
-                <div>
-                  <div style={{ fontWeight: 700, marginBottom: "4px", fontSize: "0.9375rem" }}>{title}</div>
-                  <div style={{ fontSize: "0.8125rem", color: "var(--text-muted)", lineHeight: 1.6 }}>{desc}</div>
+            </h3>
+            <div className="space-y-8 relative z-10">
+              {[
+                { num: "01", title: "Post a Challenge", desc: "Describe your problem, set a prize, and publish. We surface it to thousands of builders." },
+                { num: "02", title: "Review Submissions", desc: "All solutions are ranked by score. View GitHub repos, demos, and writeups at a glance." },
+                { num: "03", title: "Contact Top Talent", desc: "Reach out to your top performers directly. Hire, contract, or pilot their solution." },
+              ].map(({ num, title, desc }) => (
+                <div key={num} className="flex gap-6">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-surface-container-highest border border-primary/30 flex items-center justify-center font-label-mono text-primary z-10">
+                    {num}
+                  </div>
+                  <div>
+                    <h4 className="font-body-lg font-semibold text-on-surface">{title}</h4>
+                    <p className="font-body-md text-on-surface-variant mt-2">{desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
-    </div>
+
+      {/* Intersection Observer init Script equivalent */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            if (typeof document !== 'undefined') {
+              const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+              const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                  if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                    observer.unobserve(entry.target);
+                  }
+                });
+              }, observerOptions);
+              setTimeout(() => {
+                document.querySelectorAll('.fade-in-up').forEach(el => {
+                  el.style.animationPlayState = 'paused';
+                  observer.observe(el);
+                });
+              }, 100);
+            }
+          `,
+        }}
+      />
+    </>
   );
 }

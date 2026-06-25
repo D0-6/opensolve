@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Sora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { NavBar } from "@/components/NavBar";
 import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const sora = Sora({ subsets: ["latin"], variable: "--font-sora" });
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
 
 export const metadata: Metadata = {
   title: "OpenSolve — Where Builders Meet Real Opportunities",
@@ -19,82 +21,55 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={inter.variable}>
-        <body style={{ fontFamily: "var(--font-inter), Inter, sans-serif" }}>
-          {/* Ambient background orbs */}
-          <div className="bg-orb-1" aria-hidden="true" />
-          <div className="bg-orb-2" aria-hidden="true" />
-
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <NavBar />
-            <main
-              style={{
-                maxWidth: "1200px",
-                margin: "0 auto",
-                padding: "0 24px 80px",
-              }}
-            >
-              {children}
-            </main>
-
-            <footer
-              style={{
-                borderTop: "1px solid var(--border)",
-                padding: "40px 24px",
-                textAlign: "center",
-              }}
-            >
-              <div
-                style={{
-                  maxWidth: "1200px",
-                  margin: "0 auto",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "16px",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: 800,
-                    background: "linear-gradient(135deg, var(--accent), var(--accent-2))",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  OpenSolve
-                </div>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.8125rem" }}>
-                  Connecting student talent with real-world challenges from YC, government, and industry.
-                </p>
-                <div style={{ display: "flex", gap: "24px" }}>
-                  {[
-                    { href: "/about", label: "About" },
-                    { href: "/privacy", label: "Privacy" },
-                    { href: "/terms", label: "Terms" },
-                  ].map(({ href, label }) => (
-                    <Link
-                      key={href}
-                      href={href}
-                      style={{
-                        color: "rgba(255,255,255,0.35)",
-                        textDecoration: "none",
-                        fontSize: "0.8125rem",
-                        transition: "color 0.2s",
-                      }}
-                    >
-                      {label}
-                    </Link>
-                  ))}
-                </div>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>
-                  © {new Date().getFullYear()} OpenSolve. Built for the AWS + Vercel H0 Hackathon.
-                </p>
-              </div>
-            </footer>
+      <html lang="en" className={`dark ${inter.variable} ${sora.variable} ${jetbrainsMono.variable}`}>
+        <head>
+          <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+        </head>
+        <body className="antialiased" style={{ fontFamily: "var(--font-inter), sans-serif", backgroundColor: "#020617", color: "#dce1fb" }}>
+          {/* Ambient Lighting Background */}
+          <div className="fixed inset-0 z-[-2] pointer-events-none bg-[#020617]">
+            <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary-container/10 blur-[120px]"></div>
+            <div className="absolute bottom-[-20%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-secondary-container/10 blur-[120px]"></div>
           </div>
+
+          <NavBar />
+          
+          <main className="min-h-screen pt-20">
+            {children}
+          </main>
+
+          <footer className="bg-surface-container-lowest border-t border-white/5 w-full py-16 md:py-32">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 px-6 max-w-7xl mx-auto">
+              {/* Brand Column */}
+              <div className="md:col-span-1 flex flex-col gap-4">
+                <Link href="/" className="font-display-lg-mobile text-3xl font-bold text-primary flex items-center gap-2">
+                  <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>hexagon</span>
+                  OpenSolve
+                </Link>
+                <p className="font-body-md text-tertiary">Connecting student talent with real-world challenges from YC, government, and industry.</p>
+              </div>
+
+              {/* Links Column */}
+              <div className="md:col-span-2 grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-2">
+                  <Link href="/about" className="font-body-md text-on-tertiary-container hover:text-primary transition-all">About Us</Link>
+                  <Link href="/terms" className="font-body-md text-on-tertiary-container hover:text-primary transition-all">Terms of Service</Link>
+                  <Link href="/privacy" className="font-body-md text-on-tertiary-container hover:text-primary transition-all">Privacy Policy</Link>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Link href="#" className="font-body-md text-on-tertiary-container hover:text-primary transition-all">Contact Support</Link>
+                  <Link href="#" className="font-body-md text-on-tertiary-container hover:text-primary transition-all">Documentation</Link>
+                  <Link href="#" className="font-body-md text-on-tertiary-container hover:text-primary transition-all">API Status</Link>
+                </div>
+              </div>
+
+              {/* Copyright */}
+              <div className="md:col-span-1 flex flex-col justify-end">
+                <p className="font-body-md text-tertiary text-sm">© {new Date().getFullYear()} OpenSolve. All rights reserved. Built for the elite.</p>
+                <p className="font-body-md text-tertiary text-xs mt-2 opacity-50">Built for the AWS + Vercel H0 Hackathon.</p>
+              </div>
+            </div>
+          </footer>
         </body>
       </html>
     </ClerkProvider>
