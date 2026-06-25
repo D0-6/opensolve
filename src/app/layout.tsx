@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Sora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import { NavBar } from "@/components/NavBar";
 import Link from "next/link";
 
@@ -20,7 +21,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider appearance={{ 
+      baseTheme: dark,
+      variables: { colorPrimary: '#00cbe6' },
+      elements: { card: 'bg-[#0c1324] border border-white/10' }
+    }}>
       <html lang="en" className={`dark ${inter.variable} ${sora.variable} ${jetbrainsMono.variable}`}>
         <head>
           <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />

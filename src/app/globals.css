@@ -95,22 +95,3 @@
     transform: translateY(0);
   }
 }
-
-/* Clerk overrides */
-.cl-formButtonPrimary {
-  background: linear-gradient(135deg, #a078ff 0%, #00cbe6 100%) !important;
-  color: #FFFFFF !important;
-}
-.cl-card {
-  background: #0c1324 !important;
-  border: 1px solid rgba(255,255,255,0.1) !important;
-}
-.cl-headerTitle, .cl-headerSubtitle, .cl-formFieldLabel { color: #dce1fb !important; }
-.cl-formFieldInput {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-  color: #dce1fb !important;
-}
-.cl-footerActionLink { color: #5de6ff !important; }
-.cl-identityPreviewText { color: #dce1fb !important; }
-.cl-userButtonPopoverMain { background: #0c1324 !important; }
