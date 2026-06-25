@@ -13,6 +13,17 @@ const SOURCE_CONFIG: Record<string, { label: string; color: string; bg: string }
   INDUSTRY: { label: "Industry", color: "rgba(255,255,255,0.55)", bg: "var(--border)" },
 };
 
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const problem = await getProblem(id);
+  if (!problem) return { title: "Challenge Not Found | OpenSolve" };
+  
+  return {
+    title: `${problem.title} | OpenSolve Hiring Challenge`,
+    description: problem.description.substring(0, 160) + "...",
+  };
+}
+
 export default async function ProblemDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const problem = await getProblem(id);
@@ -21,8 +32,30 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
 
   const cfg = SOURCE_CONFIG[problem.source] || SOURCE_CONFIG.INDUSTRY;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    "title": problem.title,
+    "description": problem.description,
+    "datePosted": problem.postedAt || new Date().toISOString(),
+    "validThrough": problem.deadline,
+    "employmentType": problem.prizeType === "HIRING" ? "FULL_TIME" : "CONTRACTOR",
+    "hiringOrganization": {
+      "@type": "Organization",
+      "name": problem.source === "INDUSTRY" ? "Enterprise Partner" : "Startup Partner",
+    },
+    "jobLocation": {
+      "@type": "Place",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Remote"
+      }
+    }
+  };
+
   return (
     <div style={{ paddingTop: "32px" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* Back link */}
       <Link
         href="/"
