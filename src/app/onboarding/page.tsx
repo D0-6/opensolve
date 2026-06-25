@@ -1,235 +1,56 @@
-"use client";
+import { currentUser } from "@clerk/nextjs/server";
+import { setOnboardingCookieOnly, completeOnboardingAction } from "./_actions";
+import { ShieldAlert } from "lucide-react";
+import Link from "next/link";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { GraduationCap, Building2, ArrowRight, Loader2 } from "lucide-react";
+export default async function OnboardingPage() {
+  const user = await currentUser();
 
-export default function OnboardingPage() {
-  const router = useRouter();
-  const [selected, setSelected] = useState<"student" | "company" | null>(null);
-  const [loading, setLoading] = useState(false);
+  // If the user somehow reached this page without being logged in
+  if (!user) {
+    return null; 
+  }
 
-  const handleContinue = async () => {
-    if (!selected) return;
-    setLoading(true);
-    try {
-      const res = await fetch("/api/onboarding", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role: selected }),
-      });
-      if (res.ok) {
-        router.push("/dashboard");
-        router.refresh();
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Cross-device sync: If Clerk already knows they accepted terms, but the device is new
+  if (user.publicMetadata?.onboardingComplete) {
+    await setOnboardingCookieOnly();
+  }
 
   return (
-    <div
-      style={{
-        minHeight: "85vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "40px 24px",
-      }}
-    >
-      {/* Header */}
-      <div style={{ textAlign: "center", marginBottom: "48px" }}>
-        <div
-          style={{
-            display: "inline-block",
-            background: "rgba(var(--accent-rgb),0.12)",
-            border: "1px solid rgba(var(--accent-rgb),0.25)",
-            borderRadius: "100px",
-            padding: "6px 16px",
-            fontSize: "0.75rem",
-            fontWeight: 600,
-            color: "var(--accent)",
-            marginBottom: "20px",
-            letterSpacing: "0.05em",
-            textTransform: "uppercase",
-          }}
-        >
-          One Last Step
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[#020617]">
+      <div className="max-w-2xl w-full bg-[#0c1324] border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl fade-in-up">
+        
+        <div className="w-16 h-16 bg-[#00cbe6]/10 border border-[#00cbe6]/20 text-[#00cbe6] rounded-2xl flex items-center justify-center mb-8">
+          <ShieldAlert className="w-8 h-8" />
         </div>
-        <h1
-          style={{
-            fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
-            fontWeight: 800,
-            marginBottom: "12px",
-            lineHeight: 1.2,
-          }}
-        >
-          How will you use{" "}
-          <span
-            style={{
-              background: "linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3))",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            OpenSolve?
-          </span>
+
+        <h1 className="text-4xl font-display-lg text-[#dce1fb] font-bold mb-4">
+          Welcome to OpenSolve
         </h1>
-        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "1rem", maxWidth: "400px" }}>
-          This helps us personalize your experience and show you the right content.
+        
+        <p className="text-lg text-[#8990a8] font-body-md leading-relaxed mb-8">
+          To maintain the security and integrity of our platform, all users must agree to our Terms of Service and Privacy Policy before accessing challenges, posting problems, or contacting other members.
         </p>
-      </div>
 
-      {/* Role cards */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-          gap: "20px",
-          width: "100%",
-          maxWidth: "600px",
-          marginBottom: "32px",
-        }}
-      >
-        <RoleCard
-          icon={<GraduationCap size={36} />}
-          title="I'm a Student / Builder"
-          description="Browse real challenges from YC startups, governments, and companies. Submit solutions and get hired or win prizes."
-          bullets={["Browse & solve funded challenges", "Build a verifiable portfolio", "Get hired or win prizes"]}
-          selected={selected === "student"}
-          onClick={() => setSelected("student")}
-          accent="var(--accent)"
-        />
-        <RoleCard
-          icon={<Building2 size={36} />}
-          title="I'm a Company / Org"
-          description="Post real challenges to thousands of motivated builders. Find top talent and view ranked, verifiable solutions."
-          bullets={["Post challenges & find talent", "View ranked submissions", "Contact top performers"]}
-          selected={selected === "company"}
-          onClick={() => setSelected("company")}
-          accent="var(--accent-2)"
-        />
-      </div>
+        <div className="bg-white/5 border border-white/10 rounded-xl p-6 mb-8">
+          <h3 className="font-semibold text-[#dce1fb] mb-2">By clicking "I Accept", you acknowledge that:</h3>
+          <ul className="list-disc pl-5 space-y-2 text-[#8990a8] text-sm font-body-md">
+            <li>You have read and agree to the <Link href="/terms" target="_blank" className="text-[#00cbe6] hover:underline">Terms of Service</Link>.</li>
+            <li>You have read and agree to the <Link href="/privacy" target="_blank" className="text-[#00cbe6] hover:underline">Privacy Policy</Link>.</li>
+            <li>You will submit only original work and respect the intellectual property of others.</li>
+            <li>You understand that OpenSolve is a platform facilitating connections, and reward fulfillment is handled strictly between the poster and the solver.</li>
+          </ul>
+        </div>
 
-      {/* Continue button */}
-      <button
-        onClick={handleContinue}
-        disabled={!selected || loading}
-        className="btn-primary"
-        style={{
-          padding: "14px 40px",
-          borderRadius: "14px",
-          fontSize: "1rem",
-          opacity: selected ? 1 : 0.4,
-          cursor: selected ? "pointer" : "not-allowed",
-          minWidth: "200px",
-        }}
-      >
-        {loading ? (
-          <Loader2 size={18} style={{ animation: "spin 1s linear infinite" }} />
-        ) : (
-          <>
-            Continue <ArrowRight size={18} />
-          </>
-        )}
-      </button>
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
-  );
-}
-
-function RoleCard({
-  icon,
-  title,
-  description,
-  bullets,
-  selected,
-  onClick,
-  accent,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  bullets: string[];
-  selected: boolean;
-  onClick: () => void;
-  accent: string;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        background: selected
-          ? `linear-gradient(135deg, ${accent}18, ${accent}08)`
-          : "rgba(255,255,255,0.03)",
-        border: `2px solid ${selected ? accent : "rgba(255,255,255,0.08)"}`,
-        borderRadius: "20px",
-        padding: "28px",
-        cursor: "pointer",
-        textAlign: "left",
-        transition: "all 0.25s ease",
-        transform: selected ? "translateY(-2px)" : "none",
-        boxShadow: selected ? `0 12px 40px ${accent}25` : "none",
-        width: "100%",
-      }}
-    >
-      <div
-        style={{
-          width: "60px",
-          height: "60px",
-          borderRadius: "16px",
-          background: `${accent}20`,
-          color: accent,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: "16px",
-        }}
-      >
-        {icon}
-      </div>
-      <h3
-        style={{
-          fontSize: "1.125rem",
-          fontWeight: 700,
-          marginBottom: "8px",
-          color: "rgba(255,255,255,0.92)",
-        }}
-      >
-        {title}
-      </h3>
-      <p
-        style={{
-          fontSize: "0.875rem",
-          color: "rgba(255,255,255,0.45)",
-          marginBottom: "16px",
-          lineHeight: 1.6,
-        }}
-      >
-        {description}
-      </p>
-      <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "6px" }}>
-        {bullets.map((b) => (
-          <li
-            key={b}
-            style={{
-              fontSize: "0.8125rem",
-              color: "var(--text-secondary)",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
+        <form action={completeOnboardingAction}>
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-[#00cbe6] to-[#a078ff] text-[#020617] font-bold text-lg py-4 rounded-xl shadow-[0_0_20px_rgba(0,203,230,0.3)] hover:shadow-[0_0_30px_rgba(160,120,255,0.5)] transition-all hover:-translate-y-1"
           >
-            <span style={{ color: accent, fontSize: "0.625rem" }}>●</span>
-            {b}
-          </li>
-        ))}
-      </ul>
-    </button>
+            I Accept the Terms
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }

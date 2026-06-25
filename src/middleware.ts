@@ -8,10 +8,28 @@ const isProtectedRoute = createRouteMatcher([
 ])
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req)) {
-    await auth.protect()
+  const { userId } = await auth();
+
+  // If user is logged in, check for onboarding cookie
+  if (userId) {
+    const isOnboarding = req.nextUrl.pathname.startsWith('/onboarding');
+    const isApi = req.nextUrl.pathname.startsWith('/api');
+    const hasCookie = req.cookies.has('onboarding_complete');
+
+    if (!hasCookie && !isOnboarding && !isApi) {
+      return Response.redirect(new URL('/onboarding', req.url));
+    }
+
+    if (hasCookie && isOnboarding) {
+      return Response.redirect(new URL('/', req.url));
+    }
   }
-})
+
+  // Enforce protected routes
+  if (isProtectedRoute(req)) {
+    await auth.protect();
+  }
+});
 
 export const config = {
   matcher: [

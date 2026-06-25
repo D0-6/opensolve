@@ -4,7 +4,6 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { NavBar } from "@/components/NavBar";
-import { LegalConsentBanner } from "@/components/LegalConsentBanner";
 import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -70,7 +69,6 @@ export default function RootLayout({
               </div>
             </div>
           </footer>
-          <LegalConsentBanner />
         </body>
       </html>
     </ClerkProvider>
