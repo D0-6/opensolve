@@ -34,14 +34,14 @@ function ProblemCard({ problem, isFeatured }: { problem: any; isFeatured: boolea
       {isFeatured && <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent z-0"></div>}
       
       <div className="relative z-10 flex justify-between items-start">
-        <div className="flex gap-2 flex-wrap">
-          <span className={`px-2 py-1 rounded ${cfg.bgClass} ${cfg.textClass} font-label-mono text-label-mono flex items-center gap-1`}>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className={`px-2 py-1 rounded ${cfg.bgClass} ${cfg.textClass} font-label-mono text-[11px] leading-tight flex items-center gap-1 shrink-0`}>
             <span className="material-symbols-outlined text-[14px]">
               {problem.source === "GOVERNMENT" ? "account_balance" : "domain"}
             </span>
             {cfg.label}
           </span>
-          <span className={`px-2 py-1 rounded ${timeClass} font-label-mono text-label-mono flex items-center gap-1`}>
+          <span className={`px-2 py-1 rounded ${timeClass} font-label-mono text-[11px] leading-tight flex items-center gap-1 shrink-0`}>
             <span className="material-symbols-outlined text-[14px]">schedule</span>
             {timeText}
           </span>
@@ -66,16 +66,16 @@ function ProblemCard({ problem, isFeatured }: { problem: any; isFeatured: boolea
 
       <div className="relative z-10 flex items-center justify-between mt-4 pt-4 border-t border-white/10">
         {!isFeatured && problem.prizeAmount > 0 ? (
-          <span className="font-body-md text-secondary font-bold">${problem.prizeAmount.toLocaleString()}</span>
+          <span className="font-body-md text-secondary font-bold shrink-0">${problem.prizeAmount.toLocaleString()}</span>
         ) : (
-          <span className="font-label-mono text-primary border border-primary/30 px-2 py-1 rounded">
+          <span className="font-label-mono text-[11px] leading-tight text-primary border border-primary/30 px-2 py-1 rounded shrink-0 truncate max-w-[120px]" title={problem.prizeType ? problem.prizeType.replace("_", " ") : "BOUNTY"}>
             {problem.prizeType ? problem.prizeType.replace("_", " ") : "BOUNTY"}
           </span>
         )}
-        <div className="flex items-center gap-2">
-          <span className="font-label-mono text-tertiary">{problem.domain}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="font-label-mono text-tertiary truncate">{problem.domain}</span>
           {isFeatured && (
-            <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-transform group-hover:translate-x-1">
+            <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-transform group-hover:translate-x-1 shrink-0">
               arrow_forward
             </span>
           )}
@@ -103,7 +103,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
       <section className="relative min-h-screen flex items-center pt-24 pb-32 overflow-hidden -mt-20">
         <HeroShader />
         
-        <div className="px-6 max-w-7xl mx-auto w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="px-6 max-w-[1600px] mx-auto w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Hero Content */}
           <div className="lg:col-span-7 flex flex-col gap-6 fade-in-up">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel border border-primary/30 text-primary w-max">
@@ -139,7 +139,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
       </section>
 
       {/* Stats Bar */}
-      <section className="relative z-20 -mt-32 px-6 max-w-7xl mx-auto fade-in-up delay-300">
+      <section className="relative z-20 -mt-32 px-6 max-w-[1600px] mx-auto fade-in-up delay-300">
         <div className="glass-panel rounded-xl p-8 grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-white/10">
           <div className="text-center px-4">
             <h3 className="font-display-lg text-3xl md:text-5xl text-primary">{problems.length}+</h3>
@@ -165,7 +165,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
       </section>
 
       {/* Active Challenges Section */}
-      <section id="challenges" className="py-32 px-6 max-w-7xl mx-auto relative">
+      <section id="challenges" className="py-32 px-6 max-w-[1600px] mx-auto relative">
         <div className="atmospheric-glow top-0 left-[-200px]"></div>
         
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 fade-in-up">
@@ -216,12 +216,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
       <section className="py-32 bg-surface-container-low/50 relative border-t border-white/5 mx-[-24px] px-6">
         <div className="atmospheric-glow bottom-0 right-[-200px]"></div>
         
-        <div className="max-w-7xl mx-auto text-center mb-16 fade-in-up">
+        <div className="max-w-[1600px] mx-auto text-center mb-16 fade-in-up">
           <h2 className="font-headline-md text-3xl text-on-surface">How OpenSolve Works</h2>
           <p className="font-body-lg text-on-surface-variant mt-4 max-w-2xl mx-auto">A transparent pipeline from challenge to career</p>
         </div>
         
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* For Builders */}
           <div className="fade-in-up delay-100 relative">
             <div className="absolute left-[24px] top-12 bottom-0 w-[2px] bg-gradient-to-b from-secondary/50 to-transparent hidden md:block z-0"></div>

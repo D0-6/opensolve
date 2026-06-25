@@ -8,6 +8,12 @@
     color: #dce1fb;
     overflow-x: hidden;
   }
+  
+  input, textarea, select {
+    background-color: #0c1324;
+    color: #dce1fb;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
 }
 
 @layer components {

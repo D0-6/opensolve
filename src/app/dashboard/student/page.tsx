@@ -48,7 +48,7 @@ export default async function StudentDashboard() {
   const firstName = user?.firstName || "Builder";
 
   return (
-    <div style={{ paddingTop: "40px" }}>
+    <div className="max-w-[1600px] mx-auto px-6 md:px-8 pt-10 pb-24 w-full">
       {/* Welcome header */}
       <div
         style={{

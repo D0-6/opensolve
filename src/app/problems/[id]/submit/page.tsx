@@ -172,7 +172,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               value={formData.githubUrl}
               onChange={handleChange}
               placeholder="https://github.com/yourusername/your-solution"
-              style={{ width: "100%", padding: "12px 16px", borderRadius: "12px", fontSize: "0.9375rem" }}
+              className="w-full bg-[#0c1324] border border-white/10 rounded-xl px-4 py-3 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all font-body-md"
             />
           </div>
 
@@ -189,7 +189,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               value={formData.demoUrl}
               onChange={handleChange}
               placeholder="https://your-demo.vercel.app"
-              style={{ width: "100%", padding: "12px 16px", borderRadius: "12px", fontSize: "0.9375rem" }}
+              className="w-full bg-[#0c1324] border border-white/10 rounded-xl px-4 py-3 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all font-body-md"
             />
           </div>
 
@@ -206,7 +206,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               maxLength={500}
               rows={5}
               placeholder="Explain your approach, tech stack, key decisions, and why your solution stands out..."
-              style={{ width: "100%", padding: "12px 16px", borderRadius: "12px", fontSize: "0.9375rem", resize: "none" }}
+              className="w-full bg-[#0c1324] border border-white/10 rounded-xl px-4 py-3 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all font-body-md resize-y"
             />
             <div style={{ textAlign: "right", fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "4px" }}>
               {formData.writeup.length} / 500

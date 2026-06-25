@@ -12,7 +12,7 @@ export function NavBar() {
 
   return (
     <header className="fixed top-0 w-full z-50 bg-[#0c1324]/60 backdrop-blur-xl border-b border-white/10 shadow-sm">
-      <div className="flex justify-between items-center px-6 max-w-7xl mx-auto h-20">
+      <div className="flex justify-between items-center px-6 max-w-[1600px] mx-auto h-20">
         {/* Brand Logo */}
         <Link href="/" className="font-display-lg text-3xl font-bold text-primary flex items-center gap-2">
           <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>hexagon</span>
