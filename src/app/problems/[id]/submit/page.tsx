@@ -14,8 +14,24 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
     demoUrl: "",
     writeup: "",
   });
+  const [team, setTeam] = useState<any>(null);
+  const [submitAsTeam, setSubmitAsTeam] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  import("react").then((React) => {
+    React.useEffect(() => {
+      fetch("/api/teams")
+        .then(res => res.json())
+        .then(data => {
+          if (data.team) {
+            setTeam(data.team);
+            setSubmitAsTeam(true);
+          }
+        })
+        .catch(console.error);
+    }, []);
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -42,6 +58,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
           problemId: params.id,
           studentName: user?.fullName || user?.username || "Anonymous",
           userId: user?.id,
+          teamId: submitAsTeam && team ? team.teamId : null,
         }),
       });
 
@@ -116,6 +133,32 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
         )}
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+          
+          {/* Team / Solo Toggle */}
+          {team && (
+            <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "16px", padding: "16px" }}>
+              <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "12px", color: "var(--text-secondary)" }}>
+                Submission Identity
+              </label>
+              <div style={{ display: "flex", gap: "12px" }}>
+                <button
+                  type="button"
+                  onClick={() => setSubmitAsTeam(false)}
+                  style={{ flex: 1, padding: "12px", borderRadius: "10px", border: submitAsTeam ? "1px solid rgba(255,255,255,0.1)" : "1px solid #00cbe6", background: submitAsTeam ? "transparent" : "rgba(0,203,230,0.1)", color: submitAsTeam ? "var(--text-secondary)" : "#00cbe6", fontWeight: "bold", transition: "all 0.2s" }}
+                >
+                  Submit Solo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSubmitAsTeam(true)}
+                  style={{ flex: 1, padding: "12px", borderRadius: "10px", border: !submitAsTeam ? "1px solid rgba(255,255,255,0.1)" : "1px solid #a078ff", background: !submitAsTeam ? "transparent" : "rgba(160,120,255,0.1)", color: !submitAsTeam ? "var(--text-secondary)" : "#a078ff", fontWeight: "bold", transition: "all 0.2s" }}
+                >
+                  Submit as {team.name}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* GitHub URL */}
           <div>
             <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "var(--text-secondary)" }}>

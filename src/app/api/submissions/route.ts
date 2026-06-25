@@ -59,6 +59,26 @@ export async function POST(request: Request) {
     }
     const repoName = match[3];
 
+    // SECURITY PASS: Verify Team Ownership
+    let validatedTeamId = null;
+    if (body.teamId) {
+      const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
+      const teamRes = await docClient.send(new GetCommand({
+        TableName: process.env.DYNAMODB_TABLE_TEAMS || "OpenSolve_Teams",
+        Key: { teamId: body.teamId }
+      }));
+      
+      if (!teamRes.Item) {
+        return NextResponse.json({ error: "The specified team does not exist." }, { status: 400 });
+      }
+      
+      if (!teamRes.Item.members.includes(userId)) {
+        return NextResponse.json({ error: "Security Exception: You cannot submit on behalf of a team you are not a member of." }, { status: 403 });
+      }
+      
+      validatedTeamId = body.teamId;
+    }
+
     const submittedAt = new Date().toISOString();
     const score = 0;
 
@@ -74,7 +94,7 @@ export async function POST(request: Request) {
       upvotes: 0,
       submittedAt,
       score,
-      teamId: body.teamId || null,
+      teamId: validatedTeamId,
       evaluationStatus: "PENDING", // PENDING, CONTRACT_OFFERED, HIRED, REJECTED, PRIZE_AWARDED
     };
 
