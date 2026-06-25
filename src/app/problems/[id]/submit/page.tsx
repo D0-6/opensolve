@@ -71,13 +71,13 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
             display: "inline-flex",
             alignItems: "center",
             gap: "6px",
-            background: "rgba(99,102,241,0.1)",
-            border: "1px solid rgba(99,102,241,0.2)",
+            background: "rgba(var(--accent-rgb),0.1)",
+            border: "1px solid rgba(var(--accent-rgb),0.2)",
             borderRadius: "100px",
             padding: "4px 12px",
             fontSize: "0.75rem",
             fontWeight: 600,
-            color: "#818cf8",
+            color: "var(--accent)",
             marginBottom: "16px",
           }}
         >
@@ -118,7 +118,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           {/* GitHub URL */}
           <div>
-            <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "rgba(255,255,255,0.7)" }}>
+            <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "var(--text-secondary)" }}>
               <GitBranch size={14} style={{ display: "inline", marginRight: "6px", verticalAlign: "middle" }} />
               GitHub Repository URL *
             </label>
@@ -135,10 +135,10 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
 
           {/* Demo URL */}
           <div>
-            <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "rgba(255,255,255,0.7)" }}>
+            <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "var(--text-secondary)" }}>
               <Globe size={14} style={{ display: "inline", marginRight: "6px", verticalAlign: "middle" }} />
               Live Demo URL{" "}
-              <span style={{ color: "rgba(255,255,255,0.3)", fontWeight: 400 }}>(optional)</span>
+              <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>(optional)</span>
             </label>
             <input
               type="url"
@@ -152,7 +152,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
 
           {/* Writeup */}
           <div>
-            <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "rgba(255,255,255,0.7)" }}>
+            <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "var(--text-secondary)" }}>
               Solution Writeup *
             </label>
             <textarea
@@ -165,7 +165,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               placeholder="Explain your approach, tech stack, key decisions, and why your solution stands out..."
               style={{ width: "100%", padding: "12px 16px", borderRadius: "12px", fontSize: "0.9375rem", resize: "none" }}
             />
-            <div style={{ textAlign: "right", fontSize: "0.75rem", color: "rgba(255,255,255,0.3)", marginTop: "4px" }}>
+            <div style={{ textAlign: "right", fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "4px" }}>
               {formData.writeup.length} / 500
             </div>
           </div>

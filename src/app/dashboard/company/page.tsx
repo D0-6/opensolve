@@ -43,8 +43,8 @@ export default async function CompanyDashboard() {
       {/* Header */}
       <div
         style={{
-          background: "linear-gradient(135deg, rgba(139,92,246,0.12), rgba(99,102,241,0.08))",
-          border: "1px solid rgba(139,92,246,0.2)",
+          background: "linear-gradient(135deg, rgba(var(--accent-2-rgb),0.12), rgba(var(--accent-rgb),0.08))",
+          border: "1px solid rgba(var(--accent-2-rgb),0.2)",
           borderRadius: "24px",
           padding: "40px",
           marginBottom: "32px",
@@ -64,7 +64,7 @@ export default async function CompanyDashboard() {
             right: "-40px",
             width: "200px",
             height: "200px",
-            background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(var(--accent-2-rgb),0.15) 0%, transparent 70%)",
           }}
         />
         <div style={{ position: "relative", zIndex: 1 }}>
@@ -73,14 +73,14 @@ export default async function CompanyDashboard() {
               display: "inline-flex",
               alignItems: "center",
               gap: "6px",
-              background: "rgba(139,92,246,0.15)",
-              border: "1px solid rgba(139,92,246,0.3)",
+              background: "rgba(var(--accent-2-rgb),0.15)",
+              border: "1px solid rgba(var(--accent-2-rgb),0.3)",
               borderRadius: "100px",
               padding: "4px 12px",
               width: "fit-content",
               fontSize: "0.75rem",
               fontWeight: 600,
-              color: "#a78bfa",
+              color: "var(--accent-2)",
               marginBottom: "16px",
             }}
           >
@@ -89,7 +89,7 @@ export default async function CompanyDashboard() {
           <h1 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, marginBottom: "8px" }}>
             {orgName}
           </h1>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9375rem" }}>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.9375rem" }}>
             Manage your challenges and discover top talent.
           </p>
         </div>
@@ -114,10 +114,10 @@ export default async function CompanyDashboard() {
         }}
       >
         {[
-          { icon: <Zap size={20} />, label: "Active Challenges", value: myProblems.length, color: "#818cf8" },
-          { icon: <Users size={20} />, label: "Total Submissions", value: totalSubmissions, color: "#a78bfa" },
+          { icon: <Zap size={20} />, label: "Active Challenges", value: myProblems.length, color: "var(--accent)" },
+          { icon: <Users size={20} />, label: "Total Submissions", value: totalSubmissions, color: "var(--accent-2)" },
           { icon: <Trophy size={20} />, label: "Top Solvers", value: totalSubmissions > 0 ? "View →" : "—", color: "#facc15" },
-          { icon: <BarChart3 size={20} />, label: "Avg. Submissions", value: myProblems.length > 0 ? Math.round(totalSubmissions / myProblems.length) : 0, color: "#22d3ee" },
+          { icon: <BarChart3 size={20} />, label: "Avg. Submissions", value: myProblems.length > 0 ? Math.round(totalSubmissions / myProblems.length) : 0, color: "var(--accent-3)" },
         ].map(({ icon, label, value, color }) => (
           <div
             key={label}
@@ -126,7 +126,7 @@ export default async function CompanyDashboard() {
           >
             <div style={{ color, marginBottom: "8px" }}>{icon}</div>
             <div style={{ fontSize: "1.75rem", fontWeight: 800, marginBottom: "4px" }}>{value}</div>
-            <div style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.4)" }}>{label}</div>
+            <div style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>{label}</div>
           </div>
         ))}
       </div>
@@ -137,7 +137,7 @@ export default async function CompanyDashboard() {
           <h2 style={{ fontSize: "1.25rem", fontWeight: 700 }}>Your Challenges</h2>
           <Link
             href="/organizations/new"
-            style={{ fontSize: "0.875rem", color: "#818cf8", textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}
+            style={{ fontSize: "0.875rem", color: "var(--accent)", textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}
           >
             Post New <ArrowRight size={14} />
           </Link>
@@ -148,9 +148,9 @@ export default async function CompanyDashboard() {
             className="glass"
             style={{ borderRadius: "16px", padding: "60px", textAlign: "center" }}
           >
-            <Building2 size={40} style={{ margin: "0 auto 16px", opacity: 0.3, color: "rgba(255,255,255,0.5)" }} />
+            <Building2 size={40} style={{ margin: "0 auto 16px", opacity: 0.3, color: "var(--text-muted)" }} />
             <p style={{ fontWeight: 700, marginBottom: "8px", fontSize: "1.125rem" }}>No challenges posted yet</p>
-            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.875rem", marginBottom: "24px" }}>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.875rem", marginBottom: "24px" }}>
               Post your first challenge and start finding top builders
             </p>
             <Link
@@ -173,24 +173,24 @@ export default async function CompanyDashboard() {
                   style={{
                     borderRadius: "20px",
                     padding: "24px",
-                    borderLeft: "3px solid #6366f1",
+                    borderLeft: "3px solid var(--accent)",
                   }}
                 >
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "flex-start", justifyContent: "space-between" }}>
                     <div style={{ flex: 1, minWidth: "200px" }}>
                       <h3 style={{ fontSize: "1.0625rem", fontWeight: 700, marginBottom: "6px" }}>{problem.title}</h3>
-                      <p style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.4)" }}>
+                      <p style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>
                         Deadline: {new Date(problem.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                       </p>
                     </div>
 
                     <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
-                      <div style={{ background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "10px", padding: "6px 14px", fontSize: "0.8125rem", color: "#818cf8", fontWeight: 600 }}>
+                      <div style={{ background: "rgba(var(--accent-rgb),0.12)", border: "1px solid rgba(var(--accent-rgb),0.2)", borderRadius: "10px", padding: "6px 14px", fontSize: "0.8125rem", color: "var(--accent)", fontWeight: 600 }}>
                         {subs.length} Submission{subs.length !== 1 ? "s" : ""}
                       </div>
                       <Link
                         href={`/problems/${problem.problemId}`}
-                        style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "0.8125rem", color: "rgba(255,255,255,0.5)", textDecoration: "none" }}
+                        style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "0.8125rem", color: "var(--text-muted)", textDecoration: "none" }}
                       >
                         <ExternalLink size={14} /> View Public
                       </Link>
@@ -204,7 +204,7 @@ export default async function CompanyDashboard() {
                         marginTop: "16px",
                         padding: "14px 16px",
                         background: "rgba(255,255,255,0.03)",
-                        border: "1px solid rgba(255,255,255,0.06)",
+                        border: "1px solid var(--border)",
                         borderRadius: "12px",
                         display: "flex",
                         alignItems: "center",

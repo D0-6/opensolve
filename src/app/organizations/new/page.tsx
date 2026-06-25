@@ -48,7 +48,7 @@ export default function NewProblem() {
 
   const field = (label: string, children: React.ReactNode) => (
     <div>
-      <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "rgba(255,255,255,0.7)" }}>
+      <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "var(--text-secondary)" }}>
         {label}
       </label>
       {children}
@@ -66,13 +66,13 @@ export default function NewProblem() {
             display: "inline-flex",
             alignItems: "center",
             gap: "6px",
-            background: "rgba(139,92,246,0.1)",
-            border: "1px solid rgba(139,92,246,0.2)",
+            background: "rgba(var(--accent-2-rgb),0.1)",
+            border: "1px solid rgba(var(--accent-2-rgb),0.2)",
             borderRadius: "100px",
             padding: "4px 12px",
             fontSize: "0.75rem",
             fontWeight: 600,
-            color: "#a78bfa",
+            color: "var(--accent-2)",
             marginBottom: "16px",
           }}
         >

@@ -85,7 +85,7 @@ function ProblemCard({ problem }: { problem: any }) {
             fontSize: "1rem",
             fontWeight: 700,
             lineHeight: 1.4,
-            color: "rgba(255,255,255,0.9)",
+            color: "var(--text-primary)",
             display: "-webkit-box",
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
@@ -99,7 +99,7 @@ function ProblemCard({ problem }: { problem: any }) {
         <p
           style={{
             fontSize: "0.8125rem",
-            color: "rgba(255,255,255,0.4)",
+            color: "var(--text-muted)",
             lineHeight: 1.6,
             flex: 1,
             display: "-webkit-box",
@@ -114,7 +114,7 @@ function ProblemCard({ problem }: { problem: any }) {
         {/* Bottom: prize + domain */}
         <div
           style={{
-            borderTop: "1px solid rgba(255,255,255,0.06)",
+            borderTop: "1px solid var(--border)",
             paddingTop: "14px",
             display: "flex",
             alignItems: "center",
@@ -132,8 +132,8 @@ function ProblemCard({ problem }: { problem: any }) {
           <span
             style={{
               fontSize: "0.75rem",
-              color: "rgba(255,255,255,0.3)",
-              background: "rgba(255,255,255,0.05)",
+              color: "var(--text-muted)",
+              background: "var(--surface)",
               padding: "3px 8px",
               borderRadius: "6px",
             }}
@@ -179,13 +179,13 @@ export default async function Home({
             display: "inline-flex",
             alignItems: "center",
             gap: "6px",
-            background: "rgba(99,102,241,0.1)",
-            border: "1px solid rgba(99,102,241,0.22)",
+            background: "rgba(var(--accent-rgb),0.1)",
+            border: "1px solid rgba(var(--accent-rgb),0.22)",
             borderRadius: "100px",
             padding: "6px 16px",
             fontSize: "0.75rem",
             fontWeight: 600,
-            color: "#818cf8",
+            color: "var(--accent)",
             marginBottom: "28px",
             letterSpacing: "0.04em",
           }}
@@ -208,7 +208,7 @@ export default async function Home({
           Where Builders Meet{" "}
           <span
             style={{
-              background: "linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #22d3ee 100%)",
+              background: "linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 50%, var(--accent-3) 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
@@ -221,7 +221,7 @@ export default async function Home({
         <p
           style={{
             fontSize: "clamp(1rem, 2.5vw, 1.1875rem)",
-            color: "rgba(255,255,255,0.5)",
+            color: "var(--text-muted)",
             maxWidth: "560px",
             margin: "0 auto 40px",
             lineHeight: 1.7,
@@ -256,17 +256,17 @@ export default async function Home({
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
           gap: "1px",
-          background: "rgba(255,255,255,0.05)",
+          background: "var(--surface)",
           borderRadius: "20px",
           overflow: "hidden",
           marginBottom: "64px",
-          border: "1px solid rgba(255,255,255,0.06)",
+          border: "1px solid var(--border)",
         }}
       >
         {[
-          { icon: <Zap size={20} style={{ color: "#818cf8" }} />, value: `${problems.length}+`, label: "Active Challenges" },
-          { icon: <DollarSign size={20} style={{ color: "#22d3ee" }} />, value: totalPrize > 0 ? `$${(totalPrize / 1000).toFixed(0)}k+` : "Varied", label: "In Prizes" },
-          { icon: <Users size={20} style={{ color: "#a78bfa" }} />, value: "Open", label: "To All Builders" },
+          { icon: <Zap size={20} style={{ color: "var(--accent)" }} />, value: `${problems.length}+`, label: "Active Challenges" },
+          { icon: <DollarSign size={20} style={{ color: "var(--accent-3)" }} />, value: totalPrize > 0 ? `$${(totalPrize / 1000).toFixed(0)}k+` : "Varied", label: "In Prizes" },
+          { icon: <Users size={20} style={{ color: "var(--accent-2)" }} />, value: "Open", label: "To All Builders" },
           { icon: <BadgeCheck size={20} style={{ color: "#22c55e" }} />, value: "Verified", label: "Real Problems" },
         ].map(({ icon, value, label }) => (
           <div
@@ -283,7 +283,7 @@ export default async function Home({
           >
             {icon}
             <div style={{ fontSize: "1.5rem", fontWeight: 800 }}>{value}</div>
-            <div style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.4)" }}>{label}</div>
+            <div style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>{label}</div>
           </div>
         ))}
       </section>
@@ -308,9 +308,9 @@ export default async function Home({
                     fontSize: "0.8125rem",
                     fontWeight: 600,
                     textDecoration: "none",
-                    background: isActive ? "rgba(99,102,241,0.2)" : "rgba(255,255,255,0.04)",
-                    border: isActive ? "1px solid rgba(99,102,241,0.4)" : "1px solid rgba(255,255,255,0.08)",
-                    color: isActive ? "#818cf8" : "rgba(255,255,255,0.5)",
+                    background: isActive ? "rgba(var(--accent-rgb),0.2)" : "rgba(255,255,255,0.04)",
+                    border: isActive ? "1px solid rgba(var(--accent-rgb),0.4)" : "1px solid rgba(255,255,255,0.08)",
+                    color: isActive ? "var(--accent)" : "rgba(255,255,255,0.5)",
                     transition: "all 0.2s",
                   }}
                 >
@@ -351,7 +351,7 @@ export default async function Home({
           <h2 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, marginBottom: "12px" }}>
             How OpenSolve Works
           </h2>
-          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "1rem" }}>
+          <p style={{ color: "var(--text-muted)", fontSize: "1rem" }}>
             A transparent pipeline from challenge to career
           </p>
         </div>
@@ -359,7 +359,7 @@ export default async function Home({
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
           {/* Student flow */}
           <div className="glass" style={{ borderRadius: "20px", padding: "32px" }}>
-            <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "20px" }}>
+            <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "20px" }}>
               For Students & Builders
             </div>
             {[
@@ -368,10 +368,10 @@ export default async function Home({
               { step: "03", title: "Get Hired or Win", desc: "Top submissions get contacted directly by companies for jobs or contracts." },
             ].map(({ step, title, desc }) => (
               <div key={step} style={{ display: "flex", gap: "16px", marginBottom: "24px" }}>
-                <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "rgba(99,102,241,0.7)", minWidth: "28px", paddingTop: "2px" }}>{step}</div>
+                <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "rgba(var(--accent-rgb),0.7)", minWidth: "28px", paddingTop: "2px" }}>{step}</div>
                 <div>
                   <div style={{ fontWeight: 700, marginBottom: "4px", fontSize: "0.9375rem" }}>{title}</div>
-                  <div style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.4)", lineHeight: 1.6 }}>{desc}</div>
+                  <div style={{ fontSize: "0.8125rem", color: "var(--text-muted)", lineHeight: 1.6 }}>{desc}</div>
                 </div>
               </div>
             ))}
@@ -379,7 +379,7 @@ export default async function Home({
 
           {/* Company flow */}
           <div className="glass" style={{ borderRadius: "20px", padding: "32px" }}>
-            <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "20px" }}>
+            <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent-2)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "20px" }}>
               For Companies & Orgs
             </div>
             {[
@@ -388,10 +388,10 @@ export default async function Home({
               { step: "03", title: "Contact Top Talent", desc: "Reach out to your top performers directly. Hire, contract, or pilot their solution." },
             ].map(({ step, title, desc }) => (
               <div key={step} style={{ display: "flex", gap: "16px", marginBottom: "24px" }}>
-                <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "rgba(139,92,246,0.7)", minWidth: "28px", paddingTop: "2px" }}>{step}</div>
+                <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "rgba(var(--accent-2-rgb),0.7)", minWidth: "28px", paddingTop: "2px" }}>{step}</div>
                 <div>
                   <div style={{ fontWeight: 700, marginBottom: "4px", fontSize: "0.9375rem" }}>{title}</div>
-                  <div style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.4)", lineHeight: 1.6 }}>{desc}</div>
+                  <div style={{ fontSize: "0.8125rem", color: "var(--text-muted)", lineHeight: 1.6 }}>{desc}</div>
                 </div>
               </div>
             ))}

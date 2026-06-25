@@ -45,13 +45,13 @@ export default function OnboardingPage() {
         <div
           style={{
             display: "inline-block",
-            background: "rgba(99,102,241,0.12)",
-            border: "1px solid rgba(99,102,241,0.25)",
+            background: "rgba(var(--accent-rgb),0.12)",
+            border: "1px solid rgba(var(--accent-rgb),0.25)",
             borderRadius: "100px",
             padding: "6px 16px",
             fontSize: "0.75rem",
             fontWeight: 600,
-            color: "#818cf8",
+            color: "var(--accent)",
             marginBottom: "20px",
             letterSpacing: "0.05em",
             textTransform: "uppercase",
@@ -70,7 +70,7 @@ export default function OnboardingPage() {
           How will you use{" "}
           <span
             style={{
-              background: "linear-gradient(135deg, #818cf8, #a78bfa, #22d3ee)",
+              background: "linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3))",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
@@ -102,7 +102,7 @@ export default function OnboardingPage() {
           bullets={["Browse & solve funded challenges", "Build a verifiable portfolio", "Get hired or win prizes"]}
           selected={selected === "student"}
           onClick={() => setSelected("student")}
-          accent="#6366f1"
+          accent="var(--accent)"
         />
         <RoleCard
           icon={<Building2 size={36} />}
@@ -111,7 +111,7 @@ export default function OnboardingPage() {
           bullets={["Post challenges & find talent", "View ranked submissions", "Contact top performers"]}
           selected={selected === "company"}
           onClick={() => setSelected("company")}
-          accent="#8b5cf6"
+          accent="var(--accent-2)"
         />
       </div>
 
@@ -219,7 +219,7 @@ function RoleCard({
             key={b}
             style={{
               fontSize: "0.8125rem",
-              color: "rgba(255,255,255,0.6)",
+              color: "var(--text-secondary)",
               display: "flex",
               alignItems: "center",
               gap: "8px",

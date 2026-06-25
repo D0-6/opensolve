@@ -13,8 +13,8 @@ export function NavBar() {
   return (
     <nav
       style={{
-        background: "rgba(6,6,15,0.8)",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
+        background: "var(--nav-bg)0.8)",
+        borderBottom: "1px solid var(--border)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
         position: "sticky",
@@ -48,7 +48,7 @@ export function NavBar() {
               width: "32px",
               height: "32px",
               borderRadius: "10px",
-              background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+              background: "linear-gradient(135deg, var(--accent), var(--accent-2))",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -60,7 +60,7 @@ export function NavBar() {
             style={{
               fontSize: "1.125rem",
               fontWeight: 800,
-              background: "linear-gradient(135deg, #818cf8, #a78bfa, #22d3ee)",
+              background: "linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3))",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
@@ -133,7 +133,7 @@ export function NavBar() {
           style={{
             background: "none",
             border: "none",
-            color: "rgba(255,255,255,0.7)",
+            color: "var(--text-secondary)",
             cursor: "pointer",
             padding: "8px",
           }}
@@ -146,8 +146,8 @@ export function NavBar() {
       {mobileOpen && (
         <div
           style={{
-            background: "rgba(6,6,15,0.95)",
-            borderTop: "1px solid rgba(255,255,255,0.06)",
+            background: "var(--nav-bg)0.95)",
+            borderTop: "1px solid var(--border)",
             padding: "16px 24px",
             display: "flex",
             flexDirection: "column",
@@ -190,7 +190,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
     <Link
       href={href}
       style={{
-        color: "rgba(255,255,255,0.6)",
+        color: "var(--text-secondary)",
         textDecoration: "none",
         fontSize: "0.875rem",
         fontWeight: 500,
@@ -202,7 +202,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
       }}
       onMouseEnter={(e) => {
         (e.target as HTMLElement).style.color = "rgba(255,255,255,0.9)";
-        (e.target as HTMLElement).style.background = "rgba(255,255,255,0.05)";
+        (e.target as HTMLElement).style.background = "var(--surface)";
       }}
       onMouseLeave={(e) => {
         (e.target as HTMLElement).style.color = "rgba(255,255,255,0.6)";
@@ -220,12 +220,12 @@ function MobileNavLink({ href, children, onClick }: { href: string; children: Re
       href={href}
       onClick={onClick}
       style={{
-        color: "rgba(255,255,255,0.7)",
+        color: "var(--text-secondary)",
         textDecoration: "none",
         fontSize: "0.9375rem",
         fontWeight: 500,
         padding: "10px 0",
-        borderBottom: "1px solid rgba(255,255,255,0.05)",
+        borderBottom: "1px solid var(--surface)",
         display: "block",
       }}
     >

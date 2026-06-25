@@ -52,8 +52,8 @@ export default async function StudentDashboard() {
       {/* Welcome header */}
       <div
         style={{
-          background: "linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08))",
-          border: "1px solid rgba(99,102,241,0.2)",
+          background: "linear-gradient(135deg, rgba(var(--accent-rgb),0.12), rgba(var(--accent-2-rgb),0.08))",
+          border: "1px solid rgba(var(--accent-rgb),0.2)",
           borderRadius: "24px",
           padding: "40px",
           marginBottom: "32px",
@@ -71,7 +71,7 @@ export default async function StudentDashboard() {
             right: "-40px",
             width: "200px",
             height: "200px",
-            background: "radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(var(--accent-rgb),0.15) 0%, transparent 70%)",
           }}
         />
         <div
@@ -79,14 +79,14 @@ export default async function StudentDashboard() {
             display: "inline-flex",
             alignItems: "center",
             gap: "6px",
-            background: "rgba(99,102,241,0.15)",
-            border: "1px solid rgba(99,102,241,0.3)",
+            background: "rgba(var(--accent-rgb),0.15)",
+            border: "1px solid rgba(var(--accent-rgb),0.3)",
             borderRadius: "100px",
             padding: "4px 12px",
             width: "fit-content",
             fontSize: "0.75rem",
             fontWeight: 600,
-            color: "#818cf8",
+            color: "var(--accent)",
           }}
         >
           <Zap size={12} /> Student Dashboard
@@ -94,7 +94,7 @@ export default async function StudentDashboard() {
         <h1 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, lineHeight: 1.2 }}>
           Welcome back, {firstName} 👋
         </h1>
-        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9375rem" }}>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.9375rem" }}>
           Keep building. Every submission moves you closer to your next opportunity.
         </p>
 
@@ -102,7 +102,7 @@ export default async function StudentDashboard() {
         <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", marginTop: "8px" }}>
           {[
             { icon: <Trophy size={16} />, label: "Total Score", value: totalScore, color: "#facc15" },
-            { icon: <GitBranch size={16} />, label: "Submissions", value: submissions.length, color: "#818cf8" },
+            { icon: <GitBranch size={16} />, label: "Submissions", value: submissions.length, color: "var(--accent)" },
             { icon: <Flame size={16} />, label: "Rank", value: submissions.length > 0 ? "Active" : "—", color: "#fb923c" },
           ].map(({ icon, label, value, color }) => (
             <div
@@ -138,14 +138,14 @@ export default async function StudentDashboard() {
             gap: "12px",
           }}
         >
-          <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: "rgba(99,102,241,0.15)", color: "#818cf8", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: "rgba(var(--accent-rgb),0.15)", color: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <Search size={18} />
           </div>
           <div>
             <div style={{ fontWeight: 700, marginBottom: "4px" }}>Browse Challenges</div>
             <div style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.45)" }}>Find your next problem to solve</div>
           </div>
-          <ArrowRight size={16} style={{ color: "rgba(255,255,255,0.3)", marginTop: "auto" }} />
+          <ArrowRight size={16} style={{ color: "var(--text-muted)", marginTop: "auto" }} />
         </Link>
 
         <Link
@@ -160,14 +160,14 @@ export default async function StudentDashboard() {
             gap: "12px",
           }}
         >
-          <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: "rgba(139,92,246,0.15)", color: "#a78bfa", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: "rgba(var(--accent-2-rgb),0.15)", color: "var(--accent-2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <Star size={18} />
           </div>
           <div>
             <div style={{ fontWeight: 700, marginBottom: "4px" }}>My Public Profile</div>
             <div style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.45)" }}>View how companies see you</div>
           </div>
-          <ArrowRight size={16} style={{ color: "rgba(255,255,255,0.3)", marginTop: "auto" }} />
+          <ArrowRight size={16} style={{ color: "var(--text-muted)", marginTop: "auto" }} />
         </Link>
       </div>
 
@@ -216,7 +216,7 @@ export default async function StudentDashboard() {
                 <div>
                   <Link
                     href={`/problems/${sub.problemId}`}
-                    style={{ fontWeight: 600, color: "rgba(255,255,255,0.9)", textDecoration: "none", fontSize: "0.9375rem" }}
+                    style={{ fontWeight: 600, color: "var(--text-primary)", textDecoration: "none", fontSize: "0.9375rem" }}
                   >
                     View Problem →
                   </Link>
@@ -227,12 +227,12 @@ export default async function StudentDashboard() {
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                   <div
                     style={{
-                      background: "rgba(99,102,241,0.15)",
-                      border: "1px solid rgba(99,102,241,0.25)",
+                      background: "rgba(var(--accent-rgb),0.15)",
+                      border: "1px solid rgba(var(--accent-rgb),0.25)",
                       borderRadius: "10px",
                       padding: "8px 16px",
                       fontWeight: 700,
-                      color: "#818cf8",
+                      color: "var(--accent)",
                     }}
                   >
                     Score: {sub.score ?? "—"}
@@ -246,12 +246,12 @@ export default async function StudentDashboard() {
                         width: "36px",
                         height: "36px",
                         borderRadius: "10px",
-                        background: "rgba(255,255,255,0.05)",
+                        background: "var(--surface)",
                         border: "1px solid rgba(255,255,255,0.08)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: "rgba(255,255,255,0.5)",
+                        color: "var(--text-muted)",
                         transition: "all 0.2s",
                       }}
                     >

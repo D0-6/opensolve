@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 const SOURCE_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
   YC_STARTUP: { label: "YC Startup", color: "#fb923c", bg: "rgba(249,115,22,0.12)" },
   GOVERNMENT: { label: "Government", color: "#60a5fa", bg: "rgba(59,130,246,0.12)" },
-  INDUSTRY: { label: "Industry", color: "rgba(255,255,255,0.55)", bg: "rgba(255,255,255,0.06)" },
+  INDUSTRY: { label: "Industry", color: "rgba(255,255,255,0.55)", bg: "var(--border)" },
 };
 
 export default async function ProblemDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -26,7 +26,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
       {/* Back link */}
       <Link
         href="/"
-        style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "rgba(255,255,255,0.4)", textDecoration: "none", fontSize: "0.875rem", marginBottom: "24px", transition: "color 0.2s" }}
+        style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", textDecoration: "none", fontSize: "0.875rem", marginBottom: "24px", transition: "color 0.2s" }}
       >
         <ArrowLeft size={14} /> Back to Problems
       </Link>
@@ -36,7 +36,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
         className="glass"
         style={{ borderRadius: "24px", padding: "36px", marginBottom: "32px", position: "relative", overflow: "hidden" }}
       >
-        <div style={{ position: "absolute", top: "-60px", right: "-60px", width: "250px", height: "250px", background: "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)" }} />
+        <div style={{ position: "absolute", top: "-60px", right: "-60px", width: "250px", height: "250px", background: "radial-gradient(circle, rgba(var(--accent-rgb),0.08) 0%, transparent 70%)" }} />
 
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-start", gap: "20px", marginBottom: "24px" }}>
           <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
@@ -59,7 +59,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
               {cfg.label}
               {problem.verified && <BadgeCheck size={11} />}
             </span>
-            <span style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.35)", background: "rgba(255,255,255,0.05)", padding: "4px 10px", borderRadius: "8px" }}>
+            <span style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.35)", background: "var(--surface)", padding: "4px 10px", borderRadius: "8px" }}>
               {problem.domain}
             </span>
           </div>
@@ -77,12 +77,12 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
           {problem.title}
         </h1>
 
-        <p style={{ fontSize: "1rem", color: "rgba(255,255,255,0.6)", lineHeight: 1.8, marginBottom: "28px" }}>
+        <p style={{ fontSize: "1rem", color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: "28px" }}>
           {problem.description}
         </p>
 
         {/* Meta row */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", paddingTop: "20px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", paddingTop: "20px", borderTop: "1px solid var(--border)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <Trophy size={16} style={{ color: "#facc15" }} />
             <span style={{ fontWeight: 700, fontSize: "0.9375rem" }}>
@@ -102,7 +102,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
               href={problem.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.875rem", color: "#818cf8", textDecoration: "none" }}
+              style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.875rem", color: "var(--accent)", textDecoration: "none" }}
             >
               <ExternalLink size={14} /> View Original Source
             </a>

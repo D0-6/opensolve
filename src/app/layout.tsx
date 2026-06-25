@@ -39,7 +39,7 @@ export default function RootLayout({
 
             <footer
               style={{
-                borderTop: "1px solid rgba(255,255,255,0.06)",
+                borderTop: "1px solid var(--border)",
                 padding: "40px 24px",
                 textAlign: "center",
               }}
@@ -58,7 +58,7 @@ export default function RootLayout({
                   style={{
                     fontSize: "1rem",
                     fontWeight: 800,
-                    background: "linear-gradient(135deg, #818cf8, #a78bfa)",
+                    background: "linear-gradient(135deg, var(--accent), var(--accent-2))",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
@@ -66,7 +66,7 @@ export default function RootLayout({
                 >
                   OpenSolve
                 </div>
-                <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.8125rem" }}>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.8125rem" }}>
                   Connecting student talent with real-world challenges from YC, government, and industry.
                 </p>
                 <div style={{ display: "flex", gap: "24px" }}>
@@ -89,7 +89,7 @@ export default function RootLayout({
                     </Link>
                   ))}
                 </div>
-                <p style={{ color: "rgba(255,255,255,0.2)", fontSize: "0.75rem" }}>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>
                   © {new Date().getFullYear()} OpenSolve. Built for the AWS + Vercel H0 Hackathon.
                 </p>
               </div>
