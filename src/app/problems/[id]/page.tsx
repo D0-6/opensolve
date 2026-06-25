@@ -8,9 +8,9 @@ import ClientQA from "./ClientQA";
 export const dynamic = "force-dynamic";
 
 const SOURCE_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  YC_STARTUP: { label: "YC Startup", color: "text-orange-400", bg: "bg-orange-400/10 border-orange-400/20" },
-  GOVERNMENT: { label: "Government", color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20" },
-  INDUSTRY: { label: "Industry", color: "text-white/70", bg: "bg-white/5 border-white/10" },
+  YC_STARTUP: { label: "YC Startup", color: "text-zinc-300", bg: "bg-white/5 border-white/20" },
+  GOVERNMENT: { label: "Government", color: "text-zinc-300", bg: "bg-white/5 border-white/20" },
+  INDUSTRY: { label: "Industry", color: "text-zinc-300", bg: "bg-white/5 border-white/20" },
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
@@ -60,15 +60,13 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
       {/* Back link */}
       <Link
         href="/"
-        className="inline-flex items-center gap-2 text-[#8990a8] hover:text-[#dce1fb] text-sm mb-6 transition-colors font-semibold"
+        className="inline-flex items-center gap-2 text-zinc-400 hover:text-white text-sm mb-6 transition-colors font-semibold"
       >
         <ArrowLeft size={16} /> Back to Problems
       </Link>
 
       {/* Problem header card */}
-      <div className="bg-[#0c1324] border border-[#00cbe6]/30 shadow-[0_0_40px_rgba(0,203,230,0.05)] rounded-3xl p-6 md:p-10 mb-8 relative overflow-hidden">
-        <div className="absolute -top-24 -right-24 w-64 h-64 bg-radial-gradient from-[#00cbe6]/10 to-transparent blur-3xl rounded-full" />
-
+      <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-6 md:p-10 mb-8 relative overflow-hidden">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
           <div className="flex flex-wrap items-center gap-3">
             <span
@@ -77,38 +75,38 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
               {cfg.label}
               {problem.verified && <BadgeCheck size={14} />}
             </span>
-            <span className="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-white/50 border border-white/10">
+            <span className="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-zinc-400 border border-white/10">
               {problem.domain}
             </span>
           </div>
 
           <Link
             href={`/problems/${problem.problemId}/submit`}
-            className="w-full md:w-auto text-center bg-[#00cbe6] text-[#020617] font-bold px-8 py-3 rounded-xl hover:bg-[#5de6ff] transition-all shadow-[0_0_20px_rgba(0,203,230,0.3)] hover:shadow-[0_0_30px_rgba(0,203,230,0.5)]"
+            className="btn-primary w-full md:w-auto text-center px-8 py-3 rounded-xl font-bold"
           >
             Submit Solution →
           </Link>
         </div>
 
-        <h1 className="text-3xl md:text-5xl font-display-lg font-bold text-[#dce1fb] leading-tight mb-6">
+        <h1 className="text-3xl md:text-5xl font-display-lg font-bold text-white leading-tight mb-6">
           {problem.title}
         </h1>
 
-        <p className="text-base md:text-lg text-[#8990a8] leading-relaxed mb-8 whitespace-pre-wrap">
+        <p className="text-base md:text-lg text-zinc-400 leading-relaxed mb-8 whitespace-pre-wrap">
           {problem.description}
         </p>
 
         {/* Meta row */}
         <div className="flex flex-wrap items-center gap-6 pt-6 border-t border-white/10">
-          <div className="flex items-center gap-2 text-[#dce1fb] font-bold">
-            <Trophy size={18} className="text-[#facc15]" />
+          <div className="flex items-center gap-2 text-white font-bold">
+            <Trophy size={18} className="text-zinc-400" />
             <span>
               {problem.prizeType === "CASH"
                 ? `$${Number(problem.prizeAmount).toLocaleString()} Prize`
                 : problem.prizeType?.replace("_", " ")}
             </span>
           </div>
-          <div className="flex items-center gap-2 text-[#8990a8] font-medium text-sm">
+          <div className="flex items-center gap-2 text-zinc-400 font-medium text-sm">
             <CalendarDays size={18} />
             <span>
               Deadline: {new Date(problem.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
@@ -119,7 +117,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
               href={problem.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-sm font-bold text-[#00cbe6] hover:text-[#5de6ff] transition-colors ml-auto md:ml-0"
+              className="flex items-center gap-1.5 text-sm font-bold text-white hover:text-zinc-300 transition-colors ml-auto md:ml-0"
             >
               <ExternalLink size={16} /> View Original Source
             </a>
@@ -130,11 +128,11 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
       {/* Leaderboard + QA */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <h2 className="text-2xl font-bold text-[#dce1fb] mb-6 flex items-center gap-2">Leaderboard</h2>
+          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">Leaderboard</h2>
           <ClientLeaderboard problemId={problem.problemId} />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-[#dce1fb] mb-6 flex items-center gap-2">Q&amp;A Thread</h2>
+          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">Q&amp;A Thread</h2>
           <ClientQA problemId={problem.problemId} />
         </div>
       </div>

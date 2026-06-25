@@ -50,10 +50,9 @@ export default async function StudentDashboard() {
   return (
     <div className="max-w-[1600px] mx-auto px-6 md:px-8 pt-10 pb-24 w-full">
       {/* Welcome header */}
-      <div className="bg-gradient-to-br from-[#00cbe6]/10 to-[#a078ff]/10 border border-[#00cbe6]/20 rounded-3xl p-8 md:p-12 mb-10 flex flex-col gap-4 relative overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-48 h-48 bg-radial-gradient from-[#00cbe6]/20 to-transparent blur-2xl rounded-full" />
+      <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 md:p-12 mb-10 flex flex-col gap-4 relative overflow-hidden">
         
-        <div className="inline-flex items-center gap-2 bg-[#00cbe6]/15 border border-[#00cbe6]/30 rounded-full px-4 py-1.5 w-fit text-xs font-bold text-[#00cbe6]">
+        <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 w-fit text-xs font-bold text-white">
           <Zap size={14} /> Student Dashboard
         </div>
         
@@ -68,9 +67,9 @@ export default async function StudentDashboard() {
         {/* Stats row */}
         <div className="flex flex-wrap gap-4 mt-4">
           {[
-            { icon: <Trophy size={18} />, label: "Total Score", value: totalScore, color: "text-[#facc15]" },
-            { icon: <GitBranch size={18} />, label: "Submissions", value: submissions.length, color: "text-[#00cbe6]" },
-            { icon: <Flame size={18} />, label: "Rank", value: submissions.length > 0 ? "Active" : "—", color: "text-[#fb923c]" },
+            { icon: <Trophy size={18} />, label: "Total Score", value: totalScore, color: "text-white" },
+            { icon: <GitBranch size={18} />, label: "Submissions", value: submissions.length, color: "text-white" },
+            { icon: <Flame size={18} />, label: "Rank", value: submissions.length > 0 ? "Active" : "—", color: "text-white" },
           ].map(({ icon, label, value, color }) => (
             <div key={label} className="bg-white/5 border border-white/10 rounded-2xl p-5 min-w-[140px] flex-1 md:flex-none">
               <div className={`flex items-center gap-2 mb-2 text-sm font-bold ${color}`}>
@@ -88,28 +87,28 @@ export default async function StudentDashboard() {
           href="/"
           className="glass glass-card-hover rounded-2xl p-6 flex flex-col gap-4 group"
         >
-          <div className="w-12 h-12 rounded-xl bg-[#00cbe6]/15 text-[#00cbe6] flex items-center justify-center group-hover:scale-110 transition-transform">
+          <div className="w-12 h-12 rounded-xl bg-white/10 text-white flex items-center justify-center group-hover:scale-110 transition-transform">
             <Search size={20} />
           </div>
           <div>
-            <div className="font-bold text-[#dce1fb] text-lg mb-1">Browse Challenges</div>
-            <div className="text-sm text-[#8990a8]">Find your next problem to solve</div>
+            <div className="font-bold text-white text-lg mb-1">Browse Challenges</div>
+            <div className="text-sm text-zinc-400">Find your next problem to solve</div>
           </div>
-          <ArrowRight size={20} className="text-[#8990a8] mt-auto group-hover:text-[#00cbe6] transition-colors" />
+          <ArrowRight size={20} className="text-zinc-500 mt-auto group-hover:text-white transition-colors" />
         </Link>
 
         <Link
           href={`/profile/${userId}`}
           className="glass glass-card-hover rounded-2xl p-6 flex flex-col gap-4 group"
         >
-          <div className="w-12 h-12 rounded-xl bg-[#a078ff]/15 text-[#a078ff] flex items-center justify-center group-hover:scale-110 transition-transform">
+          <div className="w-12 h-12 rounded-xl bg-white/10 text-white flex items-center justify-center group-hover:scale-110 transition-transform">
             <Star size={20} />
           </div>
           <div>
-            <div className="font-bold text-[#dce1fb] text-lg mb-1">My Public Profile</div>
-            <div className="text-sm text-[#8990a8]">View how companies see you</div>
+            <div className="font-bold text-white text-lg mb-1">My Public Profile</div>
+            <div className="text-sm text-zinc-400">View how companies see you</div>
           </div>
-          <ArrowRight size={20} className="text-[#8990a8] mt-auto group-hover:text-[#a078ff] transition-colors" />
+          <ArrowRight size={20} className="text-zinc-500 mt-auto group-hover:text-white transition-colors" />
         </Link>
       </div>
 
@@ -146,7 +145,7 @@ export default async function StudentDashboard() {
                   </p>
                 </div>
                 <div className="flex items-center gap-4 w-full md:w-auto">
-                  <div className="bg-[#00cbe6]/15 border border-[#00cbe6]/30 rounded-xl px-5 py-2.5 font-bold text-[#00cbe6]">
+                  <div className="bg-white/5 border border-white/20 rounded-xl px-5 py-2.5 font-bold text-white">
                     Score: {sub.score ?? "—"}
                   </div>
                   {sub.githubUrl && (

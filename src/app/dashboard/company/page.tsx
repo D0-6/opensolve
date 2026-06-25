@@ -39,194 +39,122 @@ export default async function CompanyDashboard() {
   }
 
   return (
-    <div style={{ paddingTop: "40px" }}>
+    <div className="max-w-[1600px] mx-auto px-6 md:px-8 pt-10 pb-24 w-full">
       {/* Header */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, rgba(var(--accent-2-rgb),0.12), rgba(var(--accent-rgb),0.08))",
-          border: "1px solid rgba(var(--accent-2-rgb),0.2)",
-          borderRadius: "24px",
-          padding: "40px",
-          marginBottom: "32px",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "24px",
-          alignItems: "center",
-          justifyContent: "space-between",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: "-40px",
-            right: "-40px",
-            width: "200px",
-            height: "200px",
-            background: "radial-gradient(circle, rgba(var(--accent-2-rgb),0.15) 0%, transparent 70%)",
-          }}
-        />
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              background: "rgba(var(--accent-2-rgb),0.15)",
-              border: "1px solid rgba(var(--accent-2-rgb),0.3)",
-              borderRadius: "100px",
-              padding: "4px 12px",
-              width: "fit-content",
-              fontSize: "0.75rem",
-              fontWeight: 600,
-              color: "var(--accent-2)",
-              marginBottom: "16px",
-            }}
-          >
-            <Building2 size={12} /> Company Dashboard
+      <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 md:p-12 mb-10 flex flex-wrap gap-6 items-center justify-between relative overflow-hidden">
+        <div className="relative z-10">
+          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 w-fit text-xs font-bold text-white mb-4">
+            <Building2 size={14} /> Company Dashboard
           </div>
-          <h1 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, marginBottom: "8px" }}>
+          <h1 className="text-3xl md:text-5xl font-display-lg font-bold text-white mb-2">
             {orgName}
           </h1>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.9375rem" }}>
+          <p className="text-zinc-400 text-base md:text-lg">
             Manage your challenges and discover top talent.
           </p>
         </div>
 
         <Link
           href="/organizations/new"
-          className="btn-primary"
-          style={{ padding: "14px 28px", borderRadius: "14px", position: "relative", zIndex: 1 }}
+          className="btn-primary px-8 py-4 rounded-xl font-bold flex items-center gap-2"
         >
-          <PlusCircle size={18} />
+          <PlusCircle size={20} />
           Post a Challenge
         </Link>
       </div>
 
       {/* Metric cards */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-          gap: "16px",
-          marginBottom: "40px",
-        }}
-      >
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         {[
-          { icon: <Zap size={20} />, label: "Active Challenges", value: myProblems.length, color: "var(--accent)" },
-          { icon: <Users size={20} />, label: "Total Submissions", value: totalSubmissions, color: "var(--accent-2)" },
-          { icon: <Trophy size={20} />, label: "Top Solvers", value: totalSubmissions > 0 ? "View →" : "—", color: "#facc15" },
-          { icon: <BarChart3 size={20} />, label: "Avg. Submissions", value: myProblems.length > 0 ? Math.round(totalSubmissions / myProblems.length) : 0, color: "var(--accent-3)" },
-        ].map(({ icon, label, value, color }) => (
+          { icon: <Zap size={20} />, label: "Active Challenges", value: myProblems.length },
+          { icon: <Users size={20} />, label: "Total Submissions", value: totalSubmissions },
+          { icon: <Trophy size={20} />, label: "Top Solvers", value: totalSubmissions > 0 ? "View →" : "—" },
+          { icon: <BarChart3 size={20} />, label: "Avg. Submissions", value: myProblems.length > 0 ? Math.round(totalSubmissions / myProblems.length) : 0 },
+        ].map(({ icon, label, value }) => (
           <div
             key={label}
-            className="glass"
-            style={{ borderRadius: "16px", padding: "20px" }}
+            className="bg-white/5 border border-white/10 rounded-2xl p-6"
           >
-            <div style={{ color, marginBottom: "8px" }}>{icon}</div>
-            <div style={{ fontSize: "1.75rem", fontWeight: 800, marginBottom: "4px" }}>{value}</div>
-            <div style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>{label}</div>
+            <div className="text-zinc-400 mb-2">{icon}</div>
+            <div className="text-3xl font-bold text-white mb-1">{value}</div>
+            <div className="text-sm text-zinc-400">{label}</div>
           </div>
         ))}
       </div>
 
       {/* Posted Challenges */}
       <div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
-          <h2 style={{ fontSize: "1.25rem", fontWeight: 700 }}>Your Challenges</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-white">Your Challenges</h2>
           <Link
             href="/organizations/new"
-            style={{ fontSize: "0.875rem", color: "var(--accent)", textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}
+            className="text-sm text-white hover:text-zinc-300 transition-colors flex items-center gap-1 font-semibold"
           >
-            Post New <ArrowRight size={14} />
+            Post New <ArrowRight size={16} />
           </Link>
         </div>
 
         {myProblems.length === 0 ? (
-          <div
-            className="glass"
-            style={{ borderRadius: "16px", padding: "60px", textAlign: "center" }}
-          >
-            <Building2 size={40} style={{ margin: "0 auto 16px", opacity: 0.3, color: "var(--text-muted)" }} />
-            <p style={{ fontWeight: 700, marginBottom: "8px", fontSize: "1.125rem" }}>No challenges posted yet</p>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.875rem", marginBottom: "24px" }}>
+          <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-16 text-center">
+            <Building2 size={48} className="mx-auto mb-4 text-zinc-600" />
+            <p className="font-bold text-white text-xl mb-2">No challenges posted yet</p>
+            <p className="text-zinc-400 text-sm mb-6">
               Post your first challenge and start finding top builders
             </p>
             <Link
               href="/organizations/new"
-              className="btn-primary"
-              style={{ padding: "12px 28px", borderRadius: "12px", display: "inline-flex" }}
+              className="btn-primary px-6 py-3 rounded-xl font-bold flex items-center gap-2 w-max mx-auto"
             >
-              <PlusCircle size={16} /> Post First Challenge
+              <PlusCircle size={18} /> Post First Challenge
             </Link>
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div className="flex flex-col gap-4">
             {myProblems.map((problem: any) => {
               const subs = submissionsByProblem[problem.problemId] || [];
               const topSub = subs.sort((a: any, b: any) => b.score - a.score)[0];
               return (
                 <div
                   key={problem.problemId}
-                  className="glass"
-                  style={{
-                    borderRadius: "20px",
-                    padding: "24px",
-                    borderLeft: "3px solid var(--accent)",
-                  }}
+                  className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-colors border-l-4 border-l-white"
                 >
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "flex-start", justifyContent: "space-between" }}>
-                    <div style={{ flex: 1, minWidth: "200px" }}>
-                      <h3 style={{ fontSize: "1.0625rem", fontWeight: 700, marginBottom: "6px" }}>{problem.title}</h3>
-                      <p style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>
+                  <div className="flex flex-wrap gap-4 items-start justify-between">
+                    <div className="flex-1 min-w-[200px]">
+                      <h3 className="text-xl font-bold text-white mb-1">{problem.title}</h3>
+                      <p className="text-sm text-zinc-400">
                         Deadline: {new Date(problem.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                       </p>
                     </div>
 
-                    <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
-                      <div style={{ background: "rgba(var(--accent-rgb),0.12)", border: "1px solid rgba(var(--accent-rgb),0.2)", borderRadius: "10px", padding: "6px 14px", fontSize: "0.8125rem", color: "var(--accent)", fontWeight: 600 }}>
+                    <div className="flex gap-3 items-center flex-wrap">
+                      <div className="bg-white/5 border border-white/10 rounded-lg px-4 py-1.5 text-sm text-white font-bold">
                         {subs.length} Submission{subs.length !== 1 ? "s" : ""}
                       </div>
                       <Link
                         href={`/problems/${problem.problemId}`}
-                        style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "0.8125rem", color: "var(--text-muted)", textDecoration: "none" }}
+                        className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
                       >
-                        <ExternalLink size={14} /> View Public
+                        <ExternalLink size={16} /> View Public
                       </Link>
                     </div>
                   </div>
 
                   {/* Top submission preview */}
                   {topSub && (
-                    <div
-                      style={{
-                        marginTop: "16px",
-                        padding: "14px 16px",
-                        background: "rgba(255,255,255,0.03)",
-                        border: "1px solid var(--border)",
-                        borderRadius: "12px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: "12px",
-                        flexWrap: "wrap",
-                      }}
-                    >
+                    <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-xl flex items-center justify-between gap-4 flex-wrap">
                       <div>
-                        <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.35)", marginBottom: "2px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                        <div className="text-xs text-zinc-500 mb-1 uppercase tracking-wider font-bold">
                           🥇 Top Submission
                         </div>
-                        <div style={{ fontWeight: 600, fontSize: "0.9375rem" }}>{topSub.studentName || "Anonymous"}</div>
+                        <div className="font-bold text-white text-base">{topSub.studentName || "Anonymous"}</div>
                       </div>
-                      <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                        <span style={{ background: "rgba(250,204,21,0.1)", border: "1px solid rgba(250,204,21,0.2)", borderRadius: "8px", padding: "4px 10px", fontSize: "0.8125rem", color: "#facc15", fontWeight: 700 }}>
+                      <div className="flex gap-4 items-center">
+                        <span className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-sm text-white font-bold">
                           Score: {topSub.score}
                         </span>
                         <a
                           href={`mailto:${topSub.userId}@placeholder.com?subject=Your solution to: ${problem.title}`}
-                          className="btn-primary"
-                          style={{ padding: "8px 16px", borderRadius: "10px", fontSize: "0.8125rem" }}
+                          className="btn-primary px-4 py-2 rounded-lg text-sm font-bold"
                         >
                           Contact
                         </a>

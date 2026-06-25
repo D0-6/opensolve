@@ -1,8 +1,6 @@
 import { getProblems } from "@/lib/data";
 import Link from "next/link";
 import { formatDistanceToNow, differenceInHours } from "date-fns";
-import { HeroShader } from "@/components/HeroShader";
-import { Hero3D } from "@/components/Hero3D";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +29,7 @@ function ProblemCard({ problem, isFeatured }: { problem: any; isFeatured: boolea
         isFeatured ? "lg:col-span-2" : ""
       }`}
     >
-      {isFeatured && <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent z-0"></div>}
+      {isFeatured && <div className="absolute inset-0 bg-white/5 z-0"></div>}
       
       <div className="relative z-10 flex justify-between items-start">
         <div className="flex flex-wrap items-center gap-2">
@@ -101,39 +99,32 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
     <>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center pt-24 pb-32 overflow-hidden -mt-20">
-        <HeroShader />
         
         <div className="px-6 max-w-[1600px] mx-auto w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Hero Content */}
-          <div className="lg:col-span-7 flex flex-col gap-6 fade-in-up">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel border border-primary/30 text-primary w-max">
+          <div className="lg:col-span-9 flex flex-col gap-6 fade-in-up">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border border-white/20 text-white w-max font-semibold">
               <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-              <span className="font-label-mono uppercase">Real Challenges · Real Rewards · Real Careers</span>
+              <span className="font-label-mono uppercase tracking-wider text-xs">Real Challenges · Real Rewards · Real Careers</span>
             </div>
             
-            <h1 className="font-display-xl text-5xl md:text-7xl text-on-surface">
+            <h1 className="font-display-xl text-5xl md:text-8xl text-white font-bold leading-tight">
               Where Builders Meet <br />
-              <span className="text-gradient-primary">Real Opportunities</span>
+              <span className="text-white">Real Opportunities.</span>
             </h1>
             
-            <p className="font-body-lg text-lg text-on-surface-variant max-w-2xl">
+            <p className="font-body-lg text-lg md:text-xl text-zinc-400 max-w-2xl mt-4">
               Solve funded challenges from YC startups, government innovation programs, and top companies. Build your portfolio. Get hired. Win prizes.
             </p>
             
-            <div className="flex flex-wrap gap-4 mt-4">
-              <a href="#challenges" className="btn-primary px-8 py-4 rounded-lg font-body-lg font-medium flex items-center gap-2">
+            <div className="flex flex-wrap gap-4 mt-8">
+              <a href="#challenges" className="btn-primary px-8 py-4 rounded-xl font-bold text-lg">
                 Browse Problems
-                <span className="material-symbols-outlined">arrow_forward</span>
               </a>
-              <Link href="/organizations/new" className="btn-secondary px-8 py-4 rounded-lg font-body-lg font-medium flex items-center gap-2">
+              <Link href="/organizations/new" className="btn-secondary px-8 py-4 rounded-xl font-bold text-lg">
                 Post a Challenge
               </Link>
             </div>
-          </div>
-          
-          {/* Hero 3D Element */}
-          <div className="lg:col-span-5 h-[500px] relative hidden lg:block fade-in-up delay-200">
-            <Hero3D />
           </div>
         </div>
       </section>
@@ -224,7 +215,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
         <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* For Builders */}
           <div className="fade-in-up delay-100 relative">
-            <div className="absolute left-[24px] top-12 bottom-0 w-[2px] bg-gradient-to-b from-secondary/50 to-transparent hidden md:block z-0"></div>
+            <div className="absolute left-[24px] top-12 bottom-0 w-[1px] bg-white/20 hidden md:block z-0"></div>
             <h3 className="font-headline-md text-2xl text-secondary mb-8 flex items-center gap-3">
               <span className="material-symbols-outlined bg-surface-variant p-2 rounded-lg">code</span>
               For Students & Builders
@@ -250,7 +241,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
 
           {/* For Orgs */}
           <div className="fade-in-up delay-200 relative">
-            <div className="absolute left-[24px] top-12 bottom-0 w-[2px] bg-gradient-to-b from-primary/50 to-transparent hidden md:block z-0"></div>
+            <div className="absolute left-[24px] top-12 bottom-0 w-[1px] bg-white/20 hidden md:block z-0"></div>
             <h3 className="font-headline-md text-2xl text-primary mb-8 flex items-center gap-3">
               <span className="material-symbols-outlined bg-surface-variant p-2 rounded-lg">domain</span>
               For Companies & Orgs

@@ -4,80 +4,63 @@
 
 @layer base {
   body {
-    background-color: #020617; /* Solid Obsidian Base */
-    color: #dce1fb;
+    background-color: #000000; /* Pure Black Base */
+    color: #ffffff; /* Pure White Text */
     overflow-x: hidden;
   }
   
   input, textarea, select {
-    background-color: #0c1324;
-    color: #dce1fb;
-    border-color: rgba(255, 255, 255, 0.1);
+    background-color: #0a0a0a;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
   }
 }
 
 @layer components {
   .glass-panel {
-    background: rgba(12, 19, 36, 0.6); /* surface with opacity */
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    background: #0a0a0a;
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .glass-card-hover {
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
   .glass-card-hover:hover {
-    border-color: rgba(208, 188, 255, 0.5); /* primary tint */
-    transform: translateY(-4px);
-    box-shadow: 0 10px 40px -10px rgba(160, 120, 255, 0.15); /* primary-container glow */
+    border-color: rgba(255, 255, 255, 0.4);
   }
 
+  /* Replacing all primary text gradients with stark white */
   .text-gradient-primary {
-    background: linear-gradient(135deg, #d0bcff 0%, #5de6ff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
+    color: #ffffff;
   }
 
+  /* Solid white button for primary action */
   .btn-primary {
-    background: linear-gradient(135deg, #a078ff 0%, #00cbe6 100%);
-    color: #ffffff;
-    transition: all 0.5s ease;
-    position: relative;
-    overflow: hidden;
+    background: #ffffff;
+    color: #000000;
+    transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    border: 1px solid transparent;
   }
   .btn-primary:hover {
-    box-shadow: 0 0 20px rgba(93, 230, 255, 0.4);
+    background: #e5e5e5;
   }
 
+  /* Subtle dark gray for secondary */
   .btn-secondary {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: #ffffff;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
   .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-
-  /* Atmospheric Light */
-  .atmospheric-glow {
-    position: absolute;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(160, 120, 255, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: -1;
+    border-color: rgba(255, 255, 255, 0.4);
   }
 }
 

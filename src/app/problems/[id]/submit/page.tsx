@@ -78,18 +78,18 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
     <div className="max-w-2xl mx-auto pt-16 px-6 lg:px-8 pb-24">
       {/* Header */}
       <div className="mb-10 text-center md:text-left">
-        <div className="inline-flex items-center gap-2 bg-[#00cbe6]/10 border border-[#00cbe6]/20 rounded-full px-4 py-1.5 text-xs font-bold text-[#00cbe6] mb-6">
+        <div className="inline-flex items-center gap-2 bg-white/5 border border-white/20 rounded-full px-4 py-1.5 text-xs font-bold text-white mb-6">
           Submitting as: {user?.fullName || user?.primaryEmailAddress?.emailAddress || "You"}
         </div>
-        <h1 className="text-3xl md:text-5xl font-display-lg font-bold text-[#dce1fb] leading-tight mb-3">
+        <h1 className="text-3xl md:text-5xl font-display-lg font-bold text-white leading-tight mb-3">
           Submit Your Solution
         </h1>
-        <p className="text-base text-[#8990a8] font-medium">
+        <p className="text-base text-zinc-400 font-medium">
           Your submission is public and verifiable — make it count.
         </p>
       </div>
 
-      <div className="bg-[#0c1324] border border-[#00cbe6]/30 shadow-[0_0_40px_rgba(0,203,230,0.05)] rounded-3xl p-6 md:p-10">
+      <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-6 md:p-10">
         {error && (
           <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl mb-8 text-sm font-medium">
             <AlertCircle size={18} className="mt-0.5 shrink-0" />
@@ -102,17 +102,17 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
           {/* Team / Solo Toggle */}
           {team && (
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-              <label className="block text-sm font-bold text-[#8990a8] mb-4">
+              <label className="block text-sm font-bold text-zinc-400 mb-4">
                 Submission Identity
               </label>
               <div className="flex flex-col md:flex-row gap-4">
                 <button
                   type="button"
                   onClick={() => setSubmitAsTeam(false)}
-                  className={`flex-1 p-4 rounded-xl font-bold transition-all ${
+                  className={`flex-1 p-4 rounded-xl font-bold transition-all border ${
                     !submitAsTeam 
-                      ? "bg-[#00cbe6]/10 border border-[#00cbe6] text-[#00cbe6]" 
-                      : "bg-transparent border border-white/10 text-[#8990a8] hover:border-white/20"
+                      ? "bg-white text-black border-white" 
+                      : "bg-transparent border-white/10 text-zinc-400 hover:border-white/30"
                   }`}
                 >
                   Submit Solo
@@ -120,10 +120,10 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
                 <button
                   type="button"
                   onClick={() => setSubmitAsTeam(true)}
-                  className={`flex-1 p-4 rounded-xl font-bold transition-all ${
+                  className={`flex-1 p-4 rounded-xl font-bold transition-all border ${
                     submitAsTeam 
-                      ? "bg-[#a078ff]/10 border border-[#a078ff] text-[#a078ff]" 
-                      : "bg-transparent border border-white/10 text-[#8990a8] hover:border-white/20"
+                      ? "bg-white text-black border-white" 
+                      : "bg-transparent border-white/10 text-zinc-400 hover:border-white/30"
                   }`}
                 >
                   Submit as {team.name}
@@ -134,8 +134,8 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
 
           {/* GitHub URL */}
           <div>
-            <label className="block text-sm font-bold text-[#8990a8] mb-3">
-              <GitBranch size={16} className="inline mr-2 align-middle text-[#00cbe6]" />
+            <label className="block text-sm font-bold text-zinc-300 mb-3">
+              <GitBranch size={16} className="inline mr-2 align-middle text-zinc-400" />
               GitHub Repository URL *
             </label>
             <input
@@ -145,15 +145,15 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               value={formData.githubUrl}
               onChange={handleChange}
               placeholder="https://github.com/yourusername/your-solution"
-              className="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-4 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all font-mono text-sm"
+              className="w-full bg-[#0a0a0a] border border-white/20 rounded-xl px-4 py-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all font-mono text-sm"
             />
           </div>
 
           {/* Demo URL */}
           <div>
-            <label className="block text-sm font-bold text-[#8990a8] mb-3">
-              <Globe size={16} className="inline mr-2 align-middle text-[#00cbe6]" />
-              Live Demo URL <span className="font-normal text-[#8990a8]/60">(optional)</span>
+            <label className="block text-sm font-bold text-zinc-300 mb-3">
+              <Globe size={16} className="inline mr-2 align-middle text-zinc-400" />
+              Live Demo URL <span className="font-normal text-zinc-600">(optional)</span>
             </label>
             <input
               type="url"
@@ -161,13 +161,13 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               value={formData.demoUrl}
               onChange={handleChange}
               placeholder="https://your-demo.vercel.app"
-              className="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-4 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all font-mono text-sm"
+              className="w-full bg-[#0a0a0a] border border-white/20 rounded-xl px-4 py-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all font-mono text-sm"
             />
           </div>
 
           {/* Writeup */}
           <div>
-            <label className="block text-sm font-bold text-[#8990a8] mb-3">
+            <label className="block text-sm font-bold text-zinc-300 mb-3">
               Solution Writeup *
             </label>
             <textarea
@@ -178,9 +178,9 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               maxLength={500}
               rows={6}
               placeholder="Explain your approach, tech stack, key decisions, and why your solution stands out..."
-              className="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-4 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all text-sm resize-y"
+              className="w-full bg-[#0a0a0a] border border-white/20 rounded-xl px-4 py-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all text-sm resize-y"
             />
-            <div className="text-right text-xs text-[#8990a8] mt-2 font-bold">
+            <div className="text-right text-xs text-zinc-500 mt-2 font-bold">
               {formData.writeup.length} / 500
             </div>
           </div>
@@ -188,7 +188,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#00cbe6] text-[#020617] font-bold py-4 rounded-xl hover:bg-[#5de6ff] transition-all flex items-center justify-center gap-2 mt-4 shadow-[0_0_20px_rgba(0,203,230,0.3)] hover:shadow-[0_0_30px_rgba(0,203,230,0.5)] disabled:opacity-70"
+            className="w-full btn-primary font-bold py-4 rounded-xl flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:hover:bg-white"
           >
             {loading ? (
               <Loader2 size={20} className="animate-spin" />

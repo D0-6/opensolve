@@ -11,17 +11,17 @@ export function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-[#0c1324]/60 backdrop-blur-xl border-b border-white/10 shadow-sm">
+    <header className="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-white/10 shadow-sm">
       <div className="flex justify-between items-center px-6 max-w-[1600px] mx-auto h-20">
         {/* Brand Logo */}
-        <Link href="/" className="font-display-lg text-3xl font-bold text-primary flex items-center gap-2">
+        <Link href="/" className="font-display-lg text-3xl font-bold text-white flex items-center gap-2">
           <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>hexagon</span>
           OpenSolve
         </Link>
         
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
-          <Link href="/" className="text-primary border-b-2 border-primary pb-1 font-body-md hover:text-secondary transition-colors duration-300">Challenges</Link>
+          <Link href="/" className="text-white border-b-2 border-white pb-1 font-body-md hover:text-zinc-300 transition-colors duration-300">Challenges</Link>
           <Link href="/about" className="text-on-surface-variant font-body-md hover:text-secondary transition-colors duration-300">Builders</Link>
           <Link href="#" className="text-on-surface-variant font-body-md hover:text-secondary transition-colors duration-300">Solutions</Link>
           <Link href="#" className="text-on-surface-variant font-body-md hover:text-secondary transition-colors duration-300">Leaderboard</Link>
@@ -63,7 +63,7 @@ export function NavBar() {
 
       {/* Mobile Dropdown */}
       {mobileOpen && (
-        <div className="md:hidden bg-[#0c1324]/95 border-t border-white/10 px-6 py-4 flex flex-col gap-4">
+        <div className="md:hidden bg-black/95 border-t border-white/10 px-6 py-4 flex flex-col gap-4">
           <Link href="/" className="text-on-surface-variant font-body-md hover:text-secondary transition-colors py-2 border-b border-white/5" onClick={() => setMobileOpen(false)}>Challenges</Link>
           <Link href="/about" className="text-on-surface-variant font-body-md hover:text-secondary transition-colors py-2 border-b border-white/5" onClick={() => setMobileOpen(false)}>Builders</Link>
           

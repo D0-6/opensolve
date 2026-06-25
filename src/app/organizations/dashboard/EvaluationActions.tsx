@@ -51,7 +51,7 @@ export default function EvaluationActions({
       <button 
         onClick={() => handleAction(primaryAction)}
         disabled={loading}
-        className="bg-[#a078ff] text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-[#b08cff] transition-colors flex items-center justify-center gap-2"
+        className="btn-primary px-6 py-2 rounded-lg font-bold text-sm flex items-center justify-center gap-2"
       >
         {loading ? <Loader2 size={16} className="animate-spin"/> : <><CheckCircle2 size={16}/> {primaryText}</>}
       </button>
@@ -59,7 +59,7 @@ export default function EvaluationActions({
       <button 
         onClick={() => handleAction("INTERVIEW")}
         disabled={loading}
-        className="bg-transparent border border-white/20 text-[#dce1fb] px-6 py-2 rounded-lg font-bold text-sm hover:bg-white/5 transition-colors flex items-center justify-center gap-2"
+        className="btn-secondary px-6 py-2 rounded-lg font-bold text-sm flex items-center justify-center gap-2"
       >
         {loading ? <Loader2 size={16} className="animate-spin"/> : <><Mail size={16}/> Request Interview</>}
       </button>
