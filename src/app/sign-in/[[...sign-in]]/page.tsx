@@ -2,55 +2,37 @@ import { SignIn } from "@clerk/nextjs";
 
 export default function SignInPage() {
   return (
-    <div
-      style={{
-        minHeight: "80vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "40px 24px",
-      }}
-    >
-      <div style={{ marginBottom: "32px", textAlign: "center" }}>
-        <h1
-          style={{
-            fontSize: "1.75rem",
-            fontWeight: 800,
-            marginBottom: "8px",
-            background: "linear-gradient(135deg, var(--accent), var(--accent-2))",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}
-        >
+    <div className="min-h-[80vh] flex flex-col items-center justify-center py-10 px-6">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-display-lg font-bold mb-2 text-gradient-primary">
           Welcome back
         </h1>
-        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.875rem" }}>
+        <p className="text-[#8990a8] text-sm">
           Sign in to access your dashboard and submissions
         </p>
       </div>
       <SignIn
         appearance={{
           variables: {
-            colorPrimary: "var(--accent)",
-            colorBackground: "var(--bg-2)",
-            colorText: "rgba(255,255,255,0.9)",
-            colorTextSecondary: "rgba(255,255,255,0.5)",
-            colorInputBackground: "var(--surface)",
-            colorInputText: "rgba(255,255,255,0.9)",
+            colorPrimary: "#00cbe6",
+            colorBackground: "#0c1324",
+            colorText: "#dce1fb",
+            colorTextSecondary: "#8990a8",
+            colorInputBackground: "#020617",
+            colorInputText: "#dce1fb",
             borderRadius: "12px",
             fontFamily: "Inter, sans-serif",
           },
           elements: {
             card: {
-              background: "var(--bg-2)",
+              background: "#0c1324",
               border: "1px solid rgba(255,255,255,0.08)",
               boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
             },
             formButtonPrimary: {
-              background: "linear-gradient(135deg, var(--accent), var(--accent-2))",
+              background: "linear-gradient(135deg, #a078ff, #00cbe6)",
               fontWeight: 600,
+              color: "#020617",
             },
           },
         }}

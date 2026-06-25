@@ -50,191 +50,103 @@ export default async function StudentDashboard() {
   return (
     <div className="max-w-[1600px] mx-auto px-6 md:px-8 pt-10 pb-24 w-full">
       {/* Welcome header */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, rgba(var(--accent-rgb),0.12), rgba(var(--accent-2-rgb),0.08))",
-          border: "1px solid rgba(var(--accent-rgb),0.2)",
-          borderRadius: "24px",
-          padding: "40px",
-          marginBottom: "32px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "16px",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: "-40px",
-            right: "-40px",
-            width: "200px",
-            height: "200px",
-            background: "radial-gradient(circle, rgba(var(--accent-rgb),0.15) 0%, transparent 70%)",
-          }}
-        />
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            background: "rgba(var(--accent-rgb),0.15)",
-            border: "1px solid rgba(var(--accent-rgb),0.3)",
-            borderRadius: "100px",
-            padding: "4px 12px",
-            width: "fit-content",
-            fontSize: "0.75rem",
-            fontWeight: 600,
-            color: "var(--accent)",
-          }}
-        >
-          <Zap size={12} /> Student Dashboard
+      <div className="bg-gradient-to-br from-[#00cbe6]/10 to-[#a078ff]/10 border border-[#00cbe6]/20 rounded-3xl p-8 md:p-12 mb-10 flex flex-col gap-4 relative overflow-hidden">
+        <div className="absolute -top-10 -right-10 w-48 h-48 bg-radial-gradient from-[#00cbe6]/20 to-transparent blur-2xl rounded-full" />
+        
+        <div className="inline-flex items-center gap-2 bg-[#00cbe6]/15 border border-[#00cbe6]/30 rounded-full px-4 py-1.5 w-fit text-xs font-bold text-[#00cbe6]">
+          <Zap size={14} /> Student Dashboard
         </div>
-        <h1 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, lineHeight: 1.2 }}>
+        
+        <h1 className="text-3xl md:text-5xl font-display-lg font-bold leading-tight text-[#dce1fb]">
           Welcome back, {firstName} 👋
         </h1>
-        <p style={{ color: "var(--text-muted)", fontSize: "0.9375rem" }}>
+        
+        <p className="text-[#8990a8] text-base md:text-lg">
           Keep building. Every submission moves you closer to your next opportunity.
         </p>
 
         {/* Stats row */}
-        <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", marginTop: "8px" }}>
+        <div className="flex flex-wrap gap-4 mt-4">
           {[
-            { icon: <Trophy size={16} />, label: "Total Score", value: totalScore, color: "#facc15" },
-            { icon: <GitBranch size={16} />, label: "Submissions", value: submissions.length, color: "var(--accent)" },
-            { icon: <Flame size={16} />, label: "Rank", value: submissions.length > 0 ? "Active" : "—", color: "#fb923c" },
+            { icon: <Trophy size={18} />, label: "Total Score", value: totalScore, color: "text-[#facc15]" },
+            { icon: <GitBranch size={18} />, label: "Submissions", value: submissions.length, color: "text-[#00cbe6]" },
+            { icon: <Flame size={18} />, label: "Rank", value: submissions.length > 0 ? "Active" : "—", color: "text-[#fb923c]" },
           ].map(({ icon, label, value, color }) => (
-            <div
-              key={label}
-              style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                borderRadius: "14px",
-                padding: "16px 20px",
-                minWidth: "120px",
-              }}
-            >
-              <div style={{ color, display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px", fontSize: "0.8125rem" }}>
+            <div key={label} className="bg-white/5 border border-white/10 rounded-2xl p-5 min-w-[140px] flex-1 md:flex-none">
+              <div className={`flex items-center gap-2 mb-2 text-sm font-bold ${color}`}>
                 {icon} {label}
               </div>
-              <div style={{ fontSize: "1.5rem", fontWeight: 800 }}>{value}</div>
+              <div className="text-3xl font-bold text-[#dce1fb]">{value}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Quick actions */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", marginBottom: "40px" }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
         <Link
           href="/"
-          className="glass card-hover"
-          style={{
-            borderRadius: "16px",
-            padding: "24px",
-            textDecoration: "none",
-            display: "flex",
-            flexDirection: "column",
-            gap: "12px",
-          }}
+          className="glass glass-card-hover rounded-2xl p-6 flex flex-col gap-4 group"
         >
-          <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: "rgba(var(--accent-rgb),0.15)", color: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Search size={18} />
+          <div className="w-12 h-12 rounded-xl bg-[#00cbe6]/15 text-[#00cbe6] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Search size={20} />
           </div>
           <div>
-            <div style={{ fontWeight: 700, marginBottom: "4px" }}>Browse Challenges</div>
-            <div style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.45)" }}>Find your next problem to solve</div>
+            <div className="font-bold text-[#dce1fb] text-lg mb-1">Browse Challenges</div>
+            <div className="text-sm text-[#8990a8]">Find your next problem to solve</div>
           </div>
-          <ArrowRight size={16} style={{ color: "var(--text-muted)", marginTop: "auto" }} />
+          <ArrowRight size={20} className="text-[#8990a8] mt-auto group-hover:text-[#00cbe6] transition-colors" />
         </Link>
 
         <Link
           href={`/profile/${userId}`}
-          className="glass card-hover"
-          style={{
-            borderRadius: "16px",
-            padding: "24px",
-            textDecoration: "none",
-            display: "flex",
-            flexDirection: "column",
-            gap: "12px",
-          }}
+          className="glass glass-card-hover rounded-2xl p-6 flex flex-col gap-4 group"
         >
-          <div style={{ width: "40px", height: "40px", borderRadius: "12px", background: "rgba(var(--accent-2-rgb),0.15)", color: "var(--accent-2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Star size={18} />
+          <div className="w-12 h-12 rounded-xl bg-[#a078ff]/15 text-[#a078ff] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Star size={20} />
           </div>
           <div>
-            <div style={{ fontWeight: 700, marginBottom: "4px" }}>My Public Profile</div>
-            <div style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.45)" }}>View how companies see you</div>
+            <div className="font-bold text-[#dce1fb] text-lg mb-1">My Public Profile</div>
+            <div className="text-sm text-[#8990a8]">View how companies see you</div>
           </div>
-          <ArrowRight size={16} style={{ color: "var(--text-muted)", marginTop: "auto" }} />
+          <ArrowRight size={20} className="text-[#8990a8] mt-auto group-hover:text-[#a078ff] transition-colors" />
         </Link>
       </div>
 
       {/* Recent submissions */}
       <div>
-        <h2 style={{ fontSize: "1.25rem", fontWeight: 700, marginBottom: "16px" }}>
+        <h2 className="text-2xl font-bold text-[#dce1fb] mb-6">
           Recent Submissions
         </h2>
         {submissions.length === 0 ? (
-          <div
-            className="glass"
-            style={{
-              borderRadius: "16px",
-              padding: "48px",
-              textAlign: "center",
-              color: "rgba(255,255,255,0.35)",
-            }}
-          >
-            <Trophy size={40} style={{ margin: "0 auto 12px", opacity: 0.3 }} />
-            <p style={{ fontWeight: 600, marginBottom: "8px" }}>No submissions yet</p>
-            <p style={{ fontSize: "0.875rem" }}>Start solving problems to build your portfolio</p>
-            <Link
-              href="/"
-              className="btn-primary"
-              style={{ marginTop: "20px", padding: "10px 24px", borderRadius: "10px", display: "inline-flex" }}
-            >
+          <div className="glass rounded-3xl p-12 text-center text-[#8990a8]">
+            <Trophy size={48} className="mx-auto mb-4 opacity-30" />
+            <p className="font-bold text-[#dce1fb] text-lg mb-2">No submissions yet</p>
+            <p className="text-sm mb-6">Start solving problems to build your portfolio</p>
+            <Link href="/" className="btn-primary px-8 py-3 rounded-xl font-bold">
               Browse Problems
             </Link>
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div className="flex flex-col gap-4">
             {submissions.map((sub) => (
               <div
                 key={`${sub.problemId}-${sub.submittedAt}`}
-                className="glass"
-                style={{
-                  borderRadius: "16px",
-                  padding: "20px 24px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: "16px",
-                  flexWrap: "wrap",
-                }}
+                className="glass rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:border-white/20 transition-colors"
               >
                 <div>
                   <Link
                     href={`/problems/${sub.problemId}`}
-                    style={{ fontWeight: 600, color: "var(--text-primary)", textDecoration: "none", fontSize: "0.9375rem" }}
+                    className="font-bold text-[#dce1fb] hover:text-[#00cbe6] transition-colors text-lg"
                   >
                     View Problem →
                   </Link>
-                  <p style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.35)", marginTop: "4px" }}>
-                    {new Date(sub.submittedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  <p className="text-sm text-[#8990a8] mt-1 font-medium">
+                    Submitted: {new Date(sub.submittedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </p>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <div
-                    style={{
-                      background: "rgba(var(--accent-rgb),0.15)",
-                      border: "1px solid rgba(var(--accent-rgb),0.25)",
-                      borderRadius: "10px",
-                      padding: "8px 16px",
-                      fontWeight: 700,
-                      color: "var(--accent)",
-                    }}
-                  >
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                  <div className="bg-[#00cbe6]/15 border border-[#00cbe6]/30 rounded-xl px-5 py-2.5 font-bold text-[#00cbe6]">
                     Score: {sub.score ?? "—"}
                   </div>
                   {sub.githubUrl && (
@@ -242,20 +154,9 @@ export default async function StudentDashboard() {
                       href={sub.githubUrl}
                       target="_blank"
                       rel="noreferrer"
-                      style={{
-                        width: "36px",
-                        height: "36px",
-                        borderRadius: "10px",
-                        background: "var(--surface)",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "var(--text-muted)",
-                        transition: "all 0.2s",
-                      }}
+                      className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#8990a8] hover:bg-white/10 hover:text-[#dce1fb] transition-all"
                     >
-                      <GitBranch size={16} />
+                      <GitBranch size={20} />
                     </a>
                   )}
                 </div>

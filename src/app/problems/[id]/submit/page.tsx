@@ -75,83 +75,56 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
   if (!isLoaded) return null;
 
   return (
-    <div
-      style={{
-        maxWidth: "640px",
-        margin: "48px auto 0",
-      }}
-    >
+    <div className="max-w-2xl mx-auto pt-16 px-6 lg:px-8 pb-24">
       {/* Header */}
-      <div style={{ marginBottom: "32px" }}>
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            background: "rgba(var(--accent-rgb),0.1)",
-            border: "1px solid rgba(var(--accent-rgb),0.2)",
-            borderRadius: "100px",
-            padding: "4px 12px",
-            fontSize: "0.75rem",
-            fontWeight: 600,
-            color: "var(--accent)",
-            marginBottom: "16px",
-          }}
-        >
+      <div className="mb-10 text-center md:text-left">
+        <div className="inline-flex items-center gap-2 bg-[#00cbe6]/10 border border-[#00cbe6]/20 rounded-full px-4 py-1.5 text-xs font-bold text-[#00cbe6] mb-6">
           Submitting as: {user?.fullName || user?.primaryEmailAddress?.emailAddress || "You"}
         </div>
-        <h1 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, marginBottom: "8px" }}>
+        <h1 className="text-3xl md:text-5xl font-display-lg font-bold text-[#dce1fb] leading-tight mb-3">
           Submit Your Solution
         </h1>
-        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.9375rem" }}>
+        <p className="text-base text-[#8990a8] font-medium">
           Your submission is public and verifiable — make it count.
         </p>
       </div>
 
-      <div
-        className="glass"
-        style={{ borderRadius: "24px", padding: "36px" }}
-      >
+      <div className="bg-[#0c1324] border border-[#00cbe6]/30 shadow-[0_0_40px_rgba(0,203,230,0.05)] rounded-3xl p-6 md:p-10">
         {error && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "10px",
-              background: "rgba(239,68,68,0.08)",
-              border: "1px solid rgba(239,68,68,0.2)",
-              borderRadius: "12px",
-              padding: "14px 16px",
-              marginBottom: "24px",
-              color: "#f87171",
-              fontSize: "0.875rem",
-            }}
-          >
-            <AlertCircle size={16} style={{ marginTop: "1px", flexShrink: 0 }} />
+          <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl mb-8 text-sm font-medium">
+            <AlertCircle size={18} className="mt-0.5 shrink-0" />
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
           
           {/* Team / Solo Toggle */}
           {team && (
-            <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "16px", padding: "16px" }}>
-              <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "12px", color: "var(--text-secondary)" }}>
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+              <label className="block text-sm font-bold text-[#8990a8] mb-4">
                 Submission Identity
               </label>
-              <div style={{ display: "flex", gap: "12px" }}>
+              <div className="flex flex-col md:flex-row gap-4">
                 <button
                   type="button"
                   onClick={() => setSubmitAsTeam(false)}
-                  style={{ flex: 1, padding: "12px", borderRadius: "10px", border: submitAsTeam ? "1px solid rgba(255,255,255,0.1)" : "1px solid #00cbe6", background: submitAsTeam ? "transparent" : "rgba(0,203,230,0.1)", color: submitAsTeam ? "var(--text-secondary)" : "#00cbe6", fontWeight: "bold", transition: "all 0.2s" }}
+                  className={`flex-1 p-4 rounded-xl font-bold transition-all ${
+                    !submitAsTeam 
+                      ? "bg-[#00cbe6]/10 border border-[#00cbe6] text-[#00cbe6]" 
+                      : "bg-transparent border border-white/10 text-[#8990a8] hover:border-white/20"
+                  }`}
                 >
                   Submit Solo
                 </button>
                 <button
                   type="button"
                   onClick={() => setSubmitAsTeam(true)}
-                  style={{ flex: 1, padding: "12px", borderRadius: "10px", border: !submitAsTeam ? "1px solid rgba(255,255,255,0.1)" : "1px solid #a078ff", background: !submitAsTeam ? "transparent" : "rgba(160,120,255,0.1)", color: !submitAsTeam ? "var(--text-secondary)" : "#a078ff", fontWeight: "bold", transition: "all 0.2s" }}
+                  className={`flex-1 p-4 rounded-xl font-bold transition-all ${
+                    submitAsTeam 
+                      ? "bg-[#a078ff]/10 border border-[#a078ff] text-[#a078ff]" 
+                      : "bg-transparent border border-white/10 text-[#8990a8] hover:border-white/20"
+                  }`}
                 >
                   Submit as {team.name}
                 </button>
@@ -161,8 +134,8 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
 
           {/* GitHub URL */}
           <div>
-            <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "var(--text-secondary)" }}>
-              <GitBranch size={14} style={{ display: "inline", marginRight: "6px", verticalAlign: "middle" }} />
+            <label className="block text-sm font-bold text-[#8990a8] mb-3">
+              <GitBranch size={16} className="inline mr-2 align-middle text-[#00cbe6]" />
               GitHub Repository URL *
             </label>
             <input
@@ -172,16 +145,15 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               value={formData.githubUrl}
               onChange={handleChange}
               placeholder="https://github.com/yourusername/your-solution"
-              className="w-full bg-[#0c1324] border border-white/10 rounded-xl px-4 py-3 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all font-body-md"
+              className="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-4 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all font-mono text-sm"
             />
           </div>
 
           {/* Demo URL */}
           <div>
-            <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "var(--text-secondary)" }}>
-              <Globe size={14} style={{ display: "inline", marginRight: "6px", verticalAlign: "middle" }} />
-              Live Demo URL{" "}
-              <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>(optional)</span>
+            <label className="block text-sm font-bold text-[#8990a8] mb-3">
+              <Globe size={16} className="inline mr-2 align-middle text-[#00cbe6]" />
+              Live Demo URL <span className="font-normal text-[#8990a8]/60">(optional)</span>
             </label>
             <input
               type="url"
@@ -189,13 +161,13 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               value={formData.demoUrl}
               onChange={handleChange}
               placeholder="https://your-demo.vercel.app"
-              className="w-full bg-[#0c1324] border border-white/10 rounded-xl px-4 py-3 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all font-body-md"
+              className="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-4 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all font-mono text-sm"
             />
           </div>
 
           {/* Writeup */}
           <div>
-            <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "var(--text-secondary)" }}>
+            <label className="block text-sm font-bold text-[#8990a8] mb-3">
               Solution Writeup *
             </label>
             <textarea
@@ -204,11 +176,11 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               value={formData.writeup}
               onChange={handleChange}
               maxLength={500}
-              rows={5}
+              rows={6}
               placeholder="Explain your approach, tech stack, key decisions, and why your solution stands out..."
-              className="w-full bg-[#0c1324] border border-white/10 rounded-xl px-4 py-3 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all font-body-md resize-y"
+              className="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-4 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all text-sm resize-y"
             />
-            <div style={{ textAlign: "right", fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "4px" }}>
+            <div className="text-right text-xs text-[#8990a8] mt-2 font-bold">
               {formData.writeup.length} / 500
             </div>
           </div>
@@ -216,19 +188,16 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
           <button
             type="submit"
             disabled={loading}
-            className="btn-primary"
-            style={{ padding: "14px", borderRadius: "14px", fontSize: "1rem", opacity: loading ? 0.7 : 1 }}
+            className="w-full bg-[#00cbe6] text-[#020617] font-bold py-4 rounded-xl hover:bg-[#5de6ff] transition-all flex items-center justify-center gap-2 mt-4 shadow-[0_0_20px_rgba(0,203,230,0.3)] hover:shadow-[0_0_30px_rgba(0,203,230,0.5)] disabled:opacity-70"
           >
             {loading ? (
-              <Loader2 size={18} style={{ animation: "spin 1s linear infinite" }} />
+              <Loader2 size={20} className="animate-spin" />
             ) : (
-              <>Submit Solution <Send size={16} /></>
+              <>Submit Solution <Send size={18} /></>
             )}
           </button>
         </form>
       </div>
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }

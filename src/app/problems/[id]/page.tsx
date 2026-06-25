@@ -8,9 +8,9 @@ import ClientQA from "./ClientQA";
 export const dynamic = "force-dynamic";
 
 const SOURCE_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  YC_STARTUP: { label: "YC Startup", color: "#fb923c", bg: "rgba(249,115,22,0.12)" },
-  GOVERNMENT: { label: "Government", color: "#60a5fa", bg: "rgba(59,130,246,0.12)" },
-  INDUSTRY: { label: "Industry", color: "rgba(255,255,255,0.55)", bg: "var(--border)" },
+  YC_STARTUP: { label: "YC Startup", color: "text-orange-400", bg: "bg-orange-400/10 border-orange-400/20" },
+  GOVERNMENT: { label: "Government", color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20" },
+  INDUSTRY: { label: "Industry", color: "text-white/70", bg: "bg-white/5 border-white/10" },
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
@@ -54,79 +54,63 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
   };
 
   return (
-    <div style={{ paddingTop: "32px" }}>
+    <div className="pt-8 pb-16 max-w-7xl mx-auto px-6 lg:px-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      
       {/* Back link */}
       <Link
         href="/"
-        style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", textDecoration: "none", fontSize: "0.875rem", marginBottom: "24px", transition: "color 0.2s" }}
+        className="inline-flex items-center gap-2 text-[#8990a8] hover:text-[#dce1fb] text-sm mb-6 transition-colors font-semibold"
       >
-        <ArrowLeft size={14} /> Back to Problems
+        <ArrowLeft size={16} /> Back to Problems
       </Link>
 
       {/* Problem header card */}
-      <div
-        className="glass"
-        style={{ borderRadius: "24px", padding: "36px", marginBottom: "32px", position: "relative", overflow: "hidden" }}
-      >
-        <div style={{ position: "absolute", top: "-60px", right: "-60px", width: "250px", height: "250px", background: "radial-gradient(circle, rgba(var(--accent-rgb),0.08) 0%, transparent 70%)" }} />
+      <div className="bg-[#0c1324] border border-[#00cbe6]/30 shadow-[0_0_40px_rgba(0,203,230,0.05)] rounded-3xl p-6 md:p-10 mb-8 relative overflow-hidden">
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-radial-gradient from-[#00cbe6]/10 to-transparent blur-3xl rounded-full" />
 
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-start", gap: "20px", marginBottom: "24px" }}>
-          <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+          <div className="flex flex-wrap items-center gap-3">
             <span
-              style={{
-                background: cfg.bg,
-                color: cfg.color,
-                border: `1px solid ${cfg.color}30`,
-                borderRadius: "100px",
-                padding: "4px 12px",
-                fontSize: "0.75rem",
-                fontWeight: 700,
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide border ${cfg.bg} ${cfg.color}`}
             >
               {cfg.label}
-              {problem.verified && <BadgeCheck size={11} />}
+              {problem.verified && <BadgeCheck size={14} />}
             </span>
-            <span style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.35)", background: "var(--surface)", padding: "4px 10px", borderRadius: "8px" }}>
+            <span className="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-white/50 border border-white/10">
               {problem.domain}
             </span>
           </div>
 
           <Link
             href={`/problems/${problem.problemId}/submit`}
-            className="btn-primary"
-            style={{ padding: "12px 28px", borderRadius: "14px", whiteSpace: "nowrap" }}
+            className="w-full md:w-auto text-center bg-[#00cbe6] text-[#020617] font-bold px-8 py-3 rounded-xl hover:bg-[#5de6ff] transition-all shadow-[0_0_20px_rgba(0,203,230,0.3)] hover:shadow-[0_0_30px_rgba(0,203,230,0.5)]"
           >
             Submit Solution →
           </Link>
         </div>
 
-        <h1 style={{ fontSize: "clamp(1.5rem, 3vw, 2.25rem)", fontWeight: 800, lineHeight: 1.2, marginBottom: "20px" }}>
+        <h1 className="text-3xl md:text-5xl font-display-lg font-bold text-[#dce1fb] leading-tight mb-6">
           {problem.title}
         </h1>
 
-        <p style={{ fontSize: "1rem", color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: "28px" }}>
+        <p className="text-base md:text-lg text-[#8990a8] leading-relaxed mb-8 whitespace-pre-wrap">
           {problem.description}
         </p>
 
         {/* Meta row */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", paddingTop: "20px", borderTop: "1px solid var(--border)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Trophy size={16} style={{ color: "#facc15" }} />
-            <span style={{ fontWeight: 700, fontSize: "0.9375rem" }}>
+        <div className="flex flex-wrap items-center gap-6 pt-6 border-t border-white/10">
+          <div className="flex items-center gap-2 text-[#dce1fb] font-bold">
+            <Trophy size={18} className="text-[#facc15]" />
+            <span>
               {problem.prizeType === "CASH"
                 ? `$${Number(problem.prizeAmount).toLocaleString()} Prize`
                 : problem.prizeType?.replace("_", " ")}
             </span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "rgba(255,255,255,0.45)" }}>
-            <CalendarDays size={16} />
-            <span style={{ fontSize: "0.875rem" }}>
+          <div className="flex items-center gap-2 text-[#8990a8] font-medium text-sm">
+            <CalendarDays size={18} />
+            <span>
               Deadline: {new Date(problem.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
             </span>
           </div>
@@ -135,22 +119,22 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
               href={problem.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.875rem", color: "var(--accent)", textDecoration: "none" }}
+              className="flex items-center gap-1.5 text-sm font-bold text-[#00cbe6] hover:text-[#5de6ff] transition-colors ml-auto md:ml-0"
             >
-              <ExternalLink size={14} /> View Original Source
+              <ExternalLink size={16} /> View Original Source
             </a>
           )}
         </div>
       </div>
 
       {/* Leaderboard + QA */}
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "24px" }} className="lg:grid-cols-3">
-        <div>
-          <h2 style={{ fontSize: "1.25rem", fontWeight: 700, marginBottom: "16px" }}>Leaderboard</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <h2 className="text-2xl font-bold text-[#dce1fb] mb-6 flex items-center gap-2">Leaderboard</h2>
           <ClientLeaderboard problemId={problem.problemId} />
         </div>
         <div>
-          <h2 style={{ fontSize: "1.25rem", fontWeight: 700, marginBottom: "16px" }}>Q&amp;A Thread</h2>
+          <h2 className="text-2xl font-bold text-[#dce1fb] mb-6 flex items-center gap-2">Q&amp;A Thread</h2>
           <ClientQA problemId={problem.problemId} />
         </div>
       </div>
