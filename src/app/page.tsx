@@ -182,6 +182,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
                 <Link
                   key={label}
                   href={href}
+                  scroll={false}
                   className={`px-4 py-2 rounded-full font-label-mono whitespace-nowrap transition-colors ${
                     isActive
                       ? "glass-panel border-primary text-primary"

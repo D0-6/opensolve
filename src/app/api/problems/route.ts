@@ -90,8 +90,8 @@ export async function POST(request: Request) {
     }));
 
     return NextResponse.json({ problem: newProblem }, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error creating problem:", error);
-    return NextResponse.json({ error: "Failed to create problem" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to create problem" }, { status: 500 });
   }
 }

@@ -46,116 +46,160 @@ export default function NewProblem() {
     }
   };
 
-  const field = (label: string, children: React.ReactNode) => (
-    <div>
-      <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 600, marginBottom: "8px", color: "var(--text-secondary)" }}>
-        {label}
-      </label>
-      {children}
-    </div>
-  );
-
-  const inputStyle = { width: "100%", padding: "12px 16px", borderRadius: "12px", fontSize: "0.9375rem" };
+  const inputClass = "w-full border border-white/10 rounded-lg px-4 py-3 text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-body-md";
+  const labelClass = "text-sm font-semibold text-on-surface-variant mb-2 block";
 
   return (
-    <div style={{ maxWidth: "720px", margin: "48px auto 0" }}>
-      {/* Header */}
-      <div style={{ marginBottom: "32px" }}>
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            background: "rgba(var(--accent-2-rgb),0.1)",
-            border: "1px solid rgba(var(--accent-2-rgb),0.2)",
-            borderRadius: "100px",
-            padding: "4px 12px",
-            fontSize: "0.75rem",
-            fontWeight: 600,
-            color: "var(--accent-2)",
-            marginBottom: "16px",
-          }}
-        >
-          <Building2 size={12} /> For Companies & Orgs
+    <div className="min-h-screen py-16 px-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="mb-10">
+          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-3 py-1 text-xs font-semibold text-primary mb-4">
+            <Building2 size={14} /> For Companies & Orgs
+          </div>
+          <h1 className="font-display-lg text-4xl text-on-surface font-bold mb-2">
+            Post a Challenge
+          </h1>
+          <p className="font-body-md text-on-surface-variant">
+            Describe your real problem. Thousands of builders will compete to solve it.
+          </p>
         </div>
-        <h1 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, marginBottom: "8px" }}>
-          Post a Challenge
-        </h1>
-        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.9375rem" }}>
-          Describe your real problem. Thousands of builders will compete to solve it.
-        </p>
-      </div>
 
-      <div className="glass" style={{ borderRadius: "24px", padding: "36px" }}>
-        {error && (
-          <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "12px", padding: "14px 16px", marginBottom: "24px", color: "#f87171", fontSize: "0.875rem" }}>
-            <AlertCircle size={16} style={{ marginTop: "1px", flexShrink: 0 }} />
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-          {field("Challenge Title *",
-            <input required type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} placeholder="e.g. Build an AI system for crop disease detection" style={inputStyle} />
+        {/* Form Container */}
+        <div className="bg-surface border border-white/5 rounded-2xl p-8 shadow-xl">
+          {error && (
+            <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-8 text-red-400 text-sm">
+              <AlertCircle size={18} className="mt-0.5 shrink-0" />
+              {error}
+            </div>
           )}
 
-          {field("Problem Description *",
-            <textarea required rows={5} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Describe the problem in detail. What should a winning solution look like? What constraints exist?" style={{ ...inputStyle, resize: "none" }} />
-          )}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className={labelClass}>Challenge Title *</label>
+              <input 
+                required 
+                type="text" 
+                value={formData.title} 
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })} 
+                placeholder="e.g. Build an AI system for crop disease detection" 
+                className={inputClass}
+                style={{ backgroundColor: "#151b2d", color: "#dce1fb" }}
+              />
+            </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-            {field("Category",
-              <select value={formData.source} onChange={(e) => setFormData({ ...formData, source: e.target.value })} style={inputStyle}>
-                <option value="INDUSTRY">Industry / Startup</option>
-                <option value="GOVERNMENT">Government / Public Sector</option>
-                <option value="YC_STARTUP">YC Startup</option>
-              </select>
-            )}
-            {field("Domain *",
-              <input required type="text" value={formData.domain} onChange={(e) => setFormData({ ...formData, domain: e.target.value })} placeholder="e.g. AI / Machine Learning" style={inputStyle} />
-            )}
-          </div>
+            <div>
+              <label className={labelClass}>Problem Description *</label>
+              <textarea 
+                required 
+                rows={6} 
+                value={formData.description} 
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })} 
+                placeholder="Describe the problem in detail. What should a winning solution look like? What constraints exist?" 
+                className={`${inputClass} resize-none`}
+                style={{ backgroundColor: "#151b2d", color: "#dce1fb" }}
+              />
+            </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-            {field("Reward Type",
-              <select value={formData.prizeType} onChange={(e) => setFormData({ ...formData, prizeType: e.target.value })} style={inputStyle}>
-                <option value="CASH">Cash Prize</option>
-                <option value="CONTRACT">Contract / Project</option>
-                <option value="HIRING">Full-time Hire</option>
-                <option value="PILOT_FUNDING">Pilot Funding</option>
-                <option value="EQUITY">Equity / Co-founder</option>
-              </select>
-            )}
-            {field("Prize Amount (USD, if applicable)",
-              <input type="number" min="0" value={formData.prizeAmount} onChange={(e) => setFormData({ ...formData, prizeAmount: e.target.value })} placeholder="e.g. 10000" style={inputStyle} />
-            )}
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className={labelClass}>Category</label>
+                <select 
+                  value={formData.source} 
+                  onChange={(e) => setFormData({ ...formData, source: e.target.value })} 
+                  className={inputClass}
+                  style={{ backgroundColor: "#151b2d", color: "#dce1fb" }}
+                >
+                  <option value="INDUSTRY">Industry / Startup</option>
+                  <option value="GOVERNMENT">Government / Public Sector</option>
+                  <option value="YC_STARTUP">YC Startup</option>
+                </select>
+              </div>
+              <div>
+                <label className={labelClass}>Domain *</label>
+                <input 
+                  required 
+                  type="text" 
+                  value={formData.domain} 
+                  onChange={(e) => setFormData({ ...formData, domain: e.target.value })} 
+                  placeholder="e.g. AI / Machine Learning" 
+                  className={inputClass}
+                  style={{ backgroundColor: "#151b2d", color: "#dce1fb" }}
+                />
+              </div>
+            </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-            {field("Submission Deadline *",
-              <input required type="date" value={formData.deadline} onChange={(e) => setFormData({ ...formData, deadline: e.target.value })} style={inputStyle} />
-            )}
-            {field("Source URL (optional)",
-              <input type="url" value={formData.sourceUrl} onChange={(e) => setFormData({ ...formData, sourceUrl: e.target.value })} placeholder="https://your-company.com/challenge" style={inputStyle} />
-            )}
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className={labelClass}>Reward Type</label>
+                <select 
+                  value={formData.prizeType} 
+                  onChange={(e) => setFormData({ ...formData, prizeType: e.target.value })} 
+                  className={inputClass}
+                  style={{ backgroundColor: "#151b2d", color: "#dce1fb" }}
+                >
+                  <option value="CASH">Cash Prize</option>
+                  <option value="CONTRACT">Contract / Project</option>
+                  <option value="HIRING">Full-time Hire</option>
+                  <option value="PILOT_FUNDING">Pilot Funding</option>
+                  <option value="EQUITY">Equity / Co-founder</option>
+                </select>
+              </div>
+              <div>
+                <label className={labelClass}>Prize Amount (USD)</label>
+                <input 
+                  type="number" 
+                  min="0" 
+                  value={formData.prizeAmount} 
+                  onChange={(e) => setFormData({ ...formData, prizeAmount: e.target.value })} 
+                  placeholder="e.g. 10000" 
+                  className={inputClass}
+                  style={{ backgroundColor: "#151b2d", color: "#dce1fb" }}
+                />
+              </div>
+            </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn-primary"
-            style={{ padding: "14px", borderRadius: "14px", fontSize: "1rem", opacity: loading ? 0.7 : 1 }}
-          >
-            {loading ? (
-              <Loader2 size={18} style={{ animation: "spin 1s linear infinite" }} />
-            ) : (
-              <><PlusCircle size={18} /> Publish Challenge</>
-            )}
-          </button>
-        </form>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className={labelClass}>Submission Deadline *</label>
+                <input 
+                  required 
+                  type="date" 
+                  value={formData.deadline} 
+                  onChange={(e) => setFormData({ ...formData, deadline: e.target.value })} 
+                  className={inputClass}
+                  style={{ backgroundColor: "#151b2d", color: "#dce1fb", colorScheme: "dark" }}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Source URL (optional)</label>
+                <input 
+                  type="url" 
+                  value={formData.sourceUrl} 
+                  onChange={(e) => setFormData({ ...formData, sourceUrl: e.target.value })} 
+                  placeholder="https://your-company.com/challenge" 
+                  className={inputClass}
+                  style={{ backgroundColor: "#151b2d", color: "#dce1fb" }}
+                />
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-white/5">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[#00cbe6] hover:bg-[#5de6ff] text-[#001f25] font-bold py-4 rounded-xl transition-colors flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <Loader2 size={20} className="animate-spin" />
+                ) : (
+                  <><PlusCircle size={20} /> Publish Challenge</>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }
