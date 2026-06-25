@@ -9,8 +9,8 @@ const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_S
 
 export const dynamic = "force-dynamic";
 
-export default async function UserProfile({ params }: { params: { userId: string } }) {
-  const { userId } = params;
+export default async function UserProfile({ params }: { params: Promise<{ userId: string }> }) {
+  const { userId } = await params;
 
   // Mocking profile creation for the hackathon if it doesn't exist, to make demos easier
   let profile;
@@ -66,10 +66,7 @@ export default async function UserProfile({ params }: { params: { userId: string
           </div>
         </div>
         
-        {/* Hackathon note: Claim Profile button */}
-        <div className="z-10 mt-4 md:mt-0">
-           <Link href="/profile/claim" className="text-xs text-blue-600 dark:text-blue-400 underline decoration-blue-500/30 hover:decoration-blue-500 transition-colors">Claim & Edit Profile</Link>
-        </div>
+
       </div>
 
       {/* Submissions History */}

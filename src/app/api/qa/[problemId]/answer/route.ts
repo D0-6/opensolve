@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
 import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { checkRateLimit } from "@/lib/rate-limit";
@@ -7,26 +8,29 @@ const TABLE_NAME = process.env.DYNAMODB_TABLE_QATHREADS || "OpenSolve_QAThreads"
 
 export async function POST(
   request: Request,
-  { params }: { params: { problemId: string } }
+  { params }: { params: Promise<{ problemId: string }> }
 ) {
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Sign in to answer" }, { status: 401 });
+
   const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
   if (!checkRateLimit(ip)) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 
-  const { problemId } = params;
+  const { problemId } = await params;
 
   try {
     const body = await request.json();
-    const { sk, answeredBy, answerText } = body;
+    const { sk, answerText } = body;
 
-    if (!sk || !answeredBy || !answerText) {
+    if (!sk || !answerText) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     const now = new Date().toISOString();
     const newAnswer = {
-      answeredBy,
+      answeredBy: userId,
       answerText: answerText.trim().substring(0, 1000),
       answeredAt: now
     };

@@ -5,8 +5,9 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default async function OrganizationProfile({ params }: { params: { orgId: string } }) {
-  const org = await getOrganization(params.orgId);
+export default async function OrganizationProfile({ params }: { params: Promise<{ orgId: string }> }) {
+  const { orgId } = await params;
+  const org = await getOrganization(orgId);
 
   if (!org) {
     notFound();

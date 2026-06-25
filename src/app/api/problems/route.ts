@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
-import { PutCommand, QueryCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { checkRateLimit } from "@/lib/rate-limit";
 
@@ -52,6 +53,11 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Sign in to post a challenge" }, { status: 401 });
+  }
+
   const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
   if (!checkRateLimit(ip)) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
@@ -66,16 +72,16 @@ export async function POST(request: Request) {
       problemId,
       title: body.title,
       description: body.description,
-      source: body.source,
-      sourceUrl: body.sourceUrl,
+      source: body.source || "INDUSTRY",
+      sourceUrl: body.sourceUrl || "",
       prizeAmount: Number(body.prizeAmount) || 0,
-      prizeType: body.prizeType,
+      prizeType: body.prizeType || "CASH",
       deadline: body.deadline,
       domain: body.domain,
       postedAt: now,
-      postedByOrgId: body.postedByOrgId,
+      postedByOrgId: userId, // server-side from Clerk — not client-provided
       verified: false,
-      status: "OPEN"
+      status: "OPEN",
     };
 
     await docClient.send(new PutCommand({
