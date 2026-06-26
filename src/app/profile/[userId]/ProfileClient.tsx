@@ -17,6 +17,7 @@ export default function ProfileClient({
   submissions: any[];
   userId: string;
   fallbackName?: string;
+  imageUrl?: string;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -46,8 +47,12 @@ export default function ProfileClient({
           </button>
         )}
 
-        <div className="w-32 h-32 bg-zinc-100 border border-zinc-200 flex-shrink-0 flex items-center justify-center text-[#1a3a5c] text-5xl font-medium">
-          {(profile?.name || fallbackName) ? (profile?.name || fallbackName).charAt(0).toUpperCase() : userId.charAt(0).toUpperCase()}
+        <div className="w-32 h-32 bg-zinc-100 border border-zinc-200 flex-shrink-0 flex items-center justify-center text-[#1a3a5c] text-5xl font-medium overflow-hidden">
+          {imageUrl ? (
+            <img src={imageUrl} alt="Profile Avatar" className="w-full h-full object-cover" />
+          ) : (
+            (profile?.name || fallbackName) ? (profile?.name || fallbackName).charAt(0).toUpperCase() : userId.charAt(0).toUpperCase()
+          )}
         </div>
         
         <div className="flex-1 text-center md:text-left w-full">

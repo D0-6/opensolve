@@ -16,6 +16,7 @@ export default async function UserProfile({ params }: { params: Promise<{ userId
 
   let profile;
   let fallbackName = "";
+  let imageUrl = "";
   try {
     const res = await docClient.send(new GetCommand({ TableName: PROFILES_TABLE, Key: { userId } }));
     profile = res.Item;
@@ -29,6 +30,7 @@ export default async function UserProfile({ params }: { params: Promise<{ userId
     const targetUser = await clerk.users.getUser(userId);
     if (targetUser) {
       fallbackName = [targetUser.firstName, targetUser.lastName].filter(Boolean).join(" ");
+      imageUrl = targetUser.imageUrl;
     }
   } catch (err) {
     console.error("Failed to fetch fallback user from Clerk", err);
@@ -54,6 +56,7 @@ export default async function UserProfile({ params }: { params: Promise<{ userId
       submissions={submissions} 
       userId={userId} 
       fallbackName={fallbackName}
+      imageUrl={imageUrl}
     />
   );
 }
