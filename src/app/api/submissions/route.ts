@@ -117,6 +117,18 @@ export async function POST(request: Request) {
       body: `A new solution has just landed in your Hiring Pipeline dashboard.\n\nCandidate/Team ID: ${body.teamId || userId}\nGitHub: ${githubUrl}\n\nLog in to your Organization Dashboard to evaluate the code and extend an offer.`
     });
 
+    // PHASE 11: Trigger Auto-Scoring Engine in the background
+    const { evaluateSubmissionAsynchronously } = await import("@/lib/evaluator");
+    // Do not await this. Let it run asynchronously!
+    evaluateSubmissionAsynchronously({
+      problemId,
+      oldRankKey: newSubmission.rankKey,
+      userId: newSubmission.userId,
+      submittedAt: newSubmission.submittedAt,
+      githubUrl: newSubmission.githubUrl,
+      writeup: newSubmission.writeup
+    });
+
     return NextResponse.json({ submission: newSubmission }, { status: 201 });
   } catch (error) {
     console.error("Error creating submission:", error);

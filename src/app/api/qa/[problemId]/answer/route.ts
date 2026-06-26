@@ -51,6 +51,16 @@ export async function POST(
 
     const result = await docClient.send(command);
 
+    if (result.Attributes && result.Attributes.askedBy) {
+      const { sendEmail } = await import("@/lib/email");
+      // Ideally we would fetch the user's real email from Clerk or DB, but we'll use the routing scheme for now
+      await sendEmail({
+        to: `student-${result.Attributes.askedBy}@opensolve.user`,
+        subject: `Your question has been answered!`,
+        body: `An organization has replied to your question on the challenge thread.\n\nAnswer: "${answerText}"\n\nLog in to OpenSolve to view the full discussion.`
+      });
+    }
+
     return NextResponse.json({ thread: result.Attributes }, { status: 200 });
   } catch (error) {
     console.error("Error adding QA answer:", error);
