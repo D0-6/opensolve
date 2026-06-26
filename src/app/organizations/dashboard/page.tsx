@@ -39,59 +39,64 @@ export default async function OrgDashboard() {
   }));
 
   return (
-    <div className="min-h-screen bg-black pt-24 pb-16 px-6">
-      <div className="max-w-[1600px] mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-12">
+    <div className="min-h-screen bg-white pt-24 pb-24 px-6 w-full">
+      <div className="max-w-5xl mx-auto px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-zinc-200 pb-12 gap-6">
           <div>
-            <h1 className="text-4xl font-display-lg text-white font-bold">Hiring Pipeline</h1>
-            <p className="text-zinc-400 font-body-md mt-2">Manage active challenges, evaluate team submissions, and extend offers.</p>
+            <h1 className="text-3xl md:text-5xl tracking-tight text-zinc-900 font-medium">Hiring Pipeline</h1>
+            <p className="text-zinc-500 text-base mt-2">Manage active challenges, evaluate team submissions, and extend offers.</p>
           </div>
-          <Link href="/organizations/new" className="btn-primary px-6 py-3 rounded-xl font-bold">
-            + Post New Challenge
+          <Link href="/organizations/new" className="btn-primary px-6 py-3 font-medium shrink-0">
+            Post New Challenge
           </Link>
         </div>
 
         {dashboardData.length === 0 ? (
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-16 text-center">
-            <Briefcase size={48} className="mx-auto text-zinc-600 mb-6" />
-            <h2 className="text-2xl font-bold text-white mb-2">No active challenges</h2>
-            <p className="text-zinc-400 mb-6">Post a challenge to start receiving submissions from top talent.</p>
+          <div className="border border-zinc-200 border-dashed p-16 text-center bg-zinc-50">
+            <Briefcase size={32} className="mx-auto text-zinc-300 mb-4" />
+            <h2 className="text-lg font-medium text-zinc-900 mb-1">No active challenges</h2>
+            <p className="text-zinc-500 text-sm">Post a challenge to start receiving submissions from top talent.</p>
           </div>
         ) : (
-          <div className="space-y-12">
+          <div className="space-y-16">
             {dashboardData.map(problem => (
-              <div key={problem.problemId} className="bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+              <div key={problem.problemId} className="border border-zinc-200 bg-white">
                 {/* Challenge Header */}
-                <div className="bg-white/5 border-b border-white/10 p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="bg-zinc-50 border-b border-zinc-200 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-white">{problem.title}</h2>
-                    <div className="flex gap-4 mt-2 text-sm text-zinc-400">
-                      <span className="flex items-center gap-1"><Users size={16}/> {problem.submissions.length} Submissions</span>
-                      <span className="flex items-center gap-1"><Award size={16}/> {problem.prizeType}</span>
+                    <h2 className="text-xl font-semibold text-zinc-900">{problem.title}</h2>
+                    <div className="flex flex-wrap gap-4 mt-2 text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                      <span className="flex items-center gap-1.5"><Users size={14}/> {problem.submissions.length} Submissions</span>
+                      <span className="flex items-center gap-1.5"><Award size={14}/> {problem.prizeType?.replace("_", " ")}</span>
                     </div>
                   </div>
-                  <Link href={`/problems/${problem.problemId}`} className="text-white text-sm font-bold hover:underline">View Public Page &rarr;</Link>
+                  <Link href={`/problems/${problem.problemId}`} className="text-zinc-500 text-sm font-medium hover:text-[#b91c1c] transition-colors whitespace-nowrap">
+                    View Public Page &rarr;
+                  </Link>
                 </div>
 
                 {/* Submissions Pipeline */}
-                <div className="p-6 md:p-8 bg-black/50">
-                  <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider mb-6">Candidate Pipeline</h3>
+                <div className="p-6">
+                  <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Candidate Pipeline</h3>
                   
                   {problem.submissions.length === 0 ? (
-                    <p className="text-zinc-500 italic">Awaiting submissions...</p>
+                    <div className="py-8 text-center text-zinc-400 text-sm italic">
+                      Awaiting submissions...
+                    </div>
                   ) : (
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="flex flex-col border-t border-zinc-200">
                       {problem.submissions.map(sub => (
-                        <div key={sub.rankKey} className="bg-white/5 border border-white/10 rounded-xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:bg-white/10 transition-colors">
-                          <div className="flex-1">
+                        <div key={sub.rankKey} className="border-b border-zinc-200 py-6 px-4 -mx-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 hover:bg-zinc-50 transition-colors">
+                          <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-3 mb-2">
-                              <h4 className="font-bold text-lg text-white">{sub.studentName} {sub.teamId && <span className="text-xs bg-white/20 text-white px-2 py-0.5 rounded-full ml-2">Team Submission</span>}</h4>
-                              <span className="text-xs px-2 py-1 rounded-md bg-white/10 text-zinc-400">{sub.evaluationStatus || "PENDING"}</span>
+                              <h4 className="font-semibold text-lg text-zinc-900 truncate">{sub.studentName}</h4>
+                              {sub.teamId && <span className="text-[10px] bg-zinc-200 text-zinc-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">Team</span>}
+                              <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-100 border border-zinc-300 text-zinc-600 font-bold uppercase tracking-widest">{sub.evaluationStatus || "PENDING"}</span>
                             </div>
-                            <p className="text-sm text-zinc-400 line-clamp-2 mb-3">{sub.writeup}</p>
-                            <div className="flex items-center gap-4 text-sm font-bold">
-                              <a href={sub.githubUrl} target="_blank" className="text-white flex items-center gap-1 hover:text-zinc-300"><FileText size={16}/> View Code</a>
-                              {sub.demoUrl && <a href={sub.demoUrl} target="_blank" className="text-white flex items-center gap-1 hover:text-zinc-300"><ExternalLink size={16}/> Live Demo</a>}
+                            <p className="text-sm text-zinc-600 line-clamp-2 mb-3">{sub.writeup}</p>
+                            <div className="flex items-center gap-6 text-sm font-medium">
+                              <a href={sub.githubUrl} target="_blank" className="text-zinc-500 flex items-center gap-1.5 hover:text-[#b91c1c] transition-colors"><FileText size={16}/> View Code</a>
+                              {sub.demoUrl && <a href={sub.demoUrl} target="_blank" className="text-zinc-500 flex items-center gap-1.5 hover:text-[#b91c1c] transition-colors"><ExternalLink size={16}/> Live Demo</a>}
                             </div>
                           </div>
 

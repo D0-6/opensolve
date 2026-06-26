@@ -2,37 +2,37 @@ import { SignIn } from "@clerk/nextjs";
 
 export default function SignInPage() {
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center py-10 px-6">
+    <div className="min-h-screen bg-zinc-50 flex flex-col items-center justify-center py-10 px-6">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-display-lg font-bold mb-2 text-white">
+        <h1 className="text-3xl font-medium tracking-tight mb-2 text-zinc-900">
           Welcome back
         </h1>
-        <p className="text-zinc-400 text-sm">
+        <p className="text-zinc-500 text-sm">
           Sign in to access your dashboard and submissions
         </p>
       </div>
       <SignIn
         appearance={{
           variables: {
-            colorPrimary: "#ffffff",
-            colorBackground: "#0a0a0a",
-            colorText: "#ffffff",
-            colorTextSecondary: "#a1a1aa",
-            colorInputBackground: "#000000",
-            colorInputText: "#ffffff",
-            borderRadius: "12px",
+            colorPrimary: "#b91c1c",
+            colorBackground: "#ffffff",
+            colorText: "#18181b",
+            colorTextSecondary: "#71717a",
+            colorInputBackground: "#ffffff",
+            colorInputText: "#18181b",
+            borderRadius: "4px",
             fontFamily: "Inter, sans-serif",
           },
           elements: {
             card: {
-              background: "#0a0a0a",
-              border: "1px solid rgba(255,255,255,0.1)",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+              background: "#ffffff",
+              border: "1px solid #e4e4e7",
+              boxShadow: "none",
             },
             formButtonPrimary: {
-              background: "#ffffff",
-              fontWeight: 600,
-              color: "#000000",
+              background: "#b91c1c",
+              fontWeight: 500,
+              color: "#ffffff",
             },
           },
         }}

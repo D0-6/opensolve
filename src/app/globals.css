@@ -4,78 +4,63 @@
 
 @layer base {
   body {
-    background-color: #000000; /* Pure Black Base */
-    color: #ffffff; /* Pure White Text */
+    background-color: #ffffff;
+    color: #18181b; /* zinc-900 */
     overflow-x: hidden;
   }
   
   input, textarea, select {
-    background-color: #0a0a0a;
-    color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.2);
+    background-color: #ffffff;
+    color: #18181b;
+    border-color: #e4e4e7; /* zinc-200 */
   }
 }
 
 @layer components {
-  .glass-panel {
-    background: #0a0a0a;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .glass-card-hover {
-    transition: all 0.2s ease;
-  }
-  .glass-card-hover:hover {
-    border-color: rgba(255, 255, 255, 0.4);
-  }
-
-  /* Replacing all primary text gradients with stark white */
   .text-gradient-primary {
-    color: #ffffff;
+    color: #18181b;
   }
 
-  /* Solid white button for primary action */
   .btn-primary {
-    background: #ffffff;
-    color: #000000;
+    background: #b91c1c; /* Rust Accent */
+    color: #ffffff;
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid transparent;
+    border: 1px solid #991b1b;
+    border-radius: 4px;
   }
   .btn-primary:hover {
-    background: #e5e5e5;
+    background: #991b1b;
   }
 
-  /* Subtle dark gray for secondary */
   .btn-secondary {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
+    background: #ffffff;
+    border: 1px solid #e4e4e7; /* zinc-200 */
+    color: #18181b;
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    border-radius: 4px;
   }
   .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: #fafafa; /* zinc-50 */
+    border-color: #d4d4d8; /* zinc-300 */
   }
 }
 
 @layer utilities {
   .fade-in-up {
     opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.8s ease forwards;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s ease forwards;
   }
 
   .delay-100 { animation-delay: 100ms; }
   .delay-200 { animation-delay: 200ms; }
   .delay-300 { animation-delay: 300ms; }
-  .delay-400 { animation-delay: 400ms; }
-  .delay-500 { animation-delay: 500ms; }
 }
 
 @keyframes fadeInUp {

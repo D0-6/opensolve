@@ -48,26 +48,25 @@ export default function ClientQA({ problemId }: { problemId: string }) {
   };
 
   return (
-    <div className="glass-panel p-6 rounded-2xl flex flex-col h-[600px]">
-      <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2">
+    <div className="flex flex-col h-[600px]">
+      <div className="flex-1 overflow-y-auto space-y-4 mb-6 pr-2">
         {loading ? (
           <div className="animate-pulse space-y-4">
-            <div className="h-16 bg-slate-200 dark:bg-slate-800 rounded-lg"></div>
-            <div className="h-16 bg-slate-200 dark:bg-slate-800 rounded-lg"></div>
+            <div className="h-16 bg-zinc-100 rounded"></div>
+            <div className="h-16 bg-zinc-100 rounded"></div>
           </div>
         ) : threads.length === 0 ? (
-          <div className="text-center text-slate-500 py-8">
-            <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            No questions yet.
+          <div className="text-center text-zinc-400 py-12 border border-zinc-200 border-dashed">
+            <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-50 text-zinc-300" />
+            <span className="text-sm">No questions yet.</span>
           </div>
         ) : (
           threads.map((thread) => (
-            <div key={thread.sk} className="bg-white/50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700">
-              <div className="font-semibold text-sm mb-1">User {thread.askedBy.substring(0,6)}</div>
-              <p className="text-sm text-slate-700 dark:text-slate-300">{thread.questionText}</p>
-              {/* Simplification: Not showing full answers UI for hackathon scope to save space, but it's supported in API */}
+            <div key={thread.sk} className="bg-zinc-50 p-4 border border-zinc-200">
+              <div className="font-semibold text-zinc-900 text-sm mb-1">User {thread.askedBy.substring(0,6)}</div>
+              <p className="text-sm text-zinc-700">{thread.questionText}</p>
               {thread.answers?.length > 0 && (
-                <div className="mt-3 pl-3 border-l-2 border-blue-500 text-xs text-slate-600 dark:text-slate-400">
+                <div className="mt-3 pl-3 border-l-2 border-[#b91c1c] text-xs text-zinc-500 font-medium">
                   {thread.answers.length} reply
                 </div>
               )}
@@ -76,19 +75,19 @@ export default function ClientQA({ problemId }: { problemId: string }) {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="relative">
+      <form onSubmit={handleSubmit} className="relative mt-auto">
         <input
           type="text"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Ask a question..."
-          className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full py-3 pl-4 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+          className="w-full bg-white border border-zinc-300 py-3 pl-4 pr-12 focus:outline-none focus:border-[#b91c1c] text-sm text-zinc-900 placeholder:text-zinc-400 transition-colors"
           disabled={submitting}
         />
         <button 
           type="submit"
           disabled={submitting || !question.trim()}
-          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-blue-600 text-white rounded-full disabled:opacity-50 hover:bg-blue-700 transition-colors"
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-[#b91c1c] text-white disabled:opacity-50 hover:bg-[#991b1b] transition-colors"
         >
           <Send className="w-4 h-4" />
         </button>

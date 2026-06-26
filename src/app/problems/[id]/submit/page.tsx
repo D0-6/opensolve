@@ -75,23 +75,23 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
   if (!isLoaded) return null;
 
   return (
-    <div className="max-w-2xl mx-auto pt-16 px-6 lg:px-8 pb-24">
+    <div className="max-w-2xl mx-auto pt-24 px-6 lg:px-8 pb-24 min-h-screen bg-white">
       {/* Header */}
-      <div className="mb-10 text-center md:text-left">
-        <div className="inline-flex items-center gap-2 bg-white/5 border border-white/20 rounded-full px-4 py-1.5 text-xs font-bold text-white mb-6">
+      <div className="mb-12 text-center md:text-left">
+        <div className="inline-flex items-center gap-2 bg-zinc-50 border border-zinc-200 rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-600 mb-6 uppercase tracking-wide">
           Submitting as: {user?.fullName || user?.primaryEmailAddress?.emailAddress || "You"}
         </div>
-        <h1 className="text-3xl md:text-5xl font-display-lg font-bold text-white leading-tight mb-3">
+        <h1 className="text-3xl md:text-5xl font-medium text-zinc-900 leading-tight mb-3 tracking-tight">
           Submit Your Solution
         </h1>
-        <p className="text-base text-zinc-400 font-medium">
+        <p className="text-base text-zinc-500">
           Your submission is public and verifiable — make it count.
         </p>
       </div>
 
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-6 md:p-10">
+      <div className="bg-white border border-zinc-200 p-6 md:p-10">
         {error && (
-          <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl mb-8 text-sm font-medium">
+          <div className="flex items-start gap-3 bg-[#b91c1c]/10 border border-[#b91c1c]/20 text-[#b91c1c] p-4 mb-8 text-sm font-medium">
             <AlertCircle size={18} className="mt-0.5 shrink-0" />
             {error}
           </div>
@@ -101,18 +101,18 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
           
           {/* Team / Solo Toggle */}
           {team && (
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-              <label className="block text-sm font-bold text-zinc-400 mb-4">
+            <div className="bg-zinc-50 border border-zinc-200 p-6">
+              <label className="block text-xs font-bold text-zinc-500 mb-4 uppercase tracking-wider">
                 Submission Identity
               </label>
               <div className="flex flex-col md:flex-row gap-4">
                 <button
                   type="button"
                   onClick={() => setSubmitAsTeam(false)}
-                  className={`flex-1 p-4 rounded-xl font-bold transition-all border ${
+                  className={`flex-1 p-3 text-sm font-medium transition-all border ${
                     !submitAsTeam 
-                      ? "bg-white text-black border-white" 
-                      : "bg-transparent border-white/10 text-zinc-400 hover:border-white/30"
+                      ? "bg-white text-zinc-900 border-zinc-300 shadow-sm" 
+                      : "bg-transparent border-transparent text-zinc-500 hover:text-zinc-900"
                   }`}
                 >
                   Submit Solo
@@ -120,10 +120,10 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
                 <button
                   type="button"
                   onClick={() => setSubmitAsTeam(true)}
-                  className={`flex-1 p-4 rounded-xl font-bold transition-all border ${
+                  className={`flex-1 p-3 text-sm font-medium transition-all border ${
                     submitAsTeam 
-                      ? "bg-white text-black border-white" 
-                      : "bg-transparent border-white/10 text-zinc-400 hover:border-white/30"
+                      ? "bg-white text-zinc-900 border-zinc-300 shadow-sm" 
+                      : "bg-transparent border-transparent text-zinc-500 hover:text-zinc-900"
                   }`}
                 >
                   Submit as {team.name}
@@ -134,8 +134,8 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
 
           {/* GitHub URL */}
           <div>
-            <label className="block text-sm font-bold text-zinc-300 mb-3">
-              <GitBranch size={16} className="inline mr-2 align-middle text-zinc-400" />
+            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+              <GitBranch size={14} className="inline mr-1.5 align-text-bottom text-zinc-400" />
               GitHub Repository URL *
             </label>
             <input
@@ -145,15 +145,15 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               value={formData.githubUrl}
               onChange={handleChange}
               placeholder="https://github.com/yourusername/your-solution"
-              className="w-full bg-[#0a0a0a] border border-white/20 rounded-xl px-4 py-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all font-mono text-sm"
+              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#b91c1c] transition-colors font-mono text-sm"
             />
           </div>
 
           {/* Demo URL */}
           <div>
-            <label className="block text-sm font-bold text-zinc-300 mb-3">
-              <Globe size={16} className="inline mr-2 align-middle text-zinc-400" />
-              Live Demo URL <span className="font-normal text-zinc-600">(optional)</span>
+            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+              <Globe size={14} className="inline mr-1.5 align-text-bottom text-zinc-400" />
+              Live Demo URL <span className="font-normal normal-case tracking-normal">(optional)</span>
             </label>
             <input
               type="url"
@@ -161,13 +161,13 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               value={formData.demoUrl}
               onChange={handleChange}
               placeholder="https://your-demo.vercel.app"
-              className="w-full bg-[#0a0a0a] border border-white/20 rounded-xl px-4 py-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all font-mono text-sm"
+              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#b91c1c] transition-colors font-mono text-sm"
             />
           </div>
 
           {/* Writeup */}
           <div>
-            <label className="block text-sm font-bold text-zinc-300 mb-3">
+            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
               Solution Writeup *
             </label>
             <textarea
@@ -178,9 +178,9 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               maxLength={500}
               rows={6}
               placeholder="Explain your approach, tech stack, key decisions, and why your solution stands out..."
-              className="w-full bg-[#0a0a0a] border border-white/20 rounded-xl px-4 py-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-all text-sm resize-y"
+              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#b91c1c] transition-colors text-sm resize-y"
             />
-            <div className="text-right text-xs text-zinc-500 mt-2 font-bold">
+            <div className="text-right text-xs text-zinc-400 mt-2 font-medium">
               {formData.writeup.length} / 500
             </div>
           </div>
@@ -188,12 +188,12 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary font-bold py-4 rounded-xl flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:hover:bg-white"
+            className="w-full btn-primary font-medium py-3 flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:hover:bg-[#b91c1c]"
           >
             {loading ? (
-              <Loader2 size={20} className="animate-spin" />
+              <Loader2 size={18} className="animate-spin" />
             ) : (
-              <>Submit Solution <Send size={18} /></>
+              <>Submit Solution <Send size={16} /></>
             )}
           </button>
         </form>

@@ -1,16 +1,16 @@
 import { getProblem } from "@/lib/data";
 import { notFound } from "next/navigation";
-import { BadgeCheck, ExternalLink, CalendarDays, Trophy, ArrowLeft } from "lucide-react";
+import { ExternalLink, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import ClientLeaderboard from "./ClientLeaderboard";
 import ClientQA from "./ClientQA";
 
 export const dynamic = "force-dynamic";
 
-const SOURCE_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  YC_STARTUP: { label: "YC Startup", color: "text-zinc-300", bg: "bg-white/5 border-white/20" },
-  GOVERNMENT: { label: "Government", color: "text-zinc-300", bg: "bg-white/5 border-white/20" },
-  INDUSTRY: { label: "Industry", color: "text-zinc-300", bg: "bg-white/5 border-white/20" },
+const SOURCE_CONFIG: Record<string, { label: string }> = {
+  YC_STARTUP: { label: "YC Startup" },
+  GOVERNMENT: { label: "Government" },
+  INDUSTRY: { label: "Industry" },
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
@@ -54,85 +54,86 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
   };
 
   return (
-    <div className="pt-8 pb-16 max-w-7xl mx-auto px-6 lg:px-8">
+    <div className="pt-24 pb-16 max-w-5xl mx-auto px-6 bg-white min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       
       {/* Back link */}
       <Link
         href="/"
-        className="inline-flex items-center gap-2 text-zinc-400 hover:text-white text-sm mb-6 transition-colors font-semibold"
+        className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-900 text-sm mb-8 transition-colors font-medium"
       >
-        <ArrowLeft size={16} /> Back to Problems
+        <ArrowLeft size={16} /> Back to Directory
       </Link>
 
-      {/* Problem header card */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-6 md:p-10 mb-8 relative overflow-hidden">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+      {/* Problem header (Editorial, no card) */}
+      <div className="mb-12 relative">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
           <div className="flex flex-wrap items-center gap-3">
-            <span
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide border ${cfg.bg} ${cfg.color}`}
-            >
-              {cfg.label}
-              {problem.verified && <BadgeCheck size={14} />}
+            <span className="px-2.5 py-0.5 rounded-full border border-zinc-300 text-zinc-600 font-label-mono text-[11px] leading-tight shrink-0 uppercase tracking-wide font-semibold">
+              {cfg.label} {problem.verified && "· Verified"}
             </span>
-            <span className="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-zinc-400 border border-white/10">
+            <span className="px-2.5 py-0.5 rounded-full border border-zinc-300 text-zinc-600 font-label-mono text-[11px] leading-tight shrink-0 uppercase tracking-wide font-semibold">
               {problem.domain}
             </span>
           </div>
 
           <Link
             href={`/problems/${problem.problemId}/submit`}
-            className="btn-primary w-full md:w-auto text-center px-8 py-3 rounded-xl font-bold"
+            className="btn-primary w-full md:w-auto text-center px-6 py-2.5 font-medium text-sm"
           >
-            Submit Solution →
+            Submit Solution
           </Link>
         </div>
 
-        <h1 className="text-3xl md:text-5xl font-display-lg font-bold text-white leading-tight mb-6">
+        <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-zinc-900 leading-tight mb-6">
           {problem.title}
         </h1>
 
-        <p className="text-base md:text-lg text-zinc-400 leading-relaxed mb-8 whitespace-pre-wrap">
-          {problem.description}
-        </p>
-
-        {/* Meta row */}
-        <div className="flex flex-wrap items-center gap-6 pt-6 border-t border-white/10">
-          <div className="flex items-center gap-2 text-white font-bold">
-            <Trophy size={18} className="text-zinc-400" />
-            <span>
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-4 mb-8 text-sm">
+          <div>
+            <span className="text-zinc-400 uppercase tracking-wider text-xs font-bold block mb-1">Prize</span>
+            <span className="font-medium text-zinc-900">
               {problem.prizeType === "CASH"
-                ? `$${Number(problem.prizeAmount).toLocaleString()} Prize`
+                ? `$${Number(problem.prizeAmount).toLocaleString()}`
                 : problem.prizeType?.replace("_", " ")}
             </span>
           </div>
-          <div className="flex items-center gap-2 text-zinc-400 font-medium text-sm">
-            <CalendarDays size={18} />
-            <span>
-              Deadline: {new Date(problem.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+          <div>
+            <span className="text-zinc-400 uppercase tracking-wider text-xs font-bold block mb-1">Deadline</span>
+            <span className="font-medium text-zinc-900">
+              {new Date(problem.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
             </span>
           </div>
           {problem.sourceUrl && (
-            <a
-              href={problem.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-sm font-bold text-white hover:text-zinc-300 transition-colors ml-auto md:ml-0"
-            >
-              <ExternalLink size={16} /> View Original Source
-            </a>
+            <div>
+              <span className="text-zinc-400 uppercase tracking-wider text-xs font-bold block mb-1">Reference</span>
+              <a
+                href={problem.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 font-medium text-zinc-900 hover:text-[#b91c1c] transition-colors"
+              >
+                View Original <ExternalLink size={14} />
+              </a>
+            </div>
           )}
+        </div>
+
+        <div className="prose prose-zinc max-w-none border-t border-zinc-200 pt-8">
+          <p className="text-base md:text-lg text-zinc-700 leading-relaxed whitespace-pre-wrap">
+            {problem.description}
+          </p>
         </div>
       </div>
 
       {/* Leaderboard + QA */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 border-t border-zinc-200 pt-12">
         <div className="lg:col-span-2">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">Leaderboard</h2>
+          <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2">Leaderboard</h2>
           <ClientLeaderboard problemId={problem.problemId} />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">Q&amp;A Thread</h2>
+          <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2">Q&amp;A Thread</h2>
           <ClientQA problemId={problem.problemId} />
         </div>
       </div>

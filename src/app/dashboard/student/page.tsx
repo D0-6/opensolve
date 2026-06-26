@@ -48,104 +48,103 @@ export default async function StudentDashboard() {
   const firstName = user?.firstName || "Builder";
 
   return (
-    <div className="max-w-[1600px] mx-auto px-6 md:px-8 pt-10 pb-24 w-full">
+    <div className="max-w-5xl mx-auto px-6 pt-24 pb-24 w-full bg-white min-h-screen">
       {/* Welcome header */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 md:p-12 mb-10 flex flex-col gap-4 relative overflow-hidden">
-        
-        <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 w-fit text-xs font-bold text-white">
+      <div className="mb-12 border-b border-zinc-200 pb-12">
+        <div className="inline-flex items-center gap-2 bg-zinc-50 border border-zinc-200 rounded-full px-3 py-1.5 w-fit text-xs font-semibold text-zinc-600 mb-6 uppercase tracking-wide">
           <Zap size={14} /> Student Dashboard
         </div>
         
-        <h1 className="text-3xl md:text-5xl font-display-lg font-bold leading-tight text-[#dce1fb]">
+        <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-zinc-900 leading-tight">
           Welcome back, {firstName} 👋
         </h1>
         
-        <p className="text-[#8990a8] text-base md:text-lg">
+        <p className="text-zinc-500 text-base mt-2">
           Keep building. Every submission moves you closer to your next opportunity.
         </p>
 
         {/* Stats row */}
-        <div className="flex flex-wrap gap-4 mt-4">
+        <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-zinc-200 border border-zinc-200 mt-8">
           {[
-            { icon: <Trophy size={18} />, label: "Total Score", value: totalScore, color: "text-white" },
-            { icon: <GitBranch size={18} />, label: "Submissions", value: submissions.length, color: "text-white" },
-            { icon: <Flame size={18} />, label: "Rank", value: submissions.length > 0 ? "Active" : "—", color: "text-white" },
-          ].map(({ icon, label, value, color }) => (
-            <div key={label} className="bg-white/5 border border-white/10 rounded-2xl p-5 min-w-[140px] flex-1 md:flex-none">
-              <div className={`flex items-center gap-2 mb-2 text-sm font-bold ${color}`}>
+            { icon: <Trophy size={16} />, label: "Total Score", value: totalScore },
+            { icon: <GitBranch size={16} />, label: "Submissions", value: submissions.length },
+            { icon: <Flame size={16} />, label: "Rank", value: submissions.length > 0 ? "Active" : "—" },
+          ].map(({ icon, label, value }) => (
+            <div key={label} className="p-6 flex-1 bg-zinc-50">
+              <div className="flex items-center gap-2 mb-2 text-xs font-bold text-zinc-500 uppercase tracking-wider">
                 {icon} {label}
               </div>
-              <div className="text-3xl font-bold text-[#dce1fb]">{value}</div>
+              <div className="text-3xl font-medium text-zinc-900">{value}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Quick actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
         <Link
           href="/"
-          className="glass glass-card-hover rounded-2xl p-6 flex flex-col gap-4 group"
+          className="border border-zinc-200 bg-white p-6 flex flex-col gap-4 group hover:bg-zinc-50 transition-colors"
         >
-          <div className="w-12 h-12 rounded-xl bg-white/10 text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Search size={20} />
+          <div className="w-10 h-10 border border-zinc-200 text-zinc-600 flex items-center justify-center bg-white group-hover:text-[#b91c1c] group-hover:border-[#b91c1c] transition-colors">
+            <Search size={18} />
           </div>
           <div>
-            <div className="font-bold text-white text-lg mb-1">Browse Challenges</div>
-            <div className="text-sm text-zinc-400">Find your next problem to solve</div>
+            <div className="font-medium text-zinc-900 text-lg mb-1">Browse Challenges</div>
+            <div className="text-sm text-zinc-500">Find your next problem to solve</div>
           </div>
-          <ArrowRight size={20} className="text-zinc-500 mt-auto group-hover:text-white transition-colors" />
+          <ArrowRight size={18} className="text-zinc-400 mt-auto group-hover:translate-x-1 transition-transform" />
         </Link>
 
         <Link
           href={`/profile/${userId}`}
-          className="glass glass-card-hover rounded-2xl p-6 flex flex-col gap-4 group"
+          className="border border-zinc-200 bg-white p-6 flex flex-col gap-4 group hover:bg-zinc-50 transition-colors"
         >
-          <div className="w-12 h-12 rounded-xl bg-white/10 text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Star size={20} />
+          <div className="w-10 h-10 border border-zinc-200 text-zinc-600 flex items-center justify-center bg-white group-hover:text-[#b91c1c] group-hover:border-[#b91c1c] transition-colors">
+            <Star size={18} />
           </div>
           <div>
-            <div className="font-bold text-white text-lg mb-1">My Public Profile</div>
-            <div className="text-sm text-zinc-400">View how companies see you</div>
+            <div className="font-medium text-zinc-900 text-lg mb-1">My Public Profile</div>
+            <div className="text-sm text-zinc-500">View how companies see you</div>
           </div>
-          <ArrowRight size={20} className="text-zinc-500 mt-auto group-hover:text-white transition-colors" />
+          <ArrowRight size={18} className="text-zinc-400 mt-auto group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
 
       {/* Recent submissions */}
       <div>
-        <h2 className="text-2xl font-bold text-[#dce1fb] mb-6">
+        <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2">
           Recent Submissions
         </h2>
         {submissions.length === 0 ? (
-          <div className="glass rounded-3xl p-12 text-center text-[#8990a8]">
-            <Trophy size={48} className="mx-auto mb-4 opacity-30" />
-            <p className="font-bold text-[#dce1fb] text-lg mb-2">No submissions yet</p>
-            <p className="text-sm mb-6">Start solving problems to build your portfolio</p>
-            <Link href="/" className="btn-primary px-8 py-3 rounded-xl font-bold">
+          <div className="border border-zinc-200 border-dashed p-12 text-center text-zinc-500">
+            <Trophy size={32} className="mx-auto mb-4 opacity-50 text-zinc-300" />
+            <p className="font-medium text-zinc-900 text-lg mb-1">No submissions yet</p>
+            <p className="text-sm mb-6">Start solving problems to build your portfolio.</p>
+            <Link href="/" className="btn-primary px-6 py-2.5 font-medium text-sm">
               Browse Problems
             </Link>
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col border-t border-zinc-200">
             {submissions.map((sub) => (
               <div
                 key={`${sub.problemId}-${sub.submittedAt}`}
-                className="glass rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:border-white/20 transition-colors"
+                className="border-b border-zinc-200 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 group hover:bg-zinc-50 px-4 transition-colors -mx-4"
               >
                 <div>
                   <Link
                     href={`/problems/${sub.problemId}`}
-                    className="font-bold text-[#dce1fb] hover:text-[#00cbe6] transition-colors text-lg"
+                    className="font-semibold text-zinc-900 hover:text-[#b91c1c] transition-colors text-lg"
                   >
                     View Problem →
                   </Link>
-                  <p className="text-sm text-[#8990a8] mt-1 font-medium">
+                  <p className="text-sm text-zinc-500 mt-1">
                     Submitted: {new Date(sub.submittedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </p>
                 </div>
                 <div className="flex items-center gap-4 w-full md:w-auto">
-                  <div className="bg-white/5 border border-white/20 rounded-xl px-5 py-2.5 font-bold text-white">
+                  <div className="bg-white border border-zinc-200 px-4 py-2 font-bold text-zinc-900 text-sm">
                     Score: {sub.score ?? "—"}
                   </div>
                   {sub.githubUrl && (
@@ -153,9 +152,9 @@ export default async function StudentDashboard() {
                       href={sub.githubUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#8990a8] hover:bg-white/10 hover:text-[#dce1fb] transition-all"
+                      className="w-10 h-10 border border-zinc-200 bg-white flex items-center justify-center text-zinc-500 hover:text-zinc-900 hover:border-zinc-400 transition-colors"
                     >
-                      <GitBranch size={20} />
+                      <GitBranch size={16} />
                     </a>
                   )}
                 </div>
