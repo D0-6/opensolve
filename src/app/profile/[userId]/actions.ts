@@ -13,7 +13,9 @@ export async function updateProfile(formData: FormData) {
 
   const bio = formData.get("bio") as string;
   const githubUsername = formData.get("githubUsername") as string;
+  const linkedinUrl = formData.get("linkedinUrl") as string;
   const skillsString = formData.get("skills") as string;
+  const name = formData.get("name") as string;
 
   const skills = skillsString
     ? skillsString.split(",").map((s) => s.trim()).filter((s) => s.length > 0)
@@ -23,11 +25,16 @@ export async function updateProfile(formData: FormData) {
     new UpdateCommand({
       TableName: PROFILES_TABLE,
       Key: { userId: user.id },
-      UpdateExpression: "SET bio = :bio, githubUsername = :gh, skills = :skills",
+      UpdateExpression: "SET bio = :bio, githubUsername = :gh, linkedinUrl = :li, skills = :skills, #name = :name",
+      ExpressionAttributeNames: {
+        "#name": "name"
+      },
       ExpressionAttributeValues: {
         ":bio": bio || null,
         ":gh": githubUsername || null,
+        ":li": linkedinUrl || null,
         ":skills": skills,
+        ":name": name || null,
       },
     })
   );

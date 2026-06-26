@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { GitBranch, Trophy, Calendar, Pencil, X, Save, Loader2 } from "lucide-react";
+import { GitBranch, Trophy, Calendar, Pencil, X, Save, Loader2, Linkedin } from "lucide-react";
 import Link from "next/link";
 import { updateProfile } from "./actions";
 
@@ -9,12 +9,14 @@ export default function ProfileClient({
   isOwner, 
   profile, 
   submissions,
-  userId
+  userId,
+  fallbackName
 }: { 
   isOwner: boolean; 
   profile: any; 
   submissions: any[];
   userId: string;
+  fallbackName?: string;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -45,22 +47,35 @@ export default function ProfileClient({
         )}
 
         <div className="w-32 h-32 bg-zinc-100 border border-zinc-200 flex-shrink-0 flex items-center justify-center text-[#1a3a5c] text-5xl font-medium">
-          {profile?.name ? profile.name.charAt(0).toUpperCase() : userId.charAt(0).toUpperCase()}
+          {(profile?.name || fallbackName) ? (profile?.name || fallbackName).charAt(0).toUpperCase() : userId.charAt(0).toUpperCase()}
         </div>
         
         <div className="flex-1 text-center md:text-left w-full">
-          <h1 className="text-3xl font-medium text-zinc-900 mb-2 tracking-tight">{profile?.name || `User ${userId}`}</h1>
+          <h1 className="text-3xl font-medium text-zinc-900 mb-2 tracking-tight">{profile?.name || fallbackName || `User ${userId}`}</h1>
           
           {isEditing ? (
             <form onSubmit={handleSubmit} className="space-y-4 w-full mt-4">
-              <div>
-                <label className="block text-xs font-bold text-zinc-500 mb-1 uppercase">Bio</label>
-                <textarea 
-                  name="bio" 
-                  defaultValue={profile?.bio || ""} 
-                  className={`${inputStyles} resize-none`} 
-                  rows={3} 
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-zinc-500 mb-1 uppercase">Full Name</label>
+                  <input 
+                    name="name" 
+                    type="text" 
+                    defaultValue={profile?.name || fallbackName || ""} 
+                    className={inputStyles}
+                    placeholder="John Doe"
+                    required 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-zinc-500 mb-1 uppercase">Bio</label>
+                  <input 
+                    name="bio" 
+                    type="text"
+                    defaultValue={profile?.bio || ""} 
+                    className={inputStyles} 
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -69,7 +84,18 @@ export default function ProfileClient({
                     name="githubUsername" 
                     type="text" 
                     defaultValue={profile?.githubUsername || ""} 
-                    className={inputStyles} 
+                    className={inputStyles}
+                    placeholder="github-handle"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-zinc-500 mb-1 uppercase">LinkedIn URL</label>
+                  <input 
+                    name="linkedinUrl" 
+                    type="url" 
+                    defaultValue={profile?.linkedinUrl || ""} 
+                    className={inputStyles}
+                    placeholder="https://linkedin.com/in/..."
                   />
                 </div>
                 <div>
@@ -126,10 +152,15 @@ export default function ProfileClient({
                   <Calendar className="w-4 h-4 text-zinc-400" />
                   Joined {profile?.joinedAt ? new Date(profile.joinedAt).toLocaleDateString() : "Recently"}
                 </div>
-                {profile?.githubUsername && (
                   <a href={`https://github.com/${profile.githubUsername}`} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 bg-zinc-50 border border-zinc-200 px-3 py-1.5 hover:border-[#1a3a5c] transition-colors uppercase tracking-wider group">
                     <GitBranch className="w-4 h-4 text-zinc-400 group-hover:text-[#1a3a5c]" />
                     GitHub
+                  </a>
+                )}
+                {profile?.linkedinUrl && (
+                  <a href={profile.linkedinUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 bg-zinc-50 border border-zinc-200 px-3 py-1.5 hover:border-[#1a3a5c] transition-colors uppercase tracking-wider group">
+                    <Linkedin className="w-4 h-4 text-zinc-400 group-hover:text-[#1a3a5c]" />
+                    LinkedIn
                   </a>
                 )}
               </div>

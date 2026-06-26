@@ -1,6 +1,6 @@
 import { docClient } from "@/lib/dynamodb";
 import { GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import ProfileClient from "./ProfileClient";
 
 const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
@@ -15,11 +15,23 @@ export default async function UserProfile({ params }: { params: Promise<{ userId
   const isOwner = loggedInUserId === userId;
 
   let profile;
+  let fallbackName = "";
   try {
     const res = await docClient.send(new GetCommand({ TableName: PROFILES_TABLE, Key: { userId } }));
     profile = res.Item;
   } catch (err) {
     console.error(err);
+  }
+
+  try {
+    // Fallback to pulling name from Clerk if the user bypassed the old onboarding flow
+    const clerk = await clerkClient();
+    const targetUser = await clerk.users.getUser(userId);
+    if (targetUser) {
+      fallbackName = [targetUser.firstName, targetUser.lastName].filter(Boolean).join(" ");
+    }
+  } catch (err) {
+    console.error("Failed to fetch fallback user from Clerk", err);
   }
 
   let submissions: any[] = [];
@@ -41,6 +53,7 @@ export default async function UserProfile({ params }: { params: Promise<{ userId
       profile={profile} 
       submissions={submissions} 
       userId={userId} 
+      fallbackName={fallbackName}
     />
   );
 }
