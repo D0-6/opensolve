@@ -62,7 +62,7 @@ export default function ProfessionalPostChallenge() {
     }
   };
 
-  const inputStyles = "w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#a8581f] transition-all font-body-md text-sm";
+  const inputStyles = "w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-all font-body-md text-sm";
   const labelStyles = "block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider";
 
   return (
@@ -83,7 +83,7 @@ export default function ProfessionalPostChallenge() {
         </div>
 
         {error && (
-          <div className="bg-[#a8581f]/10 border border-[#a8581f]/20 text-[#a8581f] p-4 rounded-md mb-8 font-medium flex items-center gap-3">
+          <div className="bg-[#1a3a5c]/10 border border-[#1a3a5c]/20 text-[#1a3a5c] p-4 rounded-md mb-8 font-medium flex items-center gap-3">
             <X size={18} />
             {error}
           </div>
@@ -97,7 +97,7 @@ export default function ProfessionalPostChallenge() {
             {/* Section 1: Basic Info */}
             <section className="bg-white border border-zinc-200 p-8">
               <div className="flex items-center gap-2 mb-6 text-zinc-900 border-b border-zinc-200 pb-2">
-                <FileText size={20} className="text-[#a8581f]" />
+                <FileText size={20} className="text-[#1a3a5c]" />
                 <h2 className="text-xl font-medium">Challenge Details</h2>
               </div>
               <div className="space-y-6">
@@ -130,7 +130,7 @@ export default function ProfessionalPostChallenge() {
             <section className="bg-white border border-zinc-200 p-8">
               <div className="flex items-center justify-between mb-6 border-b border-zinc-200 pb-2">
                 <div className="flex items-center gap-2 text-zinc-900">
-                  <LinkIcon size={20} className="text-[#a8581f]" />
+                  <LinkIcon size={20} className="text-[#1a3a5c]" />
                   <h2 className="text-xl font-medium">Datasets & Resources</h2>
                 </div>
                 <button type="button" onClick={handleAddLink} className="text-xs font-bold text-zinc-600 bg-zinc-50 border border-zinc-200 px-3 py-1.5 hover:bg-zinc-100 transition-colors flex items-center gap-1">
@@ -144,7 +144,7 @@ export default function ProfessionalPostChallenge() {
                   <div key={index} className="flex gap-3">
                     <input type="url" value={link} onChange={(e) => handleLinkChange(index, e.target.value)} placeholder="https://..." className={inputStyles} />
                     {resourceLinks.length > 1 && (
-                      <button type="button" onClick={() => handleRemoveLink(index)} className="p-3 border border-zinc-200 text-zinc-500 hover:text-[#a8581f] hover:border-[#a8581f] transition-colors bg-white">
+                      <button type="button" onClick={() => handleRemoveLink(index)} className="p-3 border border-zinc-200 text-zinc-500 hover:text-[#1a3a5c] hover:border-[#1a3a5c] transition-colors bg-white">
                         <X size={20} />
                       </button>
                     )}
@@ -158,7 +158,7 @@ export default function ProfessionalPostChallenge() {
           <div className="space-y-6">
             <section className="bg-zinc-50 border border-zinc-200 p-6 sticky top-24">
               <h3 className="text-lg font-medium text-zinc-900 flex items-center gap-2 mb-6 border-b border-zinc-200 pb-2">
-                <Briefcase size={18} className="text-[#a8581f]" /> Logistics & Payout
+                <Briefcase size={18} className="text-[#1a3a5c]" /> Logistics & Payout
               </h3>
               
               <div className="space-y-6">

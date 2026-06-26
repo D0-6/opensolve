@@ -66,7 +66,7 @@ export default function ClientQA({ problemId }: { problemId: string }) {
               <div className="font-semibold text-zinc-900 text-sm mb-1">User {thread.askedBy.substring(0,6)}</div>
               <p className="text-sm text-zinc-700">{thread.questionText}</p>
               {thread.answers?.length > 0 && (
-                <div className="mt-3 pl-3 border-l-2 border-[#a8581f] text-xs text-zinc-500 font-medium">
+                <div className="mt-3 pl-3 border-l-2 border-[#1a3a5c] text-xs text-zinc-500 font-medium">
                   {thread.answers.length} reply
                 </div>
               )}
@@ -81,13 +81,13 @@ export default function ClientQA({ problemId }: { problemId: string }) {
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Ask a question..."
-          className="w-full bg-white border border-zinc-300 py-3 pl-4 pr-12 focus:outline-none focus:border-[#a8581f] text-sm text-zinc-900 placeholder:text-zinc-400 transition-colors"
+          className="w-full bg-white border border-zinc-300 py-3 pl-4 pr-12 focus:outline-none focus:border-[#1a3a5c] text-sm text-zinc-900 placeholder:text-zinc-400 transition-colors"
           disabled={submitting}
         />
         <button 
           type="submit"
           disabled={submitting || !question.trim()}
-          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-[#a8581f] text-white disabled:opacity-50 hover:bg-[#8c491a] transition-colors"
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-[#1a3a5c] text-white disabled:opacity-50 hover:bg-[#112740] transition-colors"
         >
           <Send className="w-4 h-4" />
         </button>

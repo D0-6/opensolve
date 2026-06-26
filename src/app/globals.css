@@ -22,17 +22,17 @@
   }
 
   .btn-primary {
-    background: #a8581f; /* Rust Accent */
+    background: #1a3a5c; /* Rust Accent */
     color: #ffffff;
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #8c491a;
+    border: 1px solid #112740;
     border-radius: 4px;
   }
   .btn-primary:hover {
-    background: #8c491a;
+    background: #112740;
   }
 
   .btn-secondary {

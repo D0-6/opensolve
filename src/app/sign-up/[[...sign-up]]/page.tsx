@@ -14,7 +14,7 @@ export default function SignUpPage() {
       <SignUp
         appearance={{
           variables: {
-            colorPrimary: "#a8581f",
+            colorPrimary: "#1a3a5c",
             colorBackground: "#ffffff",
             colorText: "#18181b",
             colorTextSecondary: "#71717a",
@@ -30,7 +30,7 @@ export default function SignUpPage() {
               boxShadow: "none",
             },
             formButtonPrimary: {
-              background: "#a8581f",
+              background: "#1a3a5c",
               fontWeight: 500,
               color: "#ffffff",
             },

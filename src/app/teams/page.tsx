@@ -95,7 +95,7 @@ export default function TeamsPage() {
         </div>
 
         {error && (
-          <div className="flex items-start gap-3 bg-[#a8581f]/10 border border-[#a8581f]/20 text-[#a8581f] p-4 mb-8 text-sm font-medium">
+          <div className="flex items-start gap-3 bg-[#1a3a5c]/10 border border-[#1a3a5c]/20 text-[#1a3a5c] p-4 mb-8 text-sm font-medium">
             <AlertCircle size={18} className="mt-0.5 shrink-0" />
             {error}
           </div>
@@ -106,7 +106,7 @@ export default function TeamsPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-zinc-200 pb-8 mb-8 gap-4">
               <div>
                 <h2 className="text-3xl font-semibold text-zinc-900">{team.name}</h2>
-                <div className="flex items-center gap-2 mt-2 text-[#a8581f] text-sm font-bold">
+                <div className="flex items-center gap-2 mt-2 text-[#1a3a5c] text-sm font-bold">
                   <ShieldCheck size={16} /> Verified Active Team
                 </div>
               </div>
@@ -125,7 +125,7 @@ export default function TeamsPage() {
                     {team.teamId}
                   </code>
                   <button onClick={copyToClipboard} className="bg-white border border-zinc-200 p-3 hover:bg-zinc-50 transition-colors text-zinc-600">
-                    {copied ? <Check size={20} className="text-[#a8581f]" /> : <Copy size={20} />}
+                    {copied ? <Check size={20} className="text-[#1a3a5c]" /> : <Copy size={20} />}
                   </button>
                 </div>
               </div>
@@ -133,9 +133,9 @@ export default function TeamsPage() {
               <div>
                 <h3 className="text-lg font-medium text-zinc-900 mb-4 border-b border-zinc-200 pb-2">Team Security</h3>
                 <ul className="space-y-3 text-sm text-zinc-600">
-                  <li className="flex gap-2"><CheckCircle2 size={16} className="text-[#a8581f] shrink-0" /> End-to-end verified submissions.</li>
-                  <li className="flex gap-2"><CheckCircle2 size={16} className="text-[#a8581f] shrink-0" /> Enterprise organizations can hire the whole team.</li>
-                  <li className="flex gap-2"><CheckCircle2 size={16} className="text-[#a8581f] shrink-0" /> Prize pools are distributed equally.</li>
+                  <li className="flex gap-2"><CheckCircle2 size={16} className="text-[#1a3a5c] shrink-0" /> End-to-end verified submissions.</li>
+                  <li className="flex gap-2"><CheckCircle2 size={16} className="text-[#1a3a5c] shrink-0" /> Enterprise organizations can hire the whole team.</li>
+                  <li className="flex gap-2"><CheckCircle2 size={16} className="text-[#1a3a5c] shrink-0" /> Prize pools are distributed equally.</li>
                 </ul>
               </div>
             </div>
@@ -144,7 +144,7 @@ export default function TeamsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Create Team */}
             <div className="bg-white border border-zinc-200 p-8 hover:bg-zinc-50 transition-colors group">
-              <div className="w-12 h-12 bg-white border border-zinc-200 text-zinc-600 flex items-center justify-center mb-6 group-hover:text-[#a8581f] group-hover:border-[#a8581f] transition-colors">
+              <div className="w-12 h-12 bg-white border border-zinc-200 text-zinc-600 flex items-center justify-center mb-6 group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors">
                 <Plus size={20} />
               </div>
               <h2 className="text-xl font-medium text-zinc-900 mb-2">Start a Squad</h2>
@@ -173,7 +173,7 @@ export default function TeamsPage() {
                   value={inviteCode}
                   onChange={(e) => setInviteCode(e.target.value)}
                   placeholder="Paste Invite Code" 
-                  className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#a8581f] transition-colors font-mono text-sm"
+                  className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
                 />
                 <button 
                   type="submit"

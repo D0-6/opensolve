@@ -117,11 +117,11 @@ export default async function CompanyDashboard() {
               return (
                 <div
                   key={problem.problemId}
-                  className="border-b border-zinc-200 py-6 px-4 hover:bg-zinc-50 transition-colors -mx-4 group border-l-4 border-l-transparent hover:border-l-[#a8581f]"
+                  className="border-b border-zinc-200 py-6 px-4 hover:bg-zinc-50 transition-colors -mx-4 group border-l-4 border-l-transparent hover:border-l-[#1a3a5c]"
                 >
                   <div className="flex flex-wrap gap-4 items-start justify-between">
                     <div className="flex-1 min-w-[200px]">
-                      <h3 className="text-lg font-semibold text-zinc-900 mb-1 group-hover:text-[#a8581f] transition-colors">{problem.title}</h3>
+                      <h3 className="text-lg font-semibold text-zinc-900 mb-1 group-hover:text-[#1a3a5c] transition-colors">{problem.title}</h3>
                       <p className="text-sm text-zinc-500">
                         Deadline: {new Date(problem.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                       </p>

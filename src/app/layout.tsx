@@ -21,7 +21,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider appearance={{ 
-      variables: { colorPrimary: '#a8581f' }
+      variables: { colorPrimary: '#1a3a5c' }
     }}>
       <html lang="en" className={`${inter.variable} ${sora.variable} ${jetbrainsMono.variable}`}>
         <head>

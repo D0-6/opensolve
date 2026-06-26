@@ -70,7 +70,7 @@ export default async function OrgDashboard() {
                       <span className="flex items-center gap-1.5"><Award size={14}/> {problem.prizeType?.replace("_", " ")}</span>
                     </div>
                   </div>
-                  <Link href={`/problems/${problem.problemId}`} className="text-zinc-500 text-sm font-medium hover:text-[#a8581f] transition-colors whitespace-nowrap">
+                  <Link href={`/problems/${problem.problemId}`} className="text-zinc-500 text-sm font-medium hover:text-[#1a3a5c] transition-colors whitespace-nowrap">
                     View Public Page &rarr;
                   </Link>
                 </div>
@@ -95,8 +95,8 @@ export default async function OrgDashboard() {
                             </div>
                             <p className="text-sm text-zinc-600 line-clamp-2 mb-3">{sub.writeup}</p>
                             <div className="flex items-center gap-6 text-sm font-medium">
-                              <a href={sub.githubUrl} target="_blank" className="text-zinc-500 flex items-center gap-1.5 hover:text-[#a8581f] transition-colors"><FileText size={16}/> View Code</a>
-                              {sub.demoUrl && <a href={sub.demoUrl} target="_blank" className="text-zinc-500 flex items-center gap-1.5 hover:text-[#a8581f] transition-colors"><ExternalLink size={16}/> Live Demo</a>}
+                              <a href={sub.githubUrl} target="_blank" className="text-zinc-500 flex items-center gap-1.5 hover:text-[#1a3a5c] transition-colors"><FileText size={16}/> View Code</a>
+                              {sub.demoUrl && <a href={sub.demoUrl} target="_blank" className="text-zinc-500 flex items-center gap-1.5 hover:text-[#1a3a5c] transition-colors"><ExternalLink size={16}/> Live Demo</a>}
                             </div>
                           </div>
 

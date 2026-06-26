@@ -111,7 +111,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
                 href={problem.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 font-medium text-zinc-900 hover:text-[#a8581f] transition-colors"
+                className="flex items-center gap-1.5 font-medium text-zinc-900 hover:text-[#1a3a5c] transition-colors"
               >
                 View Original <ExternalLink size={14} />
               </a>

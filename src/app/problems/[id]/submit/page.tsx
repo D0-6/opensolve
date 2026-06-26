@@ -91,7 +91,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
 
       <div className="bg-white border border-zinc-200 p-6 md:p-10">
         {error && (
-          <div className="flex items-start gap-3 bg-[#a8581f]/10 border border-[#a8581f]/20 text-[#a8581f] p-4 mb-8 text-sm font-medium">
+          <div className="flex items-start gap-3 bg-[#1a3a5c]/10 border border-[#1a3a5c]/20 text-[#1a3a5c] p-4 mb-8 text-sm font-medium">
             <AlertCircle size={18} className="mt-0.5 shrink-0" />
             {error}
           </div>
@@ -145,7 +145,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               value={formData.githubUrl}
               onChange={handleChange}
               placeholder="https://github.com/yourusername/your-solution"
-              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#a8581f] transition-colors font-mono text-sm"
+              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
             />
           </div>
 
@@ -161,7 +161,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               value={formData.demoUrl}
               onChange={handleChange}
               placeholder="https://your-demo.vercel.app"
-              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#a8581f] transition-colors font-mono text-sm"
+              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
             />
           </div>
 
@@ -178,7 +178,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
               maxLength={500}
               rows={6}
               placeholder="Explain your approach, tech stack, key decisions, and why your solution stands out..."
-              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#a8581f] transition-colors text-sm resize-y"
+              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm resize-y"
             />
             <div className="text-right text-xs text-zinc-400 mt-2 font-medium">
               {formData.writeup.length} / 500
@@ -188,7 +188,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary font-medium py-3 flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:hover:bg-[#a8581f]"
+            className="w-full btn-primary font-medium py-3 flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:hover:bg-[#1a3a5c]"
           >
             {loading ? (
               <Loader2 size={18} className="animate-spin" />

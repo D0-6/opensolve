@@ -71,7 +71,7 @@ export function NavBar() {
             <>
               <Link href="/dashboard" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Dashboard</Link>
               {role === "company" && (
-                <Link href="/organizations/new" className="text-[#a8581f] font-body-md font-medium py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Post Challenge</Link>
+                <Link href="/organizations/new" className="text-[#1a3a5c] font-body-md font-medium py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Post Challenge</Link>
               )}
               <div className="pt-2">
                 <UserButton afterSignOutUrl="/" />

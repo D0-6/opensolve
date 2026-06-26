@@ -68,7 +68,7 @@ export default function ClientLeaderboard({ problemId }: { problemId: string }) 
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <a href={`/profile/${sub.userId}`} className="font-semibold text-zinc-900 hover:text-[#a8581f] transition-colors truncate">{sub.studentName}</a>
+                <a href={`/profile/${sub.userId}`} className="font-semibold text-zinc-900 hover:text-[#1a3a5c] transition-colors truncate">{sub.studentName}</a>
                 <div className="flex items-center gap-1.5 text-zinc-900 font-bold bg-zinc-100 border border-zinc-200 px-2 py-0.5 rounded-full text-xs ml-4 shrink-0">
                   <ArrowUpCircle className="w-3.5 h-3.5 text-zinc-500" />
                   {sub.score}
