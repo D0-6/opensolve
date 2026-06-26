@@ -92,8 +92,8 @@ export async function POST(request: Request) {
     }));
 
     // PHASE 10: Trigger Automated Blast to Students
-    const { sendMockEmail } = await import("@/lib/email");
-    await sendMockEmail({
+    const { sendEmail } = await import("@/lib/email");
+    await sendEmail({
       to: "all-active-students@opensolve.talent",
       subject: `New Hiring Challenge: ${newProblem.title}`,
       body: `A new ${newProblem.prizeType} challenge has been posted by an organization in the ${newProblem.domain} domain.\n\nPrize/Budget: $${newProblem.prizeAmount}\nDeadline: ${new Date(newProblem.deadline).toLocaleDateString()}\n\nLog in to OpenSolve to assemble your team and start building!`

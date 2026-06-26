@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
 import { UpdateCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
-import { sendMockEmail } from "@/lib/email";
+import { sendEmail } from "@/lib/email";
 
 const TABLE_NAME = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
 const PROBLEMS_TABLE = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     }));
 
     // Trigger Mock Email
-    await sendMockEmail({
+    await sendEmail({
       to: `student-${studentUserId}@opensolve.user`,
       subject: emailSubject,
       body: emailBody

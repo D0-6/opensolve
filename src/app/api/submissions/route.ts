@@ -101,17 +101,17 @@ export async function POST(request: Request) {
     await docClient.send(new PutCommand({ TableName: TABLE_NAME, Item: newSubmission }));
 
     // PHASE 10: Trigger Email Receipts
-    const { sendMockEmail } = await import("@/lib/email");
+    const { sendEmail } = await import("@/lib/email");
     
     // Alert the Student/Team
-    await sendMockEmail({
+    await sendEmail({
       to: `student-${userId}@opensolve.user`,
       subject: `Submission Received: ${repoName}`,
       body: `Congratulations! Your solution for the challenge has been successfully verified and stored on the blockchain/database.\n\nThe organization will review your code and demo. If you are selected, they will trigger a Hiring Offer or Contract through your dashboard.`
     });
 
     // Alert the Organization
-    await sendMockEmail({
+    await sendEmail({
       to: `org-admin@opensolve.company`,
       subject: `New Solution Submitted!`,
       body: `A new solution has just landed in your Hiring Pipeline dashboard.\n\nCandidate/Team ID: ${body.teamId || userId}\nGitHub: ${githubUrl}\n\nLog in to your Organization Dashboard to evaluate the code and extend an offer.`
