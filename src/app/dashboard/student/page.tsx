@@ -86,7 +86,7 @@ export default async function StudentDashboard() {
           href="/"
           className="border border-zinc-200 bg-white p-6 flex flex-col gap-4 group hover:bg-zinc-50 transition-colors"
         >
-          <div className="w-10 h-10 border border-zinc-200 text-zinc-600 flex items-center justify-center bg-white group-hover:text-[#b91c1c] group-hover:border-[#b91c1c] transition-colors">
+          <div className="w-10 h-10 border border-zinc-200 text-zinc-600 flex items-center justify-center bg-white group-hover:text-[#a8581f] group-hover:border-[#a8581f] transition-colors">
             <Search size={18} />
           </div>
           <div>
@@ -100,7 +100,7 @@ export default async function StudentDashboard() {
           href={`/profile/${userId}`}
           className="border border-zinc-200 bg-white p-6 flex flex-col gap-4 group hover:bg-zinc-50 transition-colors"
         >
-          <div className="w-10 h-10 border border-zinc-200 text-zinc-600 flex items-center justify-center bg-white group-hover:text-[#b91c1c] group-hover:border-[#b91c1c] transition-colors">
+          <div className="w-10 h-10 border border-zinc-200 text-zinc-600 flex items-center justify-center bg-white group-hover:text-[#a8581f] group-hover:border-[#a8581f] transition-colors">
             <Star size={18} />
           </div>
           <div>
@@ -135,7 +135,7 @@ export default async function StudentDashboard() {
                 <div>
                   <Link
                     href={`/problems/${sub.problemId}`}
-                    className="font-semibold text-zinc-900 hover:text-[#b91c1c] transition-colors text-lg"
+                    className="font-semibold text-zinc-900 hover:text-[#a8581f] transition-colors text-lg"
                   >
                     View Problem →
                   </Link>

@@ -33,7 +33,7 @@ function ProblemRow({ problem }: { problem: any }) {
               {problem.domain}
             </span>
           </div>
-          <h3 className="font-body-lg text-lg font-semibold text-zinc-900 group-hover:text-[#b91c1c] transition-colors truncate">
+          <h3 className="font-body-lg text-lg font-semibold text-zinc-900 group-hover:text-[#a8581f] transition-colors truncate">
             {problem.title}
           </h3>
           {problem.description && (

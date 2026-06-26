@@ -46,7 +46,7 @@ export default function EvaluationActions({
 
   return (
     <div className="flex flex-col gap-2 w-full md:w-auto">
-      {error && <div className="text-[#b91c1c] text-xs mb-1 flex items-center gap-1"><AlertCircle size={12}/> {error}</div>}
+      {error && <div className="text-[#a8581f] text-xs mb-1 flex items-center gap-1"><AlertCircle size={12}/> {error}</div>}
       
       <button 
         onClick={() => handleAction(primaryAction)}

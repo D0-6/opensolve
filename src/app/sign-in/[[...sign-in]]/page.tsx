@@ -14,7 +14,7 @@ export default function SignInPage() {
       <SignIn
         appearance={{
           variables: {
-            colorPrimary: "#b91c1c",
+            colorPrimary: "#a8581f",
             colorBackground: "#ffffff",
             colorText: "#18181b",
             colorTextSecondary: "#71717a",
@@ -30,7 +30,7 @@ export default function SignInPage() {
               boxShadow: "none",
             },
             formButtonPrimary: {
-              background: "#b91c1c",
+              background: "#a8581f",
               fontWeight: 500,
               color: "#ffffff",
             },
