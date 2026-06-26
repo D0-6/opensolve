@@ -157,6 +157,7 @@ export default function ProfileClient({
                   <Calendar className="w-4 h-4 text-zinc-400" />
                   Joined {profile?.joinedAt ? new Date(profile.joinedAt).toLocaleDateString() : "Recently"}
                 </div>
+                {profile?.githubUsername && (
                   <a href={`https://github.com/${profile.githubUsername}`} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 bg-zinc-50 border border-zinc-200 px-3 py-1.5 hover:border-[#1a3a5c] transition-colors uppercase tracking-wider group">
                     <GitBranch className="w-4 h-4 text-zinc-400 group-hover:text-[#1a3a5c]" />
                     GitHub
