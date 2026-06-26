@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
 import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
@@ -53,9 +53,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
-  if (!userId) {
-    return NextResponse.json({ error: "Sign in to post a challenge" }, { status: 401 });
+  const user = await currentUser();
+  if (!user || user.publicMetadata?.role !== "organization" || !user.publicMetadata?.orgId) {
+    return NextResponse.json({ error: "Sign in as an organization to post a challenge" }, { status: 401 });
   }
 
   const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
       deadline: body.deadline,
       domain: body.domain,
       postedAt: now,
-      postedByOrgId: userId, // server-side from Clerk — not client-provided
+      postedByOrgId: user.publicMetadata.orgId, // pulled securely from clerk metadata
       verified: false,
       status: "OPEN",
       resourceLinks: body.resourceLinks || [],

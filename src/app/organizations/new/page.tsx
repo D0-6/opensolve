@@ -1,11 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { Building2, Plus, X, Loader2, Link as LinkIcon, FileText, Briefcase, Calendar, LayoutGrid, CheckCircle2 } from "lucide-react";
 
 export default function ProfessionalPostChallenge() {
   const router = useRouter();
+  const { user, isLoaded } = useUser();
+  
+  useEffect(() => {
+    if (isLoaded && (!user || user.publicMetadata?.role !== "organization")) {
+      router.push("/sign-in");
+    }
+  }, [user, isLoaded, router]);
   
   const [formData, setFormData] = useState({
     title: "",
@@ -64,6 +72,10 @@ export default function ProfessionalPostChallenge() {
 
   const inputStyles = "w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-all font-body-md text-sm";
   const labelStyles = "block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider";
+
+  if (!isLoaded || !user || user.publicMetadata?.role !== "organization") {
+    return <div className="min-h-screen bg-white flex items-center justify-center"><Loader2 size={32} className="animate-spin text-zinc-400" /></div>;
+  }
 
   return (
     <div className="min-h-screen bg-white py-12 px-6">

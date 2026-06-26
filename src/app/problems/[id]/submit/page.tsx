@@ -1,13 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { Send, GitBranch, Globe, Loader2, AlertCircle } from "lucide-react";
 
-export default function SubmitSolution({ params }: { params: { id: string } }) {
+export default function SubmitSolution({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { user, isLoaded } = useUser();
+  const [unwrappedParams, setUnwrappedParams] = useState<{ id: string } | null>(null);
+
+  useEffect(() => {
+    params.then(setUnwrappedParams);
+  }, [params]);
+
+  useEffect(() => {
+    if (isLoaded && (!user || user.publicMetadata?.role !== "student")) {
+      router.push("/sign-in");
+    }
+  }, [user, isLoaded, router]);
 
   const [formData, setFormData] = useState({
     githubUrl: "",
@@ -55,7 +66,7 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
-          problemId: params.id,
+          problemId: unwrappedParams?.id,
           studentName: user?.fullName || user?.username || "Anonymous",
           userId: user?.id,
           teamId: submitAsTeam && team ? team.teamId : null,
@@ -64,7 +75,9 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to submit solution");
-      router.push(`/problems/${params.id}`);
+      if (unwrappedParams) {
+        router.push(`/problems/${unwrappedParams.id}`);
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -72,7 +85,9 @@ export default function SubmitSolution({ params }: { params: { id: string } }) {
     }
   };
 
-  if (!isLoaded) return null;
+  if (!isLoaded || !user || user.publicMetadata?.role !== "student" || !unwrappedParams) {
+    return <div className="min-h-screen bg-white flex items-center justify-center"><Loader2 size={32} className="animate-spin text-zinc-400" /></div>;
+  }
 
   return (
     <div className="max-w-2xl mx-auto pt-24 px-6 lg:px-8 pb-24 min-h-screen bg-white">

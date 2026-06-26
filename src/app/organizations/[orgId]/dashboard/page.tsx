@@ -1,12 +1,19 @@
 import { getOrganization, getProblems, getSubmissions } from "@/lib/data";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Mail, ExternalLink, Play } from "lucide-react";
 import Link from "next/link";
+import { currentUser } from "@clerk/nextjs/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function OrgDashboard({ params }: { params: Promise<{ orgId: string }> }) {
   const { orgId } = await params;
+  
+  const user = await currentUser();
+  if (!user || user.publicMetadata?.role !== "organization" || user.publicMetadata?.orgId !== orgId) {
+    redirect("/sign-in");
+  }
+
   const org = await getOrganization(orgId);
   if (!org) notFound();
 

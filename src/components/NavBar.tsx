@@ -10,6 +10,12 @@ export function NavBar() {
   const role = user?.publicMetadata?.role as string | undefined;
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const dashboardLink = role === "organization" && user?.publicMetadata?.orgId
+    ? `/organizations/${user.publicMetadata.orgId}/dashboard`
+    : role === "student"
+    ? `/profile/${user?.id}`
+    : "/onboarding/routing";
+
   return (
     <header className="fixed top-0 w-full z-50 bg-white border-b border-zinc-200">
       <div className="flex justify-between items-center px-6 max-w-[1600px] mx-auto h-20">
@@ -31,8 +37,8 @@ export function NavBar() {
         <div className="hidden md:flex items-center gap-4">
           {isLoaded && isSignedIn && (
             <>
-              <Link href="/dashboard" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors duration-200">Dashboard</Link>
-              {role === "company" && (
+              <Link href={dashboardLink} className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors duration-200">Dashboard</Link>
+              {role === "organization" && (
                 <Link href="/organizations/new" className="btn-primary px-6 py-2 font-body-md font-medium active:scale-95 transition-transform">
                   Post Challenge
                 </Link>
@@ -69,8 +75,8 @@ export function NavBar() {
           
           {isLoaded && isSignedIn && (
             <>
-              <Link href="/dashboard" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Dashboard</Link>
-              {role === "company" && (
+              <Link href={dashboardLink} className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Dashboard</Link>
+              {role === "organization" && (
                 <Link href="/organizations/new" className="text-[#1a3a5c] font-body-md font-medium py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Post Challenge</Link>
               )}
               <div className="pt-2">

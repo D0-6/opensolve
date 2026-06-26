@@ -12,6 +12,7 @@ export default function SignInPage() {
         </p>
       </div>
       <SignIn
+        fallbackRedirectUrl="/onboarding/routing"
         appearance={{
           variables: {
             colorPrimary: "#1a3a5c",
