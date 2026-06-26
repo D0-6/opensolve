@@ -79,7 +79,7 @@ export default function ProfessionalPostChallenge() {
 
   return (
     <div className="min-h-screen bg-white py-12 px-6">
-      <div className="max-w-[1250px] mx-auto">
+      <div className="w-full max-w-[125rem] mx-auto">
         
         {/* Header Section */}
         <div className="mb-12 border-b border-zinc-200 pb-8">

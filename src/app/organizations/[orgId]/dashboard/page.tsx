@@ -29,7 +29,7 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
   submissions.sort((a, b) => b.score - a.score);
 
   return (
-    <div className="max-w-[1250px] mx-auto mt-12 space-y-8 px-6">
+    <div className="w-full max-w-[125rem] mx-auto mt-12 space-y-8 px-6">
       <div className="bg-white border border-zinc-200 p-8 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h1 className="text-3xl font-medium text-zinc-900 tracking-tight mb-2">{org.orgName} Dashboard</h1>

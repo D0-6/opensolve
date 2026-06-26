@@ -51,12 +51,12 @@ export function NavBar() {
 
           {isLoaded && !isSignedIn && (
             <>
-              <SignInButton mode="modal">
-                <button className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors duration-200">Sign In</button>
-              </SignInButton>
-              <SignUpButton mode="modal">
-                <button className="btn-primary px-6 py-2 font-body-md font-medium active:scale-95 transition-transform">Get Started</button>
-              </SignUpButton>
+              <Link href="/sign-in" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors duration-200">
+                Sign In
+              </Link>
+              <Link href="/sign-up" className="btn-primary px-6 py-2 font-body-md font-medium active:scale-95 transition-transform">
+                Get Started
+              </Link>
             </>
           )}
         </div>
@@ -87,12 +87,12 @@ export function NavBar() {
 
           {isLoaded && !isSignedIn && (
             <div className="flex gap-4 pt-2">
-              <SignInButton mode="modal">
-                <button className="btn-secondary px-4 py-2 flex-1">Sign In</button>
-              </SignInButton>
-              <SignUpButton mode="modal">
-                <button className="btn-primary px-4 py-2 flex-1">Get Started</button>
-              </SignUpButton>
+              <Link href="/sign-in" className="btn-secondary px-4 py-2 flex-1 text-center" onClick={() => setMobileOpen(false)}>
+                Sign In
+              </Link>
+              <Link href="/sign-up" className="btn-primary px-4 py-2 flex-1 text-center" onClick={() => setMobileOpen(false)}>
+                Get Started
+              </Link>
             </div>
           )}
         </div>

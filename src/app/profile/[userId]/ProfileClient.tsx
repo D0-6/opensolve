@@ -31,7 +31,7 @@ export default function ProfileClient({
   const inputStyles = "w-full bg-white border border-zinc-300 px-3 py-2 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm font-medium";
 
   return (
-    <div className="max-w-[1250px] mx-auto mt-12 space-y-8 px-6">
+    <div className="w-full max-w-[125rem] mx-auto mt-12 space-y-8 px-6">
       {/* Profile Header */}
       <div className="bg-white border border-zinc-200 p-8 flex flex-col md:flex-row gap-8 items-center md:items-start relative">
         {isOwner && !isEditing && (

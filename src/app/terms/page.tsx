@@ -3,7 +3,7 @@ import { FileText } from "lucide-react";
 export default function Terms() {
   return (
     <div className="min-h-screen bg-white pt-24 pb-32 px-6">
-      <div className="max-w-[1250px] mx-auto space-y-16">
+      <div className="w-full max-w-[125rem] mx-auto space-y-16">
         
         {/* Header Section */}
         <div className="border-b border-zinc-200 pb-12">

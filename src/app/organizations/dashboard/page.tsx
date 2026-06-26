@@ -40,7 +40,7 @@ export default async function OrgDashboard() {
 
   return (
     <div className="min-h-screen bg-white pt-24 pb-24 px-6 w-full">
-      <div className="max-w-[1250px] mx-auto px-6 lg:px-8">
+      <div className="w-full max-w-[125rem] mx-auto px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-zinc-200 pb-12 gap-6">
           <div>
             <h1 className="text-3xl md:text-5xl tracking-tight text-zinc-900 font-medium">Hiring Pipeline</h1>

@@ -14,7 +14,7 @@ export default async function OrganizationProfile({ params }: { params: Promise<
   }
 
   return (
-    <div className="max-w-[1250px] mx-auto mt-12 space-y-8 px-6">
+    <div className="w-full max-w-[125rem] mx-auto mt-12 space-y-8 px-6">
       <div className="bg-white border border-zinc-200 p-8 flex flex-col md:flex-row gap-6 items-center md:items-start relative">
         {org.logoUrl ? (
           <img src={org.logoUrl} alt={org.orgName} className="w-24 h-24 object-cover border border-zinc-200 bg-white" />

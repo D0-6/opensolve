@@ -86,7 +86,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
       
       {/* Hero Section */}
       <section className="pt-32 pb-24 px-6">
-        <div className="max-w-[1250px] mx-auto flex flex-col items-start gap-6 fade-in-up">
+        <div className="w-full max-w-[125rem] mx-auto flex flex-col items-start gap-6 fade-in-up">
           <h1 className="font-display-xl text-5xl md:text-7xl font-medium tracking-tight text-zinc-900 leading-[1.1]">
             Where Builders Meet <br className="hidden md:block" />
             <span className="text-zinc-400">Real Opportunities.</span>
@@ -109,7 +109,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
 
       {/* Stats Strip */}
       <section className="border-y border-zinc-200 bg-zinc-50 fade-in-up delay-100">
-        <div className="max-w-[1250px] mx-auto px-6 flex flex-col md:flex-row items-center justify-between divide-y md:divide-y-0 md:divide-x divide-zinc-200 py-6 md:py-0">
+        <div className="w-full max-w-[125rem] mx-auto px-6 flex flex-col md:flex-row items-center justify-between divide-y md:divide-y-0 md:divide-x divide-zinc-200 py-6 md:py-0">
           <div className="py-4 md:py-8 w-full md:flex-1 text-center md:text-left md:pr-8">
             <div className="flex items-center justify-center md:justify-start gap-3">
               <span className="text-3xl font-medium text-zinc-900">{problems.length}</span>
@@ -137,7 +137,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
       </section>
 
       {/* Active Challenges Section */}
-      <section id="challenges" className="py-24 px-6 max-w-[1250px] mx-auto">
+      <section id="challenges" className="py-24 px-6 w-full max-w-[125rem] mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-end mb-8 border-b border-zinc-200 pb-4 fade-in-up">
           <div>
             <h2 className="text-2xl font-medium text-zinc-900">Directory</h2>
@@ -182,7 +182,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
 
       {/* How It Works Section */}
       <section className="py-24 px-6 bg-zinc-50 border-t border-zinc-200">
-        <div className="max-w-[1250px] mx-auto">
+        <div className="w-full max-w-[125rem] mx-auto">
           <div className="mb-16 fade-in-up">
             <h2 className="text-2xl font-medium text-zinc-900">How OpenSolve Works</h2>
             <p className="text-zinc-500 mt-2">A transparent pipeline from challenge to career.</p>
