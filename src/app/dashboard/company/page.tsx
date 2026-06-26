@@ -39,7 +39,7 @@ export default async function CompanyDashboard() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 pt-24 pb-24 w-full bg-white min-h-screen">
+    <div className="max-w-[1250px] mx-auto px-6 pt-24 pb-24 w-full bg-white min-h-screen">
       {/* Header */}
       <div className="mb-12 border-b border-zinc-200 pb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>

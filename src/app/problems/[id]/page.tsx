@@ -54,7 +54,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
   };
 
   return (
-    <div className="pt-24 pb-16 max-w-5xl mx-auto px-6 bg-white min-h-screen">
+    <div className="pt-24 pb-16 max-w-[1250px] mx-auto px-6 bg-white min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       
       {/* Back link */}

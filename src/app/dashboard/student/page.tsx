@@ -48,7 +48,7 @@ export default async function StudentDashboard() {
   const firstName = user?.firstName || "Builder";
 
   return (
-    <div className="max-w-5xl mx-auto px-6 pt-24 pb-24 w-full bg-white min-h-screen">
+    <div className="max-w-[1250px] mx-auto px-6 pt-24 pb-24 w-full bg-white min-h-screen">
       {/* Welcome header */}
       <div className="mb-12 border-b border-zinc-200 pb-12">
         <div className="inline-flex items-center gap-2 bg-zinc-50 border border-zinc-200 rounded-full px-3 py-1.5 w-fit text-xs font-semibold text-zinc-600 mb-6 uppercase tracking-wide">

@@ -80,7 +80,7 @@ export default function TeamsPage() {
 
   return (
     <div className="min-h-screen bg-white py-24 px-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-[1250px] mx-auto">
         
         <div className="mb-12 text-center md:text-left">
           <div className="inline-flex items-center gap-2 bg-zinc-50 border border-zinc-200 rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-600 mb-6 uppercase tracking-wide">

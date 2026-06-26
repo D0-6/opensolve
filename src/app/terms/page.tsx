@@ -1,80 +1,64 @@
 import { FileText } from "lucide-react";
-import Link from "next/link";
 
 export default function Terms() {
   return (
-    <div className="max-w-4xl mx-auto mt-12 mb-32 px-6">
-      <div className="glass-panel p-8 md:p-12 rounded-3xl">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="w-12 h-12 bg-primary/10 border border-primary/20 text-primary rounded-xl flex items-center justify-center">
-            <FileText className="w-6 h-6" />
-          </div>
-          <h1 className="text-4xl font-display-lg text-on-surface">Terms of Service</h1>
-        </div>
+    <div className="min-h-screen bg-white pt-24 pb-32 px-6">
+      <div className="max-w-[1250px] mx-auto space-y-16">
         
-        <div className="prose prose-invert max-w-none text-on-surface-variant font-body-md space-y-8">
-          <p className="text-sm border-b border-white/10 pb-4"><strong>Effective Date:</strong> June 25, 2026</p>
+        {/* Header Section */}
+        <div className="border-b border-zinc-200 pb-12">
+          <div className="w-16 h-16 bg-zinc-50 border border-zinc-200 text-[#1a3a5c] flex items-center justify-center mb-8">
+            <FileText size={32} strokeWidth={1.5} />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-medium text-zinc-900 tracking-tight mb-6">Terms of Service</h1>
+          <p className="text-zinc-500 text-base">Last Updated: October 2024</p>
+        </div>
 
-          <div>
-            <h2 className="text-2xl font-headline-md text-on-surface mb-4">1. Agreement to Terms</h2>
+        {/* Content Body */}
+        <div className="space-y-12 text-zinc-600 text-base leading-relaxed">
+          
+          <section>
+            <h2 className="text-xl font-medium text-zinc-900 mb-4">1. Agreement to Terms</h2>
             <p>
-              By accessing or using the OpenSolve platform ("Platform"), you agree to be bound by these Terms of Service ("Terms") and our Privacy Policy. If you do not agree to these Terms, you may not access or use the Platform. OpenSolve is a platform facilitating connections between developers ("Solvers") and organizations ("Posters") for the purpose of solving technical challenges.
+              By accessing or using OpenSolve, you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access the platform. These terms apply to all visitors, users, and others who access or use the Service.
             </p>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="text-2xl font-headline-md text-on-surface mb-4">2. Account Registration and Security</h2>
-            <p className="mb-4">
-              To use certain features of the Platform, you must register for an account using a valid email address or third-party provider (e.g., Google, GitHub). You agree to provide accurate, current, and complete information during the registration process.
-            </p>
+          <section>
+            <h2 className="text-xl font-medium text-zinc-900 mb-4">2. Account Registration and Security</h2>
             <p>
-              You are entirely responsible for maintaining the confidentiality of your account credentials. You agree to notify us immediately of any unauthorized use of your account. We reserve the right to suspend or terminate accounts that violate these Terms or present a security risk.
+              You must provide accurate and complete information when creating an account. You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password.
             </p>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="text-2xl font-headline-md text-on-surface mb-4">3. Challenge Postings and Awards</h2>
-            <p className="mb-4">
-              <strong>For Organizations (Posters):</strong> By posting a challenge, you commit to evaluating submissions in good faith. You are solely responsible for determining the winner(s) and distributing any promised rewards (cash, contracts, hiring offers). OpenSolve does not hold funds in escrow and is not liable for unpaid prizes.
-            </p>
-            <p className="mb-4">
-              <strong>For Developers (Solvers):</strong> By submitting a solution, you warrant that your submission is your original work and does not infringe on any third-party intellectual property rights. You understand that the posting Organization retains sole discretion over selecting winners.
-            </p>
+          <section>
+            <h2 className="text-xl font-medium text-zinc-900 mb-4">3. Challenge Postings and Awards</h2>
             <p>
-              <strong>Aggregated Content:</strong> Some challenges on OpenSolve are aggregated from public sources and have not been explicitly verified by the original organization. These are marked without a "Verified" badge. We make no guarantees regarding the validity, uptime, or reward status of aggregated challenges.
+              OpenSolve aggregates both verified and publicly sourced (unverified) challenges. Verified challenges are posted directly by organizations. For unverified challenges, we make no guarantee regarding the availability, validity, or payout of the stated rewards. Any contractual relationship resulting from a challenge is strictly between the solver and the posting organization.
             </p>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="text-2xl font-headline-md text-on-surface mb-4">4. Intellectual Property</h2>
-            <p className="mb-4">
-              <strong>Platform IP:</strong> The OpenSolve platform, including its code, design, and architecture, is owned by OpenSolve. You may not copy, modify, or distribute our intellectual property without written consent.
-            </p>
+          <section>
+            <h2 className="text-xl font-medium text-zinc-900 mb-4">4. Intellectual Property</h2>
             <p>
-              <strong>User Submissions:</strong> Unless explicitly stated otherwise in the specific rules of a challenge, you retain the intellectual property rights to the code you submit. However, by submitting a solution, you grant the posting Organization a limited license to review and evaluate your code for the purpose of the challenge.
+              Unless otherwise specified by a challenge's specific rules, you retain ownership of the code you submit. By submitting a solution, you grant OpenSolve a non-exclusive license to display, host, and share your submission with the relevant organizations for evaluation purposes.
             </p>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="text-2xl font-headline-md text-on-surface mb-4">5. Disclaimer of Warranties and Limitation of Liability</h2>
-            <p className="mb-4">
-              THE PLATFORM IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED. OPENSOLVE EXPRESSLY DISCLAIMS ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
-            </p>
+          <section>
+            <h2 className="text-xl font-medium text-zinc-900 mb-4">5. Disclaimer of Warranties and Limitation of Liability</h2>
             <p>
-              IN NO EVENT SHALL OPENSOLVE BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR GOODWILL, ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF THE PLATFORM OR INABILITY TO SECURE A REWARD OR EMPLOYMENT.
+              The Service is provided on an "AS IS" and "AS AVAILABLE" basis. OpenSolve makes no representations or warranties of any kind, express or implied, as to the operation of their services, or the information, content, or materials included therein.
             </p>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="text-2xl font-headline-md text-on-surface mb-4">6. Changes to Terms</h2>
+          <section>
+            <h2 className="text-xl font-medium text-zinc-900 mb-4">6. Changes to Terms</h2>
             <p>
-              We reserve the right to modify these Terms at any time. We will notify you of any material changes by posting the new Terms on the Platform or via email. Your continued use of the Platform after changes constitutes your acceptance of the revised Terms.
+              We reserve the right, at our sole discretion, to modify or replace these Terms at any time. By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms.
             </p>
-          </div>
+          </section>
 
-          <div className="pt-8 border-t border-white/10 text-center">
-            <p>If you have any questions about these Terms, please <Link href="#" className="text-primary hover:underline">contact us</Link>.</p>
-          </div>
         </div>
       </div>
     </div>

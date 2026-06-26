@@ -1,86 +1,64 @@
-import { Shield } from "lucide-react";
-import Link from "next/link";
+import { ShieldAlert } from "lucide-react";
 
 export default function Privacy() {
   return (
-    <div className="max-w-4xl mx-auto mt-12 mb-32 px-6">
-      <div className="glass-panel p-8 md:p-12 rounded-3xl">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="w-12 h-12 bg-secondary/10 border border-secondary/20 text-secondary rounded-xl flex items-center justify-center">
-            <Shield className="w-6 h-6" />
-          </div>
-          <h1 className="text-4xl font-display-lg text-on-surface">Privacy Policy</h1>
-        </div>
+    <div className="min-h-screen bg-white pt-24 pb-32 px-6">
+      <div className="max-w-[1250px] mx-auto space-y-16">
         
-        <div className="prose prose-invert max-w-none text-on-surface-variant font-body-md space-y-8">
-          <p className="text-sm border-b border-white/10 pb-4"><strong>Effective Date:</strong> June 25, 2026</p>
+        {/* Header Section */}
+        <div className="border-b border-zinc-200 pb-12">
+          <div className="w-16 h-16 bg-zinc-50 border border-zinc-200 text-[#1a3a5c] flex items-center justify-center mb-8">
+            <ShieldAlert size={32} strokeWidth={1.5} />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-medium text-zinc-900 tracking-tight mb-6">Privacy Policy</h1>
+          <p className="text-zinc-500 text-base">Last Updated: October 2024</p>
+        </div>
 
-          <div>
-            <h2 className="text-2xl font-headline-md text-on-surface mb-4">1. Introduction</h2>
+        {/* Content Body */}
+        <div className="space-y-12 text-zinc-600 text-base leading-relaxed">
+          
+          <section>
+            <h2 className="text-xl font-medium text-zinc-900 mb-4">1. Introduction</h2>
             <p>
-              OpenSolve ("we", "our", or "us") respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our platform. Please read this Privacy Policy carefully. If you do not agree with the terms of this Privacy Policy, please do not access the site.
+              OpenSolve values your privacy. This Privacy Policy explains how we collect, use, and disclose your personal information when you use our platform. By using the Service, you consent to the data practices described in this statement.
             </p>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="text-2xl font-headline-md text-on-surface mb-4">2. Information We Collect</h2>
-            <p className="mb-4">
-              We may collect information about you in a variety of ways. The information we may collect on the Site includes:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Personal Data:</strong> Personally identifiable information, such as your name, shipping address, email address, and telephone number, that you voluntarily give to us when you register with the Site.</li>
-              <li><strong>Derivative Data:</strong> Information our servers automatically collect when you access the Site, such as your IP address, your browser type, your operating system, your access times, and the pages you have viewed directly before and after accessing the Site.</li>
-              <li><strong>Third-Party Data:</strong> Information from third parties, such as GitHub or Google, if you choose to link, create, or log in to your account with these services.</li>
-            </ul>
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-headline-md text-on-surface mb-4">3. Use of Your Information</h2>
-            <p className="mb-4">
-              Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you via the Site to:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Create and manage your account.</li>
-              <li>Facilitate the submission of challenge solutions and connect you with posting organizations.</li>
-              <li>Email you regarding your account, challenge updates, or platform changes.</li>
-              <li>Monitor and analyze usage and trends to improve your experience with the Site.</li>
-              <li>Prevent fraudulent transactions, monitor against theft, and protect against criminal activity.</li>
-            </ul>
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-headline-md text-on-surface mb-4">4. Disclosure of Your Information</h2>
-            <p className="mb-4">
-              We may share information we have collected about you in certain situations. Your information may be disclosed as follows:
-            </p>
-            <p className="mb-4">
-              <strong>To Challenge Posters:</strong> If you submit a solution to a challenge, your profile information, GitHub URL, and write-up will be shared with the organization that posted the challenge so they may evaluate your work and contact you.
-            </p>
+          <section>
+            <h2 className="text-xl font-medium text-zinc-900 mb-4">2. Information We Collect</h2>
             <p>
-              <strong>By Law or to Protect Rights:</strong> If we believe the release of information about you is necessary to respond to legal process, to investigate or remedy potential violations of our policies, or to protect the rights, property, and safety of others, we may share your information as permitted or required by any applicable law, rule, or regulation.
+              We collect information that you provide directly to us, such as when you create an account, update your profile, post a challenge, or submit a solution. This includes personal identifiers like your name, email address, GitHub username, and any other information you choose to provide in your public bio or resume.
             </p>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="text-2xl font-headline-md text-on-surface mb-4">5. Data Security and Retention</h2>
-            <p className="mb-4">
-              We use administrative, technical, and physical security measures to help protect your personal information, including end-to-end encryption and secure cloud infrastructure hosted on AWS. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable.
-            </p>
+          <section>
+            <h2 className="text-xl font-medium text-zinc-900 mb-4">3. Use of Your Information</h2>
             <p>
-              We will only retain your personal data for as long as necessary to fulfill the purposes we collected it for, including for the purposes of satisfying any legal, accounting, or reporting requirements.
+              We use the information we collect to operate, maintain, and improve our platform. This includes facilitating connections between problem solvers and organizations, verifying account identities, providing customer support, and sending you updates or notifications related to your account and platform activity.
             </p>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="text-2xl font-headline-md text-on-surface mb-4">6. Your Rights</h2>
+          <section>
+            <h2 className="text-xl font-medium text-zinc-900 mb-4">4. Disclosure of Your Information</h2>
             <p>
-              Depending on your location, you may have rights under data protection laws in relation to your personal data, including the right to request access, correction, erasure, restriction, transfer, or to object to processing. If you wish to exercise any of these rights, please contact us.
+              When you submit a solution or create a public profile, your name, GitHub link, and submitted code references are visible to organizations and other users. We do not sell your personal data to third parties. We may disclose your information if required to do so by law or in the good faith belief that such action is necessary to comply with legal obligations or protect the rights and safety of OpenSolve and our users.
             </p>
-          </div>
+          </section>
 
-          <div className="pt-8 border-t border-white/10 text-center">
-            <p>If you have any questions about this Privacy Policy, please <Link href="#" className="text-primary hover:underline">contact us</Link>.</p>
-          </div>
+          <section>
+            <h2 className="text-xl font-medium text-zinc-900 mb-4">5. Data Security and Retention</h2>
+            <p>
+              We implement reasonable security measures designed to protect your information from unauthorized access, alteration, or disclosure. We retain your personal data only for as long as necessary to fulfill the purposes for which it was collected or to comply with legal requirements.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-medium text-zinc-900 mb-4">6. Your Rights</h2>
+            <p>
+              Depending on your jurisdiction, you may have the right to access, correct, or delete the personal information we hold about you. If you wish to exercise these rights or have any questions about this Privacy Policy, please contact our support team.
+            </p>
+          </section>
+
         </div>
       </div>
     </div>
