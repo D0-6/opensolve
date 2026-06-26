@@ -44,7 +44,7 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
         <h2 className="text-xl font-medium text-zinc-900 border-b border-zinc-200 pb-2">Your Active Problems</h2>
         {orgProblems.length === 0 ? (
           <div className="bg-zinc-50 border border-zinc-200 p-8 text-center text-zinc-500 text-sm">
-            You haven't posted any problems yet.
+            You haven&apos;t posted any problems yet.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -67,7 +67,7 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
           <h2 className="text-xl font-medium text-zinc-900 border-b border-zinc-200 pb-2">Top Submissions for: {exampleProblem.title}</h2>
           
           <div className="bg-zinc-50 p-4 text-sm text-zinc-600 border border-zinc-200">
-            <strong>Note:</strong> In this hackathon version, "Contact" opens a pre-filled mailto link. Phase 2 adds in-app messaging.
+            <strong>Note:</strong> In this hackathon version, &quot;Contact&quot; opens a pre-filled mailto link. Phase 2 adds in-app messaging.
           </div>
 
           <div className="space-y-4">

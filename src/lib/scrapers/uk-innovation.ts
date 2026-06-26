@@ -18,7 +18,7 @@ export async function scrapeUKInnovation() {
 
     const html = await response.text();
     const $ = cheerio.load(html);
-    const problems: any[] = [];
+    const problems: Record<string, unknown>[] = [];
 
     $("li.search-result, .search-results > li, h2 > a").each((_, element) => {
       // Find each "## [...]({url})" heading

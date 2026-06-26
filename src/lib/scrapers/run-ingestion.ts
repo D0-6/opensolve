@@ -46,7 +46,7 @@ export async function runIngestion() {
           if (queryResult.Items && queryResult.Items.some(item => item.title === p.title)) {
             exists = true;
           }
-        } catch (e: any) {
+        } catch (e: unknown) {
           // If GSI does not exist, fallback to Scan
           console.warn(`Query on sourceUrl-index failed, falling back to Scan for ${p.sourceUrl}. Ensure GSI is created!`);
           const scanResult = await docClient.send(new ScanCommand({
@@ -80,9 +80,9 @@ export async function runIngestion() {
           added++;
         }
       }
-    } catch (err: any) {
-      console.error(`Error in scraper ${scraper.name}:`, err);
-      errors.push(`Error in ${scraper.name}: ${err.message}`);
+    } catch (e: unknown) {
+      console.error(`Failed to scrape ${scraper.name}:`, e);
+      errors.push(`Error in ${scraper.name}: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
 

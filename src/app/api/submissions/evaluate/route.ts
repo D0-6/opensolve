@@ -67,8 +67,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, status });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error evaluating submission:", error);
-    return NextResponse.json({ error: error.message || "Failed to evaluate submission" }, { status: 500 });
+    const msg = error instanceof Error ? error.message : "Failed to evaluate submission";
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

@@ -1,4 +1,4 @@
-import { getProblems } from "@/lib/data";
+import { getProblems, type Problem } from "@/lib/data";
 import Link from "next/link";
 import { formatDistanceToNow, differenceInHours } from "date-fns";
 
@@ -10,7 +10,7 @@ const SOURCE_CONFIG: Record<string, { label: string }> = {
   INDUSTRY: { label: "Industry" },
 };
 
-function ProblemRow({ problem }: { problem: any }) {
+function ProblemRow({ problem }: { problem: Problem }) {
   const cfg = SOURCE_CONFIG[problem.source] || SOURCE_CONFIG.INDUSTRY;
   const hoursLeft = differenceInHours(new Date(problem.deadline), new Date());
   const isPast = hoursLeft <= 0;
@@ -66,9 +66,9 @@ function ProblemRow({ problem }: { problem: any }) {
 export default async function Home({ searchParams }: { searchParams: Promise<{ source?: string; domain?: string }> }) {
   const sp = await searchParams;
   const problems = await getProblems(sp.source, sp.domain);
-  const totalPrize = problems.reduce((sum: number, p: any) => sum + (p.prizeAmount || 0), 0);
+  const totalPrize = problems.reduce((sum: number, p: Problem) => sum + (Number(p.prizeAmount) || 0), 0);
   
-  const newThisWeek = problems.filter((p: any) => {
+  const newThisWeek = problems.filter((p: Problem) => {
     if (!p.postedAt) return false;
     return differenceInHours(new Date(), new Date(p.postedAt)) < 168;
   }).length;
@@ -173,7 +173,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
           </div>
         ) : (
           <div className="flex flex-col border-t border-zinc-200">
-            {problems.map((problem: any) => (
+            {problems.map((problem: Problem) => (
               <ProblemRow key={problem.problemId} problem={problem} />
             ))}
           </div>

@@ -16,7 +16,7 @@ export async function scrapeSprind() {
 
     const html = await response.text();
     const $ = cheerio.load(html);
-    const problems: any[] = [];
+    const problems: Record<string, unknown>[] = [];
 
     // Find all links
     $("a").each((_, element) => {

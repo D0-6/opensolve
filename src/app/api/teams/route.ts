@@ -29,9 +29,10 @@ export async function POST(request: Request) {
     }));
 
     return NextResponse.json({ team: newTeam }, { status: 201 });
-  } catch (error: any) {
-    console.error("Error creating team:", error);
-    return NextResponse.json({ error: error.message || "Failed to create team" }, { status: 500 });
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : "Failed to create team";
+    console.error("Error creating team:", msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -66,8 +67,9 @@ export async function GET(request: Request) {
     }
 
     return NextResponse.json({ team: null }); // User is not in a team
-  } catch (error: any) {
-    console.error("Error fetching team:", error);
-    return NextResponse.json({ error: error.message || "Failed to fetch team" }, { status: 500 });
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error fetching teams:", msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

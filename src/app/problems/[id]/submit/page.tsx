@@ -30,19 +30,17 @@ export default function SubmitSolution({ params }: { params: Promise<{ id: strin
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  import("react").then((React) => {
-    React.useEffect(() => {
-      fetch("/api/teams")
-        .then(res => res.json())
-        .then(data => {
-          if (data.team) {
-            setTeam(data.team);
-            setSubmitAsTeam(true);
-          }
-        })
-        .catch(console.error);
-    }, []);
-  });
+  useEffect(() => {
+    fetch("/api/teams")
+      .then(res => res.json())
+      .then(data => {
+        if (data.team) {
+          setTeam(data.team);
+          setSubmitAsTeam(true);
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -78,8 +76,8 @@ export default function SubmitSolution({ params }: { params: Promise<{ id: strin
       if (unwrappedParams) {
         router.push(`/problems/${unwrappedParams.id}`);
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to submit");
     } finally {
       setLoading(false);
     }

@@ -36,7 +36,7 @@ export default async function UserProfile({ params }: { params: Promise<{ userId
     console.error("Failed to fetch fallback user from Clerk", err);
   }
 
-  let submissions: any[] = [];
+  let submissions: Record<string, unknown>[] = [];
   try {
     const res = await docClient.send(new QueryCommand({
       TableName: SUBMISSIONS_TABLE,

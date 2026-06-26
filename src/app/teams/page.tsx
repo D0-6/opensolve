@@ -6,7 +6,7 @@ import { Users, Copy, Plus, LogIn, Loader2, ShieldCheck, Check, AlertCircle, Che
 
 export default function TeamsPage() {
   const { user } = useUser();
-  const [team, setTeam] = useState<any>(null);
+  const [team, setTeam] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [inviteCode, setInviteCode] = useState("");
@@ -41,8 +41,8 @@ export default function TeamsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setTeam(data.team);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to create team");
     } finally {
       setActionLoading(false);
     }
@@ -61,8 +61,8 @@ export default function TeamsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       await fetchTeam();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to join team");
     } finally {
       setActionLoading(false);
     }

@@ -33,7 +33,7 @@ export default async function OnboardingPage() {
         </p>
 
         <div className="bg-zinc-50 border border-zinc-200 p-6 mb-8">
-          <h3 className="font-semibold text-zinc-900 mb-3">By clicking "I Accept", you acknowledge that:</h3>
+          <h3 className="font-semibold text-zinc-900 mb-3">By clicking &quot;I Accept&quot;, you acknowledge that:</h3>
           <ul className="list-disc pl-5 space-y-2 text-zinc-600 text-sm">
             <li>You have read and agree to the <Link href="/terms" target="_blank" className="text-zinc-900 font-medium hover:underline">Terms of Service</Link>.</li>
             <li>You have read and agree to the <Link href="/privacy" target="_blank" className="text-zinc-900 font-medium hover:underline">Privacy Policy</Link>.</li>

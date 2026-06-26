@@ -27,7 +27,7 @@ export default async function StudentDashboard() {
   if (role && role !== "student") redirect("/dashboard/company");
 
   // Fetch this user's submissions
-  let submissions: any[] = [];
+  let submissions: Record<string, unknown>[] = [];
   try {
     const res = await docClient.send(
       new QueryCommand({
@@ -44,7 +44,7 @@ export default async function StudentDashboard() {
     console.error("Error fetching student submissions:", err);
   }
 
-  const totalScore = submissions.reduce((sum, s) => sum + (s.score || 0), 0);
+  const totalScore = submissions.reduce((sum, s) => sum + (Number(s.score) || 0), 0);
   const firstName = user?.firstName || "Builder";
 
   return (

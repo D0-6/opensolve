@@ -15,7 +15,7 @@ export default function SignUpPage() {
             Join OpenSolve
           </h1>
           <p className="text-zinc-500 text-sm">
-            Select how you'll be using the platform
+            Select how you&apos;ll be using the platform
           </p>
         </div>
 
@@ -28,7 +28,7 @@ export default function SignUpPage() {
               <UserCircle size={20} />
             </div>
             <div>
-              <h2 className="text-lg font-medium text-zinc-900 mb-1">I'm a Student / Builder</h2>
+              <h2 className="text-lg font-medium text-zinc-900 mb-1">I&apos;m a Student / Builder</h2>
               <p className="text-sm text-zinc-500">I want to solve challenges, build my reputation, and get hired.</p>
             </div>
           </button>
@@ -41,7 +41,7 @@ export default function SignUpPage() {
               <Building2 size={20} />
             </div>
             <div>
-              <h2 className="text-lg font-medium text-zinc-900 mb-1">I'm an Organization</h2>
+              <h2 className="text-lg font-medium text-zinc-900 mb-1">I&apos;m an Organization</h2>
               <p className="text-sm text-zinc-500">I want to post challenges and hire top vetted talent.</p>
             </div>
           </button>

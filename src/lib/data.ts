@@ -1,6 +1,40 @@
 import { docClient } from "@/lib/dynamodb";
 import { QueryCommand, ScanCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
 
+export interface Problem {
+  problemId: string;
+  title: string;
+  description?: string;
+  source: string;
+  sourceUrl?: string;
+  prizeAmount: number;
+  prizeType?: string;
+  deadline: string;
+  domain: string;
+  postedAt: string;
+  postedByOrgId: string;
+  verified: boolean;
+  status: string;
+  resourceLinks?: string[];
+  [key: string]: unknown;
+}
+
+export interface Submission {
+  problemId: string;
+  rankKey: string;
+  userId: string;
+  teamId?: string;
+  studentName: string;
+  githubUrl: string;
+  demoUrl?: string;
+  writeup: string;
+  score: number;
+  evaluationStatus?: string;
+  status?: string;
+  submittedAt: string;
+  [key: string]: unknown;
+}
+
 const PROBLEMS_TABLE = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
 const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
 const ORGS_TABLE = process.env.DYNAMODB_TABLE_ORGANIZATIONS || "OpenSolve_Organizations";

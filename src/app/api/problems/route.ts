@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
 import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
@@ -100,8 +100,9 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ problem: newProblem }, { status: 201 });
-  } catch (error: any) {
-    console.error("Error creating problem:", error);
-    return NextResponse.json({ error: error.message || "Failed to create problem" }, { status: 500 });
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : "Failed to create problem";
+    console.error("Error creating problem:", msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

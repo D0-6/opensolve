@@ -63,8 +63,8 @@ export default function ProfessionalPostChallenge() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to post challenge");
       router.push(`/problems/${data.problem.problemId}`);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to post problem");
     } finally {
       setLoading(false);
     }

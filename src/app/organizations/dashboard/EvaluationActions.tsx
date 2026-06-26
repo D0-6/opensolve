@@ -34,8 +34,8 @@ export default function EvaluationActions({
       if (!res.ok) throw new Error(data.error);
       
       router.refresh(); // Refresh the page to show updated status
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to submit action");
     } finally {
       setLoading(false);
     }

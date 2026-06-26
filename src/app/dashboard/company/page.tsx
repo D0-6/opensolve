@@ -27,10 +27,10 @@ export default async function CompanyDashboard() {
 
   // Fetch all problems and filter by this user's org
   const allProblems = await getProblems();
-  const myProblems = allProblems.filter((p: any) => p.postedByOrgId === userId);
+  const myProblems = allProblems.filter((p: Record<string, unknown>) => p.postedByOrgId === userId);
 
   // Fetch submissions for all my problems
-  const submissionsByProblem: Record<string, any[]> = {};
+  const submissionsByProblem: Record<string, Record<string, unknown>[]> = {};
   let totalSubmissions = 0;
   for (const p of myProblems) {
     const subs = await getSubmissions(p.problemId);
@@ -111,9 +111,9 @@ export default async function CompanyDashboard() {
           </div>
         ) : (
           <div className="flex flex-col border-t border-zinc-200">
-            {myProblems.map((problem: any) => {
+            {myProblems.map((problem: Record<string, unknown>) => {
               const subs = submissionsByProblem[problem.problemId] || [];
-              const topSub = subs.sort((a: any, b: any) => b.score - a.score)[0];
+              const topSub = subs.sort((a: Record<string, unknown>, b: Record<string, unknown>) => Number(b.score) - Number(a.score))[0];
               return (
                 <div
                   key={problem.problemId}

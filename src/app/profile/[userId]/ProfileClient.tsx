@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { GitBranch, Trophy, Calendar, Pencil, X, Save, Loader2, Linkedin } from "lucide-react";
+import { GitBranch, Trophy, Calendar, Pencil, X, Save, Loader2, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { updateProfile } from "./actions";
 
@@ -14,8 +14,8 @@ export default function ProfileClient({
   imageUrl
 }: { 
   isOwner: boolean; 
-  profile: any; 
-  submissions: any[];
+  profile: Record<string, unknown>; 
+  submissions: Record<string, unknown>[];
   userId: string;
   fallbackName?: string;
   imageUrl?: string;
@@ -166,7 +166,7 @@ export default function ProfileClient({
                 )}
                 {profile?.linkedinUrl && (
                   <a href={profile.linkedinUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 bg-zinc-50 border border-zinc-200 px-3 py-1.5 hover:border-[#1a3a5c] transition-colors uppercase tracking-wider group">
-                    <Linkedin className="w-4 h-4 text-zinc-400 group-hover:text-[#1a3a5c]" />
+                    <ExternalLink className="w-4 h-4 text-zinc-400 group-hover:text-[#1a3a5c]" />
                     LinkedIn
                   </a>
                 )}

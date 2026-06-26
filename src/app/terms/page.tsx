@@ -41,14 +41,14 @@ export default function Terms() {
           <section>
             <h2 className="text-xl font-medium text-zinc-900 mb-4">4. Intellectual Property</h2>
             <p>
-              Unless otherwise specified by a challenge's specific rules, you retain ownership of the code you submit. By submitting a solution, you grant OpenSolve a non-exclusive license to display, host, and share your submission with the relevant organizations for evaluation purposes.
+              Unless otherwise specified by a challenge&apos;s specific rules, you retain ownership of the code you submit. By submitting a solution, you grant OpenSolve a non-exclusive license to display, host, and share your submission with the relevant organizations for evaluation purposes.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-medium text-zinc-900 mb-4">5. Disclaimer of Warranties and Limitation of Liability</h2>
             <p>
-              The Service is provided on an "AS IS" and "AS AVAILABLE" basis. OpenSolve makes no representations or warranties of any kind, express or implied, as to the operation of their services, or the information, content, or materials included therein.
+              The Service is provided on an &quot;AS IS&quot; and &quot;AS AVAILABLE&quot; basis. OpenSolve makes no representations or warranties of any kind, express or implied, as to the operation of their services, or the information, content, or materials included therein.
             </p>
           </section>
 

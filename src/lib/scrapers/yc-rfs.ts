@@ -17,7 +17,7 @@ export async function scrapeYCRFS() {
     const html = await response.text();
     const $ = cheerio.load(html);
 
-    const problems: any[] = [];
+    const problems: Record<string, unknown>[] = [];
 
     // If YC changes their page HTML structure, this parser will need updating — this is a known fragility of scraping over an API.
     // Assuming YC RFS items are structured as articles or sections with headings and paragraphs.

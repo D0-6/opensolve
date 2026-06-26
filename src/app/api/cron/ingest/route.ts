@@ -18,8 +18,8 @@ export async function GET(request: Request) {
   try {
     const summary = await runIngestion();
     return NextResponse.json(summary);
-  } catch (error: any) {
-    console.error("Cron ingestion failed:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    console.error("Ingestion CRON failed:", error);
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Internal Server Error" }, { status: 500 });
   }
 }
