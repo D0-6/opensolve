@@ -13,8 +13,8 @@ export function NavBar() {
   const dashboardLink = (role === "organization" || role === "company") && user?.publicMetadata?.orgId
     ? `/organizations/${user.publicMetadata.orgId}/dashboard`
     : role === "student"
-    ? `/profile/${user?.id}`
-    : "/onboarding/routing";
+    ? `/dashboard/student`
+    : "/dashboard";
 
   return (
     <header className="fixed top-0 w-full z-50 bg-white border-b border-zinc-200">
