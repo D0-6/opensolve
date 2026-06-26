@@ -39,7 +39,7 @@ export default async function OnboardingRoutingPage() {
     redirect(`/profile/${user.id}`);
   }
 
-  if (role === "organization") {
+  if (role === "organization" || role === "company") {
     // Check if they have an orgId assigned in metadata
     const orgId = user.publicMetadata?.orgId as string | undefined;
     

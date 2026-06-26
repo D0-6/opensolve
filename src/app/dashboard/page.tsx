@@ -10,7 +10,14 @@ export default async function DashboardPage() {
 
   if (!role) redirect("/onboarding");
   if (role === "student") redirect("/dashboard/student");
-  if (role === "company") redirect("/dashboard/company");
+  if (role === "organization" || role === "company") {
+    const orgId = user?.publicMetadata?.orgId;
+    if (orgId) {
+      redirect(`/organizations/${orgId}/dashboard`);
+    } else {
+      redirect("/onboarding/organization");
+    }
+  }
 
   redirect("/onboarding");
 }
