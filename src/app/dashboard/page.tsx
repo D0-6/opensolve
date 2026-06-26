@@ -14,6 +14,8 @@ export default async function DashboardPage() {
     const orgId = user?.publicMetadata?.orgId;
     if (orgId) {
       redirect(`/organizations/${orgId}/dashboard`);
+    } else if (role === "company") {
+      redirect("/dashboard/company");
     } else {
       redirect("/onboarding/organization");
     }

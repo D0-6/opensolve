@@ -10,8 +10,10 @@ export function NavBar() {
   const role = user?.publicMetadata?.role as string | undefined;
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const dashboardLink = (role === "organization" || role === "company") && user?.publicMetadata?.orgId
+  const dashboardLink = role === "organization" && user?.publicMetadata?.orgId
     ? `/organizations/${user.publicMetadata.orgId}/dashboard`
+    : role === "company"
+    ? `/dashboard/company`
     : role === "student"
     ? `/dashboard/student`
     : "/dashboard";
