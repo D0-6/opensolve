@@ -10,7 +10,8 @@ export default function ProfileClient({
   profile, 
   submissions,
   userId,
-  fallbackName
+  fallbackName,
+  imageUrl
 }: { 
   isOwner: boolean; 
   profile: any; 
