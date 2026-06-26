@@ -2,6 +2,8 @@ import { MetadataRoute } from 'next';
 import { docClient } from "@/lib/dynamodb";
 import { ScanCommand } from "@aws-sdk/lib-dynamodb";
 
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://opensolve.talent";
   
