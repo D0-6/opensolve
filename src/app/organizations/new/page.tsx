@@ -62,28 +62,28 @@ export default function ProfessionalPostChallenge() {
     }
   };
 
-  const inputStyles = "w-full bg-[#0c1324] border border-white/10 rounded-xl px-4 py-3 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#00cbe6]/50 transition-all font-body-md";
-  const labelStyles = "block text-sm font-semibold text-[#8990a8] mb-2";
+  const inputStyles = "w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#a8581f] transition-all font-body-md text-sm";
+  const labelStyles = "block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider";
 
   return (
-    <div className="min-h-screen bg-[#020617] py-12 px-6">
+    <div className="min-h-screen bg-white py-12 px-6">
       <div className="max-w-5xl mx-auto">
         
         {/* Header Section */}
-        <div className="mb-12 border-b border-white/10 pb-8">
+        <div className="mb-12 border-b border-zinc-200 pb-8">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-[#dce1fb]">
+            <div className="w-12 h-12 border border-zinc-200 bg-zinc-50 flex items-center justify-center text-zinc-600">
               <Building2 size={24} />
             </div>
             <div>
-              <h1 className="text-3xl font-display-lg text-[#dce1fb] font-bold">Post a Direct Hiring Challenge</h1>
-              <p className="text-[#8990a8] font-body-md mt-1">Deploy a real-world problem to vetted talent and hire the best solutions directly.</p>
+              <h1 className="text-3xl font-medium text-zinc-900 tracking-tight">Post a Direct Hiring Challenge</h1>
+              <p className="text-zinc-500 text-base mt-1">Deploy a real-world problem to vetted talent and hire the best solutions directly.</p>
             </div>
           </div>
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl mb-8 font-body-md flex items-center gap-3">
+          <div className="bg-[#a8581f]/10 border border-[#a8581f]/20 text-[#a8581f] p-4 rounded-md mb-8 font-medium flex items-center gap-3">
             <X size={18} />
             {error}
           </div>
@@ -95,10 +95,10 @@ export default function ProfessionalPostChallenge() {
           <div className="lg:col-span-2 space-y-10">
             
             {/* Section 1: Basic Info */}
-            <section className="bg-white/5 border border-white/10 rounded-2xl p-8">
-              <div className="flex items-center gap-2 mb-6 text-[#dce1fb]">
-                <FileText size={20} className="text-[#00cbe6]" />
-                <h2 className="text-xl font-bold">Challenge Details</h2>
+            <section className="bg-white border border-zinc-200 p-8">
+              <div className="flex items-center gap-2 mb-6 text-zinc-900 border-b border-zinc-200 pb-2">
+                <FileText size={20} className="text-[#a8581f]" />
+                <h2 className="text-xl font-medium">Challenge Details</h2>
               </div>
               <div className="space-y-6">
                 <div>
@@ -127,24 +127,24 @@ export default function ProfessionalPostChallenge() {
             </section>
 
             {/* Section 2: Resources */}
-            <section className="bg-white/5 border border-white/10 rounded-2xl p-8">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2 text-[#dce1fb]">
-                  <LinkIcon size={20} className="text-[#00cbe6]" />
-                  <h2 className="text-xl font-bold">Datasets & Resources</h2>
+            <section className="bg-white border border-zinc-200 p-8">
+              <div className="flex items-center justify-between mb-6 border-b border-zinc-200 pb-2">
+                <div className="flex items-center gap-2 text-zinc-900">
+                  <LinkIcon size={20} className="text-[#a8581f]" />
+                  <h2 className="text-xl font-medium">Datasets & Resources</h2>
                 </div>
-                <button type="button" onClick={handleAddLink} className="text-xs font-bold text-[#00cbe6] bg-[#00cbe6]/10 px-3 py-1.5 rounded-lg hover:bg-[#00cbe6]/20 transition-colors flex items-center gap-1">
+                <button type="button" onClick={handleAddLink} className="text-xs font-bold text-zinc-600 bg-zinc-50 border border-zinc-200 px-3 py-1.5 hover:bg-zinc-100 transition-colors flex items-center gap-1">
                   <Plus size={14} /> Add Link
                 </button>
               </div>
-              <p className="text-sm text-[#8990a8] mb-6">Provide URLs to Google Drive folders, Kaggle datasets, GitHub repos, or API documentation.</p>
+              <p className="text-sm text-zinc-500 mb-6">Provide URLs to Google Drive folders, Kaggle datasets, GitHub repos, or API documentation.</p>
               
               <div className="space-y-4">
                 {resourceLinks.map((link, index) => (
                   <div key={index} className="flex gap-3">
                     <input type="url" value={link} onChange={(e) => handleLinkChange(index, e.target.value)} placeholder="https://..." className={inputStyles} />
                     {resourceLinks.length > 1 && (
-                      <button type="button" onClick={() => handleRemoveLink(index)} className="p-3 bg-red-500/10 text-red-400 rounded-xl hover:bg-red-500/20 transition-colors border border-red-500/10">
+                      <button type="button" onClick={() => handleRemoveLink(index)} className="p-3 border border-zinc-200 text-zinc-500 hover:text-[#a8581f] hover:border-[#a8581f] transition-colors bg-white">
                         <X size={20} />
                       </button>
                     )}
@@ -156,9 +156,9 @@ export default function ProfessionalPostChallenge() {
 
           {/* Sidebar / Logistics */}
           <div className="space-y-6">
-            <section className="bg-[#0c1324] border border-[#00cbe6]/30 rounded-2xl p-6 sticky top-24 shadow-[0_0_40px_rgba(0,203,230,0.05)]">
-              <h3 className="text-lg font-bold text-[#dce1fb] flex items-center gap-2 mb-6">
-                <Briefcase size={18} className="text-[#00cbe6]" /> Logistics & Payout
+            <section className="bg-zinc-50 border border-zinc-200 p-6 sticky top-24">
+              <h3 className="text-lg font-medium text-zinc-900 flex items-center gap-2 mb-6 border-b border-zinc-200 pb-2">
+                <Briefcase size={18} className="text-[#a8581f]" /> Logistics & Payout
               </h3>
               
               <div className="space-y-6">
@@ -179,7 +179,7 @@ export default function ProfessionalPostChallenge() {
 
                 <div>
                   <label className={labelStyles}>Submission Deadline *</label>
-                  <input required type="date" value={formData.deadline} onChange={(e) => setFormData({ ...formData, deadline: e.target.value })} className={inputStyles} style={{ colorScheme: "dark" }} />
+                  <input required type="date" value={formData.deadline} onChange={(e) => setFormData({ ...formData, deadline: e.target.value })} className={inputStyles} />
                 </div>
 
                 <div>
@@ -187,11 +187,11 @@ export default function ProfessionalPostChallenge() {
                   <input type="url" value={formData.sourceUrl} onChange={(e) => setFormData({ ...formData, sourceUrl: e.target.value })} placeholder="https://your-company.com" className={inputStyles} />
                 </div>
                 
-                <div className="pt-6 border-t border-white/10">
-                  <button type="submit" disabled={loading} className="w-full bg-[#00cbe6] text-[#020617] font-bold py-4 rounded-xl hover:bg-[#5de6ff] transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,203,230,0.3)] hover:shadow-[0_0_30px_rgba(0,203,230,0.5)]">
+                <div className="pt-6 border-t border-zinc-200">
+                  <button type="submit" disabled={loading} className="w-full btn-primary font-medium py-3 flex items-center justify-center gap-2">
                     {loading ? <Loader2 size={20} className="animate-spin" /> : <><CheckCircle2 size={20} /> Publish to Talent Pool</>}
                   </button>
-                  <p className="text-xs text-center text-[#8990a8] mt-4">By publishing, you agree to evaluate submissions fairly.</p>
+                  <p className="text-xs text-center text-zinc-500 mt-4 font-medium">By publishing, you agree to evaluate submissions fairly.</p>
                 </div>
               </div>
             </section>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
-import { Users, Copy, Plus, LogIn, Loader2, ShieldCheck, Check, AlertCircle } from "lucide-react";
+import { Users, Copy, Plus, LogIn, Loader2, ShieldCheck, Check, AlertCircle, CheckCircle2 } from "lucide-react";
 
 export default function TeamsPage() {
   const { user } = useUser();
@@ -75,63 +75,67 @@ export default function TeamsPage() {
   };
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center bg-[#020617]"><Loader2 className="animate-spin text-[#00cbe6]" size={32} /></div>;
+    return <div className="min-h-screen flex items-center justify-center bg-white"><Loader2 className="animate-spin text-zinc-400" size={32} /></div>;
   }
 
   return (
-    <div className="min-h-screen bg-[#020617] py-24 px-6">
+    <div className="min-h-screen bg-white py-24 px-6">
       <div className="max-w-4xl mx-auto">
         
-        <div className="mb-12">
-          <div className="inline-flex items-center gap-2 bg-[#a078ff]/10 border border-[#a078ff]/20 rounded-full px-3 py-1 text-xs font-semibold text-[#a078ff] mb-4">
+        <div className="mb-12 text-center md:text-left">
+          <div className="inline-flex items-center gap-2 bg-zinc-50 border border-zinc-200 rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-600 mb-6 uppercase tracking-wide">
             <Users size={14} /> Collaboration Hub
           </div>
-          <h1 className="text-4xl font-display-lg text-[#dce1fb] font-bold mb-4">Squad Up.</h1>
-          <p className="text-[#8990a8] font-body-md text-lg">Form a team of up to 4 builders to tackle enterprise challenges together. Teams have a higher success rate of securing contracts.</p>
+          <h1 className="text-3xl md:text-5xl font-medium text-zinc-900 leading-tight tracking-tight mb-3">
+            Squad Up.
+          </h1>
+          <p className="text-base text-zinc-500">
+            Form a team of up to 4 builders to tackle enterprise challenges together. Teams have a higher success rate of securing contracts.
+          </p>
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl mb-8 flex items-center gap-3">
-            <AlertCircle size={18} />
+          <div className="flex items-start gap-3 bg-[#a8581f]/10 border border-[#a8581f]/20 text-[#a8581f] p-4 mb-8 text-sm font-medium">
+            <AlertCircle size={18} className="mt-0.5 shrink-0" />
             {error}
           </div>
         )}
 
         {team ? (
-          <div className="bg-[#0c1324] border border-[#00cbe6]/30 shadow-[0_0_40px_rgba(0,203,230,0.05)] rounded-3xl p-8 md:p-12">
-            <div className="flex items-center justify-between border-b border-white/10 pb-8 mb-8">
+          <div className="bg-white border border-zinc-200 p-6 md:p-12">
+            <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-zinc-200 pb-8 mb-8 gap-4">
               <div>
-                <h2 className="text-3xl font-bold text-[#dce1fb]">{team.name}</h2>
-                <div className="flex items-center gap-2 mt-2 text-[#00cbe6] text-sm font-bold">
+                <h2 className="text-3xl font-semibold text-zinc-900">{team.name}</h2>
+                <div className="flex items-center gap-2 mt-2 text-[#a8581f] text-sm font-bold">
                   <ShieldCheck size={16} /> Verified Active Team
                 </div>
               </div>
-              <div className="text-right">
-                <p className="text-sm text-[#8990a8] mb-2 uppercase tracking-wider font-bold">Members</p>
-                <p className="text-3xl font-bold text-[#dce1fb]">{team.members.length} <span className="text-[#8990a8] text-xl">/ 4</span></p>
+              <div className="md:text-right">
+                <p className="text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">Members</p>
+                <p className="text-3xl font-medium text-zinc-900">{team.members.length} <span className="text-zinc-400 text-xl">/ 4</span></p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               <div>
-                <h3 className="text-lg font-bold text-[#dce1fb] mb-4">Invite Code</h3>
-                <p className="text-sm text-[#8990a8] mb-4">Share this secure code with up to 3 friends to have them join your squad.</p>
+                <h3 className="text-lg font-medium text-zinc-900 mb-4 border-b border-zinc-200 pb-2">Invite Code</h3>
+                <p className="text-sm text-zinc-500 mb-4">Share this secure code with up to 3 friends to have them join your squad.</p>
                 <div className="flex items-center gap-3">
-                  <code className="flex-1 bg-[#020617] border border-white/10 p-4 rounded-xl text-[#00cbe6] font-mono text-sm break-all">
+                  <code className="flex-1 bg-zinc-50 border border-zinc-200 px-4 py-3 text-zinc-900 font-mono text-sm break-all">
                     {team.teamId}
                   </code>
-                  <button onClick={copyToClipboard} className="bg-white/5 border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-colors text-[#dce1fb]">
-                    {copied ? <Check size={20} className="text-[#00cbe6]" /> : <Copy size={20} />}
+                  <button onClick={copyToClipboard} className="bg-white border border-zinc-200 p-3 hover:bg-zinc-50 transition-colors text-zinc-600">
+                    {copied ? <Check size={20} className="text-[#a8581f]" /> : <Copy size={20} />}
                   </button>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-[#dce1fb] mb-4">Team Security</h3>
-                <ul className="space-y-3 text-sm text-[#8990a8]">
-                  <li className="flex gap-2"><CheckCircle2 size={16} className="text-[#00cbe6] shrink-0" /> End-to-end verified submissions.</li>
-                  <li className="flex gap-2"><CheckCircle2 size={16} className="text-[#00cbe6] shrink-0" /> Enterprise organizations can hire the whole team.</li>
-                  <li className="flex gap-2"><CheckCircle2 size={16} className="text-[#00cbe6] shrink-0" /> Prize pools are distributed equally.</li>
+                <h3 className="text-lg font-medium text-zinc-900 mb-4 border-b border-zinc-200 pb-2">Team Security</h3>
+                <ul className="space-y-3 text-sm text-zinc-600">
+                  <li className="flex gap-2"><CheckCircle2 size={16} className="text-[#a8581f] shrink-0" /> End-to-end verified submissions.</li>
+                  <li className="flex gap-2"><CheckCircle2 size={16} className="text-[#a8581f] shrink-0" /> Enterprise organizations can hire the whole team.</li>
+                  <li className="flex gap-2"><CheckCircle2 size={16} className="text-[#a8581f] shrink-0" /> Prize pools are distributed equally.</li>
                 </ul>
               </div>
             </div>
@@ -139,28 +143,28 @@ export default function TeamsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Create Team */}
-            <div className="bg-[#0c1324] border border-white/10 rounded-3xl p-8 hover:border-[#00cbe6]/50 transition-colors group">
-              <div className="w-14 h-14 bg-[#00cbe6]/10 text-[#00cbe6] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Plus size={24} />
+            <div className="bg-white border border-zinc-200 p-8 hover:bg-zinc-50 transition-colors group">
+              <div className="w-12 h-12 bg-white border border-zinc-200 text-zinc-600 flex items-center justify-center mb-6 group-hover:text-[#a8581f] group-hover:border-[#a8581f] transition-colors">
+                <Plus size={20} />
               </div>
-              <h2 className="text-2xl font-bold text-[#dce1fb] mb-3">Start a Squad</h2>
-              <p className="text-[#8990a8] text-sm mb-8">Create a new team, generate an invite code, and recruit up to 3 other builders.</p>
+              <h2 className="text-xl font-medium text-zinc-900 mb-2">Start a Squad</h2>
+              <p className="text-zinc-500 text-sm mb-8">Create a new team, generate an invite code, and recruit up to 3 other builders.</p>
               <button 
                 onClick={handleCreateTeam} 
                 disabled={actionLoading}
-                className="w-full bg-white/5 border border-white/10 text-[#dce1fb] font-bold py-3 rounded-xl hover:bg-[#00cbe6] hover:text-[#020617] transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-white border border-zinc-200 text-zinc-900 font-medium py-3 hover:bg-zinc-50 transition-colors flex items-center justify-center gap-2"
               >
                 {actionLoading ? <Loader2 size={18} className="animate-spin" /> : "Initialize Team"}
               </button>
             </div>
 
             {/* Join Team */}
-            <div className="bg-[#0c1324] border border-white/10 rounded-3xl p-8">
-              <div className="w-14 h-14 bg-[#a078ff]/10 text-[#a078ff] rounded-2xl flex items-center justify-center mb-6">
-                <LogIn size={24} />
+            <div className="bg-white border border-zinc-200 p-8">
+              <div className="w-12 h-12 bg-zinc-50 border border-zinc-200 text-zinc-600 flex items-center justify-center mb-6">
+                <LogIn size={20} />
               </div>
-              <h2 className="text-2xl font-bold text-[#dce1fb] mb-3">Join a Squad</h2>
-              <p className="text-[#8990a8] text-sm mb-6">Have an invite code from a friend? Paste it below to join their roster.</p>
+              <h2 className="text-xl font-medium text-zinc-900 mb-2">Join a Squad</h2>
+              <p className="text-zinc-500 text-sm mb-6">Have an invite code from a friend? Paste it below to join their roster.</p>
               
               <form onSubmit={handleJoinTeam} className="space-y-4">
                 <input 
@@ -169,12 +173,12 @@ export default function TeamsPage() {
                   value={inviteCode}
                   onChange={(e) => setInviteCode(e.target.value)}
                   placeholder="Paste Invite Code" 
-                  className="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-[#dce1fb] placeholder:text-[#8990a8] focus:outline-none focus:ring-2 focus:ring-[#a078ff]/50 font-mono text-sm"
+                  className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#a8581f] transition-colors font-mono text-sm"
                 />
                 <button 
                   type="submit"
                   disabled={actionLoading}
-                  className="w-full bg-[#a078ff] text-white font-bold py-3 rounded-xl hover:bg-[#b08cff] transition-colors flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(160,120,255,0.2)]"
+                  className="w-full btn-primary font-medium py-3 flex items-center justify-center gap-2"
                 >
                   {actionLoading ? <Loader2 size={18} className="animate-spin" /> : "Verify & Join"}
                 </button>
