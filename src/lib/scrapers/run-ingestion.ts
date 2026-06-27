@@ -32,7 +32,7 @@ export async function runIngestion() {
         // The user specified: "if checking by sourceUrl requires a Scan because there's no GSI for it, add a GSI: sourceUrl-index, PK: sourceUrl"
         // We will attempt to query the GSI `sourceUrl-index`. If the GSI is not created yet, it will throw an error,
         // but for local testing, we might fall back to a Scan or just log it. Let's strictly use the Query if possible.
-        // Wait, since we can't reliably know if the GSI is created in a hackathon, we will try to Query, and if it fails, fallback to Scan.
+        // Wait, since we can't reliably know if the GSI is created in a MVP, we will try to Query, and if it fails, fallback to Scan.
 
         let exists = false;
         try {

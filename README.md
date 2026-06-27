@@ -2,7 +2,7 @@
 
 A platform aggregating real funded problems (YC Requests for Startups, Indian government innovation challenges, industry-posted problems). Students submit public, verifiable solutions. Organizations view ranked submissions, see student profiles, and contact top performers.
 
-Built for the AWS + Vercel H0 Hackathon.
+Built as an Open Innovation Platform prototype.
 
 ## Tech Stack
 - Next.js 14 (App Router)
@@ -42,9 +42,9 @@ Built for the AWS + Vercel H0 Hackathon.
    node scripts/seed.js
    ```
 
-## Hackathon Simplifications
+## MVP Simplifications
 - **Auth**: Uses a mocked "Magic Link" claim system. In production, this would use NextAuth or Clerk.
-- **Database**: Schemas are simplified single-table-design concepts mapped across multiple tables for hackathon velocity.
+- **Database**: Schemas are simplified single-table-design concepts mapped across multiple tables for prototyping velocity.
 - **Rate Limiting**: Currently uses an in-memory JS map. Production would use Redis.
 - **Ingestion Pipeline**: Currently simulated via `scripts/seed.js`. See `docs/ingestion-pipeline-design.md` for the full architecture.
 

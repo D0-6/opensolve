@@ -13,7 +13,7 @@ export default async function OrgDashboard() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
 
-  // Fetch problems posted by this org (Using a GSI would be better in prod, but for hackathon/demo we scan or query if GSI exists)
+  // Fetch problems posted by this org (Using a GSI would be better in prod, but for MVP/demo we scan or query if GSI exists)
   // Let's assume we fetch all problems and filter for now to guarantee it works without complex GSI setup
   const problemsRes = await docClient.send(new QueryCommand({
     TableName: PROBLEMS_TABLE,

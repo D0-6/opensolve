@@ -55,7 +55,7 @@ export default async function OrganizationProfile({ params }: { params: Promise<
       <div>
         <h2 className="text-xl font-medium text-zinc-900 border-b border-zinc-200 pb-2 mb-6">Posted Problems</h2>
         <div className="bg-zinc-50 border border-zinc-200 p-8 text-center text-zinc-500 text-sm">
-          Fetching problems for this organization is simplified for the hackathon. 
+          Fetching problems for this organization is simplified for the MVP. 
           See the <Link href="/" className="text-[#1a3a5c] font-bold hover:underline">homepage feed</Link> instead.
         </div>
       </div>

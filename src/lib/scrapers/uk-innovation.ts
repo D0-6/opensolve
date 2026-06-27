@@ -2,7 +2,7 @@ import * as cheerio from "cheerio";
 
 // Confirmed legal to reuse — page states 'All content is available under the Open Government Licence v3.0'
 export async function scrapeUKInnovation() {
-  // Full pagination is a Phase 2 improvement. We only fetch page=0 for the hackathon scope (first 10 results).
+  // Full pagination is a Phase 2 improvement. We only fetch page=0 for the MVP scope (first 10 results).
   const url = "https://apply-for-innovation-funding.service.gov.uk/competition/search";
   
   try {

@@ -1,4 +1,4 @@
-// In-memory rate limiting map for Hackathon purposes
+// In-memory rate limiting map for MVP purposes
 // Production would use Redis or DynamoDB TTL
 
 type RateLimitEntry = {

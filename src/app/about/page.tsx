@@ -50,10 +50,10 @@ export default function About() {
               </p>
             </div>
 
-            {/* Hackathon Model */}
+            {/* Open Innovation Model */}
             <div className="pt-8 border-t border-zinc-200">
               <h3 className="text-xl font-medium text-zinc-900 mb-4">
-                Why the Hackathon Model Works
+                Why the Open Innovation Model Works
               </h3>
               <p className="text-zinc-600 text-base leading-relaxed">
                 By creating a lightweight Q&A layer alongside the problem description, we enable asynchronous mentorship. Developers get the help they need while solving, and organizations get better solutions faster.

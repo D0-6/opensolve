@@ -6,7 +6,7 @@ export async function scrapeYCRFS() {
   try {
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "OpenSolve-Scraper/1.0 (Integration for Hackathon)",
+        "User-Agent": "OpenSolve-Scraper/1.0 (Integration for MVP)",
       },
     });
 
@@ -22,7 +22,7 @@ export async function scrapeYCRFS() {
     // If YC changes their page HTML structure, this parser will need updating — this is a known fragility of scraping over an API.
     // Assuming YC RFS items are structured as articles or sections with headings and paragraphs.
     // Common structure: <h3>Title</h3> followed by <p>description</p>
-    // We will extract generic sections for the hackathon prototype.
+    // We will extract generic sections for the prototype.
     
     $("section, article, .rfs-item").each((_, element) => {
       // Very basic extraction logic that usually catches RFS style pages
