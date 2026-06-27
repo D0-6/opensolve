@@ -2,6 +2,8 @@ import { getProblem } from "@/lib/data";
 import { notFound } from "next/navigation";
 import { ExternalLink, ArrowLeft, Users, Tag, Globe, Lock } from "lucide-react";
 import Link from "next/link";
+import { docClient } from "@/lib/dynamodb";
+import { GetCommand } from "@aws-sdk/lib-dynamodb";
 import ClientLeaderboard from "./ClientLeaderboard";
 import ClientQA from "./ClientQA";
 
@@ -38,6 +40,21 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
   const problem = await getProblem(id);
 
   if (!problem) notFound();
+
+  // Validate if scout profile still exists
+  let scoutExists = false;
+  if (problem.scoutId) {
+    try {
+      const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
+      const scoutRes = await docClient.send(new GetCommand({
+        TableName: PROFILES_TABLE,
+        Key: { userId: problem.scoutId }
+      }));
+      scoutExists = !!scoutRes.Item;
+    } catch (err) {
+      console.error("Error validating scout profile:", err);
+    }
+  }
 
   const cfg = SOURCE_CONFIG[problem.source] || SOURCE_CONFIG.INDUSTRY;
   const isCountryRestricted = Array.isArray(problem.allowedCountries) && problem.allowedCountries.length > 0;
@@ -97,9 +114,13 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
               This challenge was discovered and shared by community scout <strong>{String(problem.scoutName || "Anonymous")}</strong>.
             </span>
           </div>
-          <Link href={`/profile/${problem.scoutId}`} className="text-purple-700 hover:text-purple-900 underline underline-offset-2">
-            View Profile
-          </Link>
+          {scoutExists ? (
+            <Link href={`/profile/${problem.scoutId}`} className="text-purple-700 hover:text-purple-900 underline underline-offset-2">
+              View Profile
+            </Link>
+          ) : (
+            <span className="text-purple-400 italic text-xs">Profile Unavailable</span>
+          )}
         </div>
       )}
 

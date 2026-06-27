@@ -4,7 +4,8 @@ import ModerationClient from "./ModerationClient";
 export const dynamic = "force-dynamic";
 
 export default async function ModerationPage() {
-  const allProblems = await getProblems();
+  const problemsRes = await getProblems();
+  const allProblems = problemsRes.items;
   const pendingModeration = allProblems.filter(p => p.source === "COMMUNITY" && !p.verified);
   
   // Sort by newest first

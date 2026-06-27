@@ -8,7 +8,8 @@ export default async function AdminDashboard() {
   const stats = await getPlatformStats();
   
   // We need to fetch all problems to find the ones pending moderation (source: COMMUNITY, verified: false)
-  const allProblems = await getProblems();
+  const problemsRes = await getProblems();
+  const allProblems = problemsRes.items;
   const pendingModeration = allProblems.filter(p => p.source === "COMMUNITY" && !p.verified);
 
   const cards = [

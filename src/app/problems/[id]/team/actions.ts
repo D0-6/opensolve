@@ -27,9 +27,32 @@ export async function searchUsers(query: string) {
   }));
 }
 
-export async function addTeammate(problemId: string, teammateId: string, teammateName: string) {
+export async function addTeammate(problemId: string, teammateId: string, teammateName: string, currentMembers: any[]) {
   const user = await currentUser();
   if (!user) throw new Error("Unauthorized");
+
+  // Exploit Patch 1: Prevent user from inviting themselves
+  if (user.id === teammateId) {
+    throw new Error("You cannot add yourself to the team.");
+  }
+
+  // Exploit Patch 2: Prevent duplicate members
+  if (currentMembers.some(m => m.userId === teammateId)) {
+    throw new Error("This user is already on your team.");
+  }
+
+  // Exploit Patch 3: Verify the user hasn't already submitted a solution to this problem independently
+  const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
+  const { QueryCommand } = await import("@aws-sdk/lib-dynamodb");
+  const subRes = await docClient.send(new QueryCommand({
+    TableName: SUBMISSIONS_TABLE,
+    KeyConditionExpression: "problemId = :pid",
+    ExpressionAttributeValues: { ":pid": problemId }
+  }));
+  
+  if (subRes.Items && subRes.Items.some(sub => sub.userId === teammateId || (sub.teamMembers && sub.teamMembers.some((m: any) => m.userId === teammateId)))) {
+    throw new Error("This user has already submitted a solution to this problem.");
+  }
 
   // Add the teammate to the teamMembers array of the application
   await docClient.send(new UpdateCommand({

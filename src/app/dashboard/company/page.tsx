@@ -26,15 +26,17 @@ export default async function CompanyDashboard() {
 
   const orgName = user?.firstName ? `${user.firstName}'s Org` : "Your Organization";
 
-  // Fetch all problems and filter by this user's org
-  const allProblems = await getProblems();
-  const myProblems = allProblems.filter((p: Record<string, unknown>) => p.postedByOrgId === userId);
+  // Fetch all problems and handle paginated response
+  const problemsRes = await getProblems();
+  const allProblems = problemsRes.items;
+  const myProblems = allProblems.filter((p: any) => p.postedByOrgId === userId);
 
   // Fetch submissions for all my problems
-  const submissionsByProblem: Record<string, Record<string, unknown>[]> = {};
+  const submissionsByProblem: Record<string, any[]> = {};
   let totalSubmissions = 0;
   for (const p of myProblems) {
-    const subs = await getSubmissions(p.problemId);
+    const subsRes = await getSubmissions(p.problemId);
+    const subs = subsRes.items;
     submissionsByProblem[p.problemId] = subs;
     totalSubmissions += subs.length;
   }

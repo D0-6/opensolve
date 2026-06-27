@@ -20,16 +20,20 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
     redirect("/dashboard");
   }
 
-  const org = await getOrganization(orgId);
+  const [org, problemsRes] = await Promise.all([
+    getOrganization(orgId),
+    getProblems()
+  ]);
   if (!org) notFound();
 
-  const allProblems = await getProblems();
+  const allProblems = problemsRes.items;
   const orgProblems = allProblems.filter(p => p.postedByOrgId === org.orgId);
 
   // Fetch submissions for ALL problems (not just the first)
   const problemsWithSubmissions = await Promise.all(
     orgProblems.map(async (problem) => {
-      const submissions = await getSubmissions(problem.problemId);
+      const subsRes = await getSubmissions(problem.problemId);
+      const submissions = subsRes.items;
       submissions.sort((a, b) => b.score - a.score);
       return { ...problem, submissions };
     })

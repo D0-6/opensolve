@@ -1,5 +1,6 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { incrementPlatformStat } from "@/lib/data";
 
 export async function POST(req: Request) {
   const { userId } = await auth();
@@ -17,6 +18,14 @@ export async function POST(req: Request) {
     await client.users.updateUserMetadata(userId, {
       publicMetadata: { role },
     });
+    
+    // Atomic stat increments
+    if (role === "student") {
+      await incrementPlatformStat("totalStudents", 1);
+    } else if (role === "company") {
+      await incrementPlatformStat("totalOrgs", 1);
+    }
+
     return NextResponse.json({ success: true, role });
   } catch (error) {
     console.error("Failed to update user role:", error);

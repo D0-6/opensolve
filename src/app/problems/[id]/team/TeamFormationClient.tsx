@@ -39,9 +39,13 @@ export default function TeamFormationClient({
 
   const handleAdd = async (userId: string, name: string) => {
     setIsUpdating(true);
-    await addTeammate(problemId, userId, name);
-    setQuery("");
-    setResults([]);
+    try {
+      await addTeammate(problemId, userId, name, currentMembers);
+      setQuery("");
+      setResults([]);
+    } catch (error: any) {
+      alert(error.message || "Failed to add teammate.");
+    }
     setIsUpdating(false);
     router.refresh();
   };

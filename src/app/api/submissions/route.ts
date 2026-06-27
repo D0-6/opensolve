@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
 import { QueryCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getSubmissions, incrementPlatformStat } from "@/lib/data";
 
 const TABLE_NAME = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
 
@@ -14,18 +15,22 @@ function formatRankKey(score: number, submittedAt: string, userId: string) {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const problemId = searchParams.get("problemId");
+  const lekStr = searchParams.get("lastEvaluatedKey");
+  let lastEvaluatedKey = undefined;
+  
+  if (lekStr) {
+    try {
+      lastEvaluatedKey = JSON.parse(decodeURIComponent(lekStr));
+    } catch(e) {}
+  }
 
   if (!problemId) {
     return NextResponse.json({ error: "problemId is required" }, { status: 400 });
   }
 
   try {
-    const result = await docClient.send(new QueryCommand({
-      TableName: TABLE_NAME,
-      KeyConditionExpression: "problemId = :pid",
-      ExpressionAttributeValues: { ":pid": problemId },
-    }));
-    return NextResponse.json({ submissions: result.Items });
+    const result = await getSubmissions(problemId, lastEvaluatedKey);
+    return NextResponse.json({ submissions: result.items, lastEvaluatedKey: result.lastEvaluatedKey });
   } catch (error) {
     console.error("Error fetching submissions:", error);
     return NextResponse.json({ error: "Failed to fetch submissions" }, { status: 500 });
@@ -98,6 +103,9 @@ export async function POST(request: Request) {
     };
 
     await docClient.send(new PutCommand({ TableName: TABLE_NAME, Item: newSubmission }));
+    
+    // Trigger Atomic Increment!
+    await incrementPlatformStat("totalSubmissions", 1);
 
     // PHASE 10: Trigger Email Receipts
     const { sendEmail } = await import("@/lib/email");

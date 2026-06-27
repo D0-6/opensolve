@@ -72,10 +72,11 @@ function ProblemRow({ problem }: { problem: Problem }) {
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ source?: string; domain?: string }> }) {
   const sp = await searchParams;
-  const [problems, stats] = await Promise.all([
+  const [problemsRes, stats] = await Promise.all([
     getProblems(sp.source, sp.domain),
     getPlatformStats(),
   ]);
+  const problems = problemsRes.items;
   const totalPrize = problems.reduce((sum: number, p: Problem) => sum + (Number(p.prizeAmount) || 0), 0);
   
   const newThisWeek = problems.filter((p: Problem) => {
@@ -134,21 +135,21 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
           
           <div className="py-4 md:py-8 w-full md:flex-1 text-center md:pl-8 md:pr-8">
             <div className="text-3xl font-medium text-zinc-900">
-              {stats.builderCount > 0 ? `${stats.builderCount.toLocaleString()}` : "Open"}
+              {stats.totalStudents > 0 ? stats.totalStudents.toLocaleString() : "0"}
             </div>
             <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">Builders Registered</p>
           </div>
           
           <div className="py-4 md:py-8 w-full md:flex-1 text-center md:pl-8 md:pr-8">
             <div className="text-3xl font-medium text-zinc-900">
-              {totalPrize > 0 ? `$${(totalPrize / 1000).toFixed(0)}k+` : "Varied"}
+              {stats.totalPrizePool > 0 ? `$${(stats.totalPrizePool / 1000).toFixed(0)}k+` : "Varied"}
             </div>
             <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">In Prizes</p>
           </div>
 
           <div className="py-4 md:py-8 w-full md:flex-1 text-center md:text-right md:pl-8">
             <div className="text-3xl font-medium text-zinc-900">
-              {stats.submissionCount > 0 ? stats.submissionCount.toLocaleString() : "0"}
+              {stats.totalSubmissions > 0 ? stats.totalSubmissions.toLocaleString() : "0"}
             </div>
             <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">Solutions Submitted</p>
           </div>

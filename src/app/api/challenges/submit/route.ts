@@ -28,6 +28,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    // XSS & Security Validation
+    try {
+      const url = new URL(body.sourceUrl);
+      if (url.protocol !== "http:" && url.protocol !== "https:") {
+        return NextResponse.json({ error: "Invalid URL protocol. Only HTTP/HTTPS is allowed." }, { status: 400 });
+      }
+    } catch (err) {
+      return NextResponse.json({ error: "Invalid URL format." }, { status: 400 });
+    }
+
     const problemId = uuidv4();
     const now = new Date().toISOString();
 

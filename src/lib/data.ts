@@ -1,5 +1,5 @@
 import { docClient } from "@/lib/dynamodb";
-import { QueryCommand, ScanCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { QueryCommand, ScanCommand, GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 export interface Problem {
   problemId: string;
@@ -43,7 +43,7 @@ const PROBLEMS_TABLE = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problem
 const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
 const ORGS_TABLE = process.env.DYNAMODB_TABLE_ORGANIZATIONS || "OpenSolve_Organizations";
 
-export async function getProblems(source?: string, domain?: string) {
+export async function getProblems(source?: string, domain?: string, lastEvaluatedKey?: Record<string, any>) {
   try {
     let command;
     if (source) {
@@ -71,11 +71,19 @@ export async function getProblems(source?: string, domain?: string) {
         ExpressionAttributeValues: { ":status": "OPEN" },
       });
     }
+
+    if (lastEvaluatedKey) {
+      command.input.ExclusiveStartKey = lastEvaluatedKey;
+    }
+    
     const result = await docClient.send(command);
-    return result.Items || [];
+    return {
+      items: result.Items || [],
+      lastEvaluatedKey: result.LastEvaluatedKey
+    };
   } catch (error) {
     console.error("Error fetching problems:", error);
-    return [];
+    return { items: [], lastEvaluatedKey: undefined };
   }
 }
 
@@ -92,18 +100,26 @@ export async function getProblem(id: string) {
   }
 }
 
-export async function getSubmissions(problemId: string) {
+export async function getSubmissions(problemId: string, lastEvaluatedKey?: Record<string, any>) {
   try {
-    const command = new QueryCommand({
+    const input: any = {
       TableName: SUBMISSIONS_TABLE,
       KeyConditionExpression: "problemId = :pid",
       ExpressionAttributeValues: { ":pid": problemId },
-    });
+    };
+    if (lastEvaluatedKey) {
+      input.ExclusiveStartKey = lastEvaluatedKey;
+    }
+
+    const command = new QueryCommand(input);
     const result = await docClient.send(command);
-    return result.Items || [];
+    return {
+      items: result.Items || [],
+      lastEvaluatedKey: result.LastEvaluatedKey
+    };
   } catch (error) {
     console.error("Error fetching submissions:", error);
-    return [];
+    return { items: [], lastEvaluatedKey: undefined };
   }
 }
 
@@ -123,31 +139,50 @@ export async function getOrganization(orgId: string) {
 const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
 
 export interface PlatformStats {
-  builderCount: number;
-  submissionCount: number;
-  activeProblemCount: number;
+  totalStudents: number;
+  totalOrgs: number;
+  totalSubmissions: number;
+  activeProblems: number;
+  totalPrizePool: number;
 }
 
 export async function getPlatformStats(): Promise<PlatformStats> {
   try {
-    const [profilesRes, submissionsRes] = await Promise.all([
-      docClient.send(new ScanCommand({
-        TableName: PROFILES_TABLE,
-        Select: "COUNT",
-      })),
-      docClient.send(new ScanCommand({
-        TableName: SUBMISSIONS_TABLE,
-        Select: "COUNT",
-      })),
-    ]);
+    const result = await docClient.send(new GetCommand({
+      TableName: PROBLEMS_TABLE,
+      Key: { problemId: "GLOBAL_METADATA" }
+    }));
+
+    if (!result.Item) {
+      return { totalStudents: 0, totalOrgs: 0, totalSubmissions: 0, activeProblems: 0, totalPrizePool: 0 };
+    }
 
     return {
-      builderCount: profilesRes.Count || 0,
-      submissionCount: submissionsRes.Count || 0,
-      activeProblemCount: 0, // populated separately from getProblems length
+      totalStudents: result.Item.totalStudents || 0,
+      totalOrgs: result.Item.totalOrgs || 0,
+      totalSubmissions: result.Item.totalSubmissions || 0,
+      activeProblems: result.Item.activeProblems || 0,
+      totalPrizePool: result.Item.totalPrizePool || 0,
     };
   } catch (error) {
     console.error("Error fetching platform stats:", error);
-    return { builderCount: 0, submissionCount: 0, activeProblemCount: 0 };
+    return { totalStudents: 0, totalOrgs: 0, totalSubmissions: 0, activeProblems: 0, totalPrizePool: 0 };
+  }
+}
+
+export async function incrementPlatformStat(
+  field: "totalStudents" | "totalOrgs" | "totalSubmissions" | "activeProblems" | "totalPrizePool",
+  value: number = 1
+) {
+  try {
+    await docClient.send(new UpdateCommand({
+      TableName: PROBLEMS_TABLE,
+      Key: { problemId: "GLOBAL_METADATA" },
+      UpdateExpression: "ADD #field :val",
+      ExpressionAttributeNames: { "#field": field },
+      ExpressionAttributeValues: { ":val": value },
+    }));
+  } catch (error) {
+    console.error(`Error incrementing ${field}:`, error);
   }
 }
