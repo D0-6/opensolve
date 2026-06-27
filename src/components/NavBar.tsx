@@ -43,8 +43,8 @@ export function NavBar() {
         <nav className="hidden md:flex items-center gap-8">
           <Link href="/" className={navLinkClass("/")}>Challenges</Link>
           <Link href="/about" className={navLinkClass("/about")}>About</Link>
-          <span className="text-zinc-400 font-body-md cursor-not-allowed" title="Coming soon">Solutions</span>
-          <span className="text-zinc-400 font-body-md cursor-not-allowed" title="Coming soon">Leaderboard</span>
+          <Link href="/solutions" className={navLinkClass("/solutions")}>Solutions</Link>
+          <Link href="/leaderboard" className={navLinkClass("/leaderboard")}>Leaderboard</Link>
         </nav>
         
         {/* Actions */}
@@ -91,6 +91,8 @@ export function NavBar() {
         <div className="md:hidden bg-white border-t border-zinc-200 px-6 py-4 flex flex-col gap-4">
           <Link href="/" className="text-zinc-900 font-body-md font-medium py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Challenges</Link>
           <Link href="/about" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>About</Link>
+          <Link href="/solutions" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Solutions</Link>
+          <Link href="/leaderboard" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Leaderboard</Link>
           
           {isLoaded && isSignedIn && (
             <>

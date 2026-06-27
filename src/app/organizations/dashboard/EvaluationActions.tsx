@@ -1,25 +1,145 @@
 "use client";
 
-import { useState } from "react";
-import { CheckCircle2, Mail, Loader2, AlertCircle } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { CheckCircle2, Mail, Loader2, AlertCircle, MessageCircle, X, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 
-export default function EvaluationActions({ 
-  problemId, 
-  rankKey, 
-  prizeType, 
-  submitterName, 
-  studentUserId 
-}: { 
-  problemId: string, 
-  rankKey: string, 
-  prizeType: string, 
-  submitterName: string, 
-  studentUserId: string 
+interface Message {
+  threadId: string;
+  createdAt: string;
+  messageId: string;
+  senderId: string;
+  senderName: string;
+  text: string;
+}
+
+function MessageDrawer({
+  threadId,
+  studentUserId,
+  orgName,
+  onClose,
+}: {
+  threadId: string;
+  studentUserId: string;
+  orgName: string;
+  onClose: () => void;
+}) {
+  const { user } = useUser();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [text, setText] = useState("");
+  const [sending, setSending] = useState(false);
+
+  const fetchMessages = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/messages?threadId=${encodeURIComponent(threadId)}`);
+      const data = await res.json();
+      setMessages(data.messages || []);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [threadId]);
+
+  useEffect(() => {
+    fetchMessages();
+    const interval = setInterval(fetchMessages, 8000);
+    return () => clearInterval(interval);
+  }, [fetchMessages]);
+
+  const handleSend = async () => {
+    if (!text.trim() || !user) return;
+    setSending(true);
+    try {
+      await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          threadId,
+          text,
+          senderName: orgName,
+          recipientUserId: studentUserId,
+        }),
+      });
+      setText("");
+      await fetchMessages();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <div className="fixed bottom-8 right-8 w-96 bg-white border border-zinc-200 shadow-2xl z-50 flex flex-col" style={{ height: "440px" }}>
+      <div className="flex items-center justify-between px-4 py-3 bg-[#1a3a5c] text-white">
+        <div>
+          <div className="text-sm font-semibold">Message Candidate</div>
+          <div className="text-[10px] text-blue-200 uppercase tracking-wider">{threadId.split("#")[1]?.slice(0, 8)}…</div>
+        </div>
+        <button onClick={onClose}><X size={18} className="text-blue-200 hover:text-white" /></button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-zinc-50">
+        {messages.length === 0 ? (
+          <div className="text-center text-xs text-zinc-400 pt-10">
+            No messages yet. Start the conversation!
+          </div>
+        ) : (
+          messages.map(msg => (
+            <div key={msg.createdAt} className={`flex ${msg.senderId === user?.id ? "justify-end" : "justify-start"}`}>
+              <div className={`max-w-[80%] px-3 py-2 text-sm rounded-sm ${
+                msg.senderId === user?.id
+                  ? "bg-[#1a3a5c] text-white"
+                  : "bg-white border border-zinc-200 text-zinc-900"
+              }`}>
+                <div className="text-[10px] font-bold mb-1 opacity-60 uppercase tracking-wider">{msg.senderName}</div>
+                {msg.text}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="flex items-center gap-2 p-3 border-t border-zinc-200 bg-white">
+        <input
+          value={text}
+          onChange={e => setText(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()}
+          placeholder="Type a message..."
+          className="flex-1 text-sm border border-zinc-200 px-3 py-2 focus:outline-none focus:border-[#1a3a5c] transition-colors"
+        />
+        <button
+          onClick={handleSend}
+          disabled={sending || !text.trim()}
+          className="p-2 bg-[#1a3a5c] text-white hover:opacity-90 disabled:opacity-40"
+        >
+          {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default function EvaluationActions({
+  problemId,
+  rankKey,
+  prizeType,
+  submitterName,
+  studentUserId,
+  orgName = "Organization",
+}: {
+  problemId: string;
+  rankKey: string;
+  prizeType: string;
+  submitterName: string;
+  studentUserId: string;
+  orgName?: string;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [msgOpen, setMsgOpen] = useState(false);
+  const threadId = `${problemId}#${studentUserId}`;
 
   const handleAction = async (action: "HIRE" | "CONTRACT" | "INTERVIEW") => {
     setLoading(true);
@@ -28,12 +148,11 @@ export default function EvaluationActions({
       const res = await fetch("/api/submissions/evaluate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ problemId, rankKey, action, submitterName, studentUserId })
+        body: JSON.stringify({ problemId, rankKey, action, submitterName, studentUserId }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      
-      router.refresh(); // Refresh the page to show updated status
+      router.refresh();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to submit action");
     } finally {
@@ -45,24 +164,46 @@ export default function EvaluationActions({
   const primaryText = prizeType === "HIRING" ? "Extend Hire Offer" : "Offer Contract";
 
   return (
-    <div className="flex flex-col gap-2 w-full md:w-auto">
-      {error && <div className="text-[#1a3a5c] text-xs mb-1 flex items-center gap-1"><AlertCircle size={12}/> {error}</div>}
-      
-      <button 
-        onClick={() => handleAction(primaryAction)}
-        disabled={loading}
-        className="btn-primary px-6 py-2.5 font-medium text-sm flex items-center justify-center gap-2"
-      >
-        {loading ? <Loader2 size={16} className="animate-spin"/> : <><CheckCircle2 size={16}/> {primaryText}</>}
-      </button>
-      
-      <button 
-        onClick={() => handleAction("INTERVIEW")}
-        disabled={loading}
-        className="btn-secondary px-6 py-2.5 font-medium text-sm flex items-center justify-center gap-2"
-      >
-        {loading ? <Loader2 size={16} className="animate-spin"/> : <><Mail size={16}/> Request Interview</>}
-      </button>
-    </div>
+    <>
+      <div className="flex flex-col gap-2 w-full md:w-auto">
+        {error && (
+          <div className="text-[#1a3a5c] text-xs mb-1 flex items-center gap-1">
+            <AlertCircle size={12} /> {error}
+          </div>
+        )}
+
+        <button
+          onClick={() => handleAction(primaryAction)}
+          disabled={loading}
+          className="btn-primary px-6 py-2.5 font-medium text-sm flex items-center justify-center gap-2"
+        >
+          {loading ? <Loader2 size={16} className="animate-spin" /> : <><CheckCircle2 size={16} /> {primaryText}</>}
+        </button>
+
+        <button
+          onClick={() => handleAction("INTERVIEW")}
+          disabled={loading}
+          className="btn-secondary px-6 py-2.5 font-medium text-sm flex items-center justify-center gap-2"
+        >
+          {loading ? <Loader2 size={16} className="animate-spin" /> : <><Mail size={16} /> Request Interview</>}
+        </button>
+
+        <button
+          onClick={() => setMsgOpen(true)}
+          className="px-6 py-2.5 font-medium text-sm flex items-center justify-center gap-2 border border-zinc-300 text-zinc-700 hover:bg-zinc-50 transition-colors"
+        >
+          <MessageCircle size={16} /> Message Candidate
+        </button>
+      </div>
+
+      {msgOpen && (
+        <MessageDrawer
+          threadId={threadId}
+          studentUserId={studentUserId}
+          orgName={orgName}
+          onClose={() => setMsgOpen(false)}
+        />
+      )}
+    </>
   );
 }
