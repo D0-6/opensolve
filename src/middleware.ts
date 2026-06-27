@@ -16,6 +16,8 @@ const ONBOARDING_SETUP_ROUTES = [
   '/onboarding/organization',
   '/onboarding/student',
   '/onboarding/sync-role',
+  '/terms',
+  '/privacy',
 ]
 
 export default clerkMiddleware(async (auth, req) => {

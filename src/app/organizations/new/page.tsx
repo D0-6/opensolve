@@ -119,7 +119,7 @@ export default function ProfessionalPostChallenge() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to post challenge");
-      router.push(`/organizations/${user?.publicMetadata?.orgId}/dashboard`);
+      router.push(`/organizations/new/success`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to post problem");
     } finally {
