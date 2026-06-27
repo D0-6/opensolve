@@ -7,6 +7,7 @@ const isProtectedRoute = createRouteMatcher([
   '/problems/(.*)/apply',
   '/problems/(.*)/team',
   '/organizations/new',
+  '/admin(.*)',
 ])
 
 // Onboarding sub-routes that must remain accessible regardless of cookie state
@@ -62,6 +63,13 @@ export default clerkMiddleware(async (auth, req) => {
       pathname.startsWith('/dashboard')
     ) {
       return Response.redirect(new URL('/onboarding/student', req.url));
+    }
+
+    // --- Gate 3: Admin RBAC ---
+    if (pathname.startsWith('/admin') || (pathname.startsWith('/api/admin') && !pathname.startsWith('/api/admin/setup'))) {
+      if (role !== 'admin') {
+        return Response.redirect(new URL('/', req.url));
+      }
     }
   }
 
