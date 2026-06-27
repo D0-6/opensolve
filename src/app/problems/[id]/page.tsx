@@ -105,10 +105,10 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
           </div>
 
           <Link
-            href={`/problems/${problem.problemId}/submit`}
+            href={`/problems/${problem.problemId}/apply`}
             className="btn-primary w-full md:w-auto text-center px-6 py-2.5 font-medium text-sm"
           >
-            Submit Solution
+            Apply to Work
           </Link>
         </div>
 

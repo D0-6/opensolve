@@ -1,0 +1,182 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Send, GitBranch, Globe, Loader2, AlertCircle, Users, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
+
+export default function SubmitClient({ 
+  problemId, 
+  problemTitle,
+  teamMembers 
+}: { 
+  problemId: string; 
+  problemTitle: string;
+  teamMembers: any[];
+}) {
+  const router = useRouter();
+  const { user } = useUser();
+  const [formData, setFormData] = useState({
+    githubUrl: "",
+    demoUrl: "",
+    writeup: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const hasTeam = teamMembers && teamMembers.length > 0;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    const githubRegex = /^https?:\/\/(www\.)?github\.com\/([a-zA-Z0-9-]+)\/([a-zA-Z0-9_.-]+)\/?$/;
+    if (!githubRegex.test(formData.githubUrl)) {
+      setError("Please provide a valid GitHub repo URL (e.g. https://github.com/user/repo)");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/submissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          problemId,
+          studentName: user?.fullName || user?.username || "Anonymous",
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to submit solution");
+      router.push(`/problems/${problemId}`);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to submit");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto pt-12 md:pt-24 px-6 lg:px-8 pb-24 min-h-screen bg-white">
+      
+      <Link href={`/problems/${problemId}/team`} className="inline-flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-zinc-900 mb-8 transition-colors">
+        <ArrowLeft size={16} /> Back to Team Formation
+      </Link>
+
+      <div className="mb-12">
+        <h1 className="text-3xl md:text-5xl font-medium text-zinc-900 leading-tight mb-3 tracking-tight">
+          Submit Solution
+        </h1>
+        <p className="text-base text-zinc-500">
+          Submitting final deliverable for <strong className="text-zinc-800">{problemTitle}</strong>.
+        </p>
+      </div>
+
+      <div className="bg-white border border-zinc-200 p-6 md:p-10">
+        {error && (
+          <div className="flex items-start gap-3 bg-[#1a3a5c]/10 border border-[#1a3a5c]/20 text-[#1a3a5c] p-4 mb-8 text-sm font-medium">
+            <AlertCircle size={18} className="mt-0.5 shrink-0" />
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+          
+          {/* Identity Display */}
+          <div className="bg-zinc-50 border border-zinc-200 p-6">
+            <label className="block text-xs font-bold text-zinc-500 mb-3 uppercase tracking-wider">
+              Submission Identity
+            </label>
+            {hasTeam ? (
+              <div>
+                <div className="flex items-center gap-2 text-sm font-medium text-zinc-900 mb-2">
+                  <Users size={16} className="text-zinc-400" /> Submitting as a Team
+                </div>
+                <div className="text-xs text-zinc-500">
+                  Members: You, {teamMembers.map(m => m.name).join(", ")}
+                </div>
+              </div>
+            ) : (
+              <div className="text-sm font-medium text-zinc-900">
+                Submitting Solo (You)
+              </div>
+            )}
+          </div>
+
+          {/* GitHub URL */}
+          <div>
+            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+              <GitBranch size={14} className="inline mr-1.5 align-text-bottom text-zinc-400" />
+              GitHub Repository URL *
+            </label>
+            <input
+              required
+              type="url"
+              name="githubUrl"
+              value={formData.githubUrl}
+              onChange={handleChange}
+              placeholder="https://github.com/yourusername/your-solution"
+              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
+            />
+          </div>
+
+          {/* Demo URL */}
+          <div>
+            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+              <Globe size={14} className="inline mr-1.5 align-text-bottom text-zinc-400" />
+              Live Demo URL <span className="font-normal normal-case tracking-normal">(optional)</span>
+            </label>
+            <input
+              type="url"
+              name="demoUrl"
+              value={formData.demoUrl}
+              onChange={handleChange}
+              placeholder="https://your-demo.vercel.app"
+              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
+            />
+          </div>
+
+          {/* Writeup */}
+          <div>
+            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+              Solution Writeup *
+            </label>
+            <textarea
+              required
+              name="writeup"
+              value={formData.writeup}
+              onChange={handleChange}
+              maxLength={500}
+              rows={6}
+              placeholder="Explain your approach, tech stack, key decisions, and why your solution stands out..."
+              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm resize-y"
+            />
+            <div className="text-right text-xs text-zinc-400 mt-2 font-medium">
+              {formData.writeup.length} / 500
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full btn-primary font-medium py-3 flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:hover:bg-[#1a3a5c]"
+          >
+            {loading ? (
+              <Loader2 size={18} className="animate-spin" />
+            ) : (
+              <>Submit Solution <Send size={16} /></>
+            )}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}

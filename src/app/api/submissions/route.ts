@@ -60,23 +60,22 @@ export async function POST(request: Request) {
     const repoName = match[3];
 
     // SECURITY PASS: Verify Team Ownership
-    let validatedTeamId = null;
-    if (body.teamId) {
-      const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
-      const teamRes = await docClient.send(new GetCommand({
-        TableName: process.env.DYNAMODB_TABLE_TEAMS || "OpenSolve_Teams",
-        Key: { teamId: body.teamId }
-      }));
-      
-      if (!teamRes.Item) {
-        return NextResponse.json({ error: "The specified team does not exist." }, { status: 400 });
-      }
-      
-      if (!teamRes.Item.members.includes(userId)) {
-        return NextResponse.json({ error: "Security Exception: You cannot submit on behalf of a team you are not a member of." }, { status: 403 });
-      }
-      
-      validatedTeamId = body.teamId;
+    let validatedTeamMembers = null;
+    const APPLICATIONS_TABLE = process.env.DYNAMODB_TABLE_APPLICATIONS || "OpenSolve_Applications";
+    
+    // Always fetch their application to prove they went through the gating flow
+    const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
+    const appRes = await docClient.send(new GetCommand({
+      TableName: APPLICATIONS_TABLE,
+      Key: { problemId, userId }
+    }));
+    
+    if (!appRes.Item) {
+      return NextResponse.json({ error: "You must apply to this problem before submitting." }, { status: 403 });
+    }
+    
+    if (appRes.Item.teamMembers && appRes.Item.teamMembers.length > 0) {
+      validatedTeamMembers = appRes.Item.teamMembers;
     }
 
     const submittedAt = new Date().toISOString();
@@ -94,7 +93,7 @@ export async function POST(request: Request) {
       upvotes: 0,
       submittedAt,
       score,
-      teamId: validatedTeamId,
+      teamMembers: validatedTeamMembers,
       evaluationStatus: "PENDING", // PENDING, CONTRACT_OFFERED, HIRED, REJECTED, PRIZE_AWARDED
     };
 
