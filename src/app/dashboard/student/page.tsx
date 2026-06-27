@@ -190,7 +190,7 @@ export default async function StudentDashboard() {
             <FileText size={28} className="mx-auto mb-3 text-zinc-300" />
             <p className="font-medium text-zinc-700 mb-1">No applications yet</p>
             <p className="text-sm mb-4">Apply to a challenge to start tracking your progress.</p>
-            <Link href="/" className="btn-primary px-5 py-2 text-sm inline-block">Browse Challenges</Link>
+            <Link href="/challenges" className="btn-primary px-5 py-2 text-sm inline-block">Browse Challenges</Link>
           </div>
         ) : (
           <div className="flex flex-col border-t border-zinc-200">
@@ -246,7 +246,7 @@ export default async function StudentDashboard() {
             <Trophy size={32} className="mx-auto mb-4 opacity-50 text-zinc-300" />
             <p className="font-medium text-zinc-900 text-lg mb-1">No submissions yet</p>
             <p className="text-sm mb-6">Start solving problems to build your portfolio.</p>
-            <Link href="/" className="btn-primary px-6 py-2.5 font-medium text-sm">
+            <Link href="/challenges" className="btn-primary px-6 py-2.5 font-medium text-sm">
               Browse Problems
             </Link>
           </div>

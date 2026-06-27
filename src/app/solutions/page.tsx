@@ -114,7 +114,7 @@ export default async function SolutionsPage({ searchParams }: {
             <Layers size={40} className="mx-auto text-zinc-200 mb-4" />
             <p className="text-zinc-500 font-medium">No solutions yet.</p>
             <p className="text-zinc-400 text-sm mt-1">Apply to a challenge and submit the first solution!</p>
-            <Link href="/" className="btn-primary inline-block mt-6 px-6 py-2.5 text-sm">Browse Challenges</Link>
+            <Link href="/challenges" className="btn-primary inline-block mt-6 px-6 py-2.5 text-sm">Browse Challenges</Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

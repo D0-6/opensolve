@@ -101,7 +101,7 @@ export default async function LeaderboardPage() {
             <Trophy size={40} className="mx-auto text-zinc-200 mb-4" />
             <p className="text-zinc-500 font-medium">No submissions yet.</p>
             <p className="text-zinc-400 text-sm mt-1">Be the first to solve a challenge and claim your spot.</p>
-            <Link href="/" className="btn-primary inline-block mt-6 px-6 py-2.5 text-sm">Browse Challenges</Link>
+            <Link href="/challenges" className="btn-primary inline-block mt-6 px-6 py-2.5 text-sm">Browse Challenges</Link>
           </div>
         ) : (
           <>

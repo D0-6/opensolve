@@ -394,7 +394,7 @@ export default function ProfileClient({
               <LinkIcon size={24} className="mx-auto text-zinc-300 mb-3" />
               <p className="text-zinc-500 text-sm font-medium">No submissions yet</p>
               <p className="text-zinc-400 text-xs mt-1">Browse challenges and submit your first solution to build your record.</p>
-              <Link href="/" className="inline-block mt-4 text-xs font-bold text-[#1a3a5c] uppercase tracking-wider hover:underline">
+              <Link href="/challenges" className="inline-block mt-4 text-xs font-bold text-[#1a3a5c] uppercase tracking-wider hover:underline">
                 Browse Challenges →
               </Link>
             </div>

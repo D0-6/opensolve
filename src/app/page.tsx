@@ -107,9 +107,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
           </p>
           
           <div className="flex items-center gap-4 mt-6">
-            <a href="#challenges" className="btn-primary px-6 py-3 font-medium text-[15px]">
+            <Link href="/challenges" className="btn-primary px-6 py-3 font-medium text-[15px]">
               Browse Problems
-            </a>
+            </Link>
             <Link href="/organizations/new" className="btn-secondary px-6 py-3 font-medium text-[15px]">
               Post a Challenge
             </Link>

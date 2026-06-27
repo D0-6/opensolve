@@ -68,10 +68,10 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
 
       {/* Back link */}
       <Link
-        href="/"
+        href="/challenges"
         className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-900 text-sm mb-8 transition-colors font-medium"
       >
-        <ArrowLeft size={16} /> Back to Directory
+        <ArrowLeft size={16} /> Back to Challenges
       </Link>
 
       {/* Country restriction banner */}
