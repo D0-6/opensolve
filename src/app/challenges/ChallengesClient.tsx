@@ -12,6 +12,7 @@ const SOURCE_CONFIG: Record<string, { label: string; color: string }> = {
   YC_STARTUP: { label: "YC Startup", color: "bg-orange-50 text-orange-700 border-orange-200" },
   GOVERNMENT: { label: "Government", color: "bg-blue-50 text-blue-700 border-blue-200" },
   INDUSTRY: { label: "Industry", color: "bg-zinc-100 text-zinc-700 border-zinc-200" },
+  COMMUNITY: { label: "Community", color: "bg-purple-50 text-purple-700 border-purple-200" },
 };
 
 const PRIZE_TYPE_CONFIG: Record<string, { label: string; color: string }> = {
@@ -110,13 +111,18 @@ export default function ChallengesClient({
     <div className="w-full max-w-[125rem] mx-auto px-6 pt-28 pb-24 min-h-screen bg-white">
 
       {/* Page header */}
-      <div className="mb-10 border-b border-zinc-200 pb-10">
-        <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-zinc-900 mb-2">
-          Open Challenges
-        </h1>
-        <p className="text-zinc-500 text-base">
-          {problems.length} active challenge{problems.length !== 1 ? "s" : ""} from startups, government bodies, and top companies.
-        </p>
+      <div className="mb-10 border-b border-zinc-200 pb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-zinc-900 mb-2">
+            Open Challenges
+          </h1>
+          <p className="text-zinc-500 text-base">
+            {problems.length} active challenge{problems.length !== 1 ? "s" : ""} from startups, government bodies, and top companies.
+          </p>
+        </div>
+        <Link href="/challenges/submit" className="bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-medium px-5 py-2.5 transition-colors text-sm flex items-center gap-2 whitespace-nowrap shadow-sm">
+          <Globe size={16} /> Submit a Link
+        </Link>
       </div>
 
       {/* Search + filter bar */}
@@ -188,7 +194,7 @@ export default function ChallengesClient({
           <div>
             <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-2">Source</label>
             <div className="flex flex-col gap-2">
-              {["ALL", "YC_STARTUP", "GOVERNMENT", "INDUSTRY"].map(val => (
+              {["ALL", "YC_STARTUP", "GOVERNMENT", "INDUSTRY", "COMMUNITY"].map(val => (
                 <button
                   key={val}
                   onClick={() => setSource(val)}
@@ -317,6 +323,11 @@ export default function ChallengesClient({
                       {problem.verified && (
                         <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 border border-green-200 bg-green-50 text-green-700">
                           ✓ Verified
+                        </span>
+                      )}
+                      {problem.scoutId && (
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 border border-amber-200 bg-amber-50 text-amber-700 flex items-center gap-1">
+                          🕵️ Scouted
                         </span>
                       )}
                       {isRestricted && (

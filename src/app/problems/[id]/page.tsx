@@ -11,6 +11,7 @@ const SOURCE_CONFIG: Record<string, { label: string }> = {
   YC_STARTUP: { label: "YC Startup" },
   GOVERNMENT: { label: "Government" },
   INDUSTRY: { label: "Industry" },
+  COMMUNITY: { label: "Community Scouts" },
 };
 
 const COUNTRY_NAMES: Record<string, string> = {
@@ -84,6 +85,21 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
               {(problem.allowedCountries as string[]).map(c => COUNTRY_NAMES[c] || c).join(", ")}
             </strong>
           </span>
+        </div>
+      )}
+
+      {/* Scout / Discovered By banner */}
+      {problem.scoutId && (
+        <div className="flex items-center justify-between bg-purple-50 border border-purple-200 text-purple-800 px-5 py-3.5 mb-8 text-sm font-medium">
+          <div className="flex items-center gap-3">
+            <span className="text-xl">🕵️</span>
+            <span>
+              This challenge was discovered and shared by community scout <strong>{String(problem.scoutName || "Anonymous")}</strong>.
+            </span>
+          </div>
+          <Link href={`/profile/${problem.scoutId}`} className="text-purple-700 hover:text-purple-900 underline underline-offset-2">
+            View Profile
+          </Link>
         </div>
       )}
 
