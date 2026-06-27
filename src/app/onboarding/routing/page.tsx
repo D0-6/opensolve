@@ -15,43 +15,50 @@ export default async function OnboardingRoutingPage() {
   const role = user.publicMetadata?.role as string | undefined;
 
   if (!role) {
-    // Edge case: account created before roles existed
+    // Account has accepted TOS but has no role — send to role selection
     redirect("/onboarding/role-selection");
   }
 
   if (role === "student") {
-    // Check if they have a profile
+    // Check if they have a profile in DynamoDB
+    let hasProfile = false;
     try {
-      const getCommand = new GetCommand({
-        TableName: PROFILES_TABLE,
-        Key: { userId: user.id },
-      });
-      const result = await docClient.send(getCommand);
-      
-      if (!result.Item) {
-        redirect("/onboarding/student");
-      }
+      const result = await docClient.send(
+        new GetCommand({
+          TableName: PROFILES_TABLE,
+          Key: { userId: user.id },
+        })
+      );
+      hasProfile = !!result.Item;
     } catch (error) {
       console.error("Error checking profile:", error);
+      // On DynamoDB error, assume they have a profile to avoid re-onboarding loop
+      hasProfile = true;
     }
-    
-    // Profile exists, go to profile
-    redirect(`/profile/${user.id}`);
+
+    if (!hasProfile) {
+      redirect("/onboarding/student");
+    }
+
+    // Profile exists — go directly to dashboard
+    redirect("/dashboard/student");
   }
 
   if (role === "organization" || role === "company") {
-    // Check if they have an orgId assigned in metadata
     const orgId = user.publicMetadata?.orgId as string | undefined;
-    
+
     if (!orgId) {
       // They haven't finished organization onboarding
       redirect("/onboarding/organization");
     }
 
-    // Finished onboarding, go to dashboard
-    redirect(`/organizations/${orgId}/dashboard`);
+    if (role === "organization") {
+      redirect(`/organizations/${orgId}/dashboard`);
+    } else {
+      redirect("/dashboard/company");
+    }
   }
 
-  // Fallback
+  // Fallback for any unrecognized role
   redirect("/");
 }

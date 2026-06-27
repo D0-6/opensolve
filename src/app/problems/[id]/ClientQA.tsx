@@ -3,8 +3,15 @@
 import { useEffect, useState } from "react";
 import { MessageSquare, Send } from "lucide-react";
 
+interface QAThread {
+  sk: string;
+  askedBy: string;
+  questionText: string;
+  answers?: unknown[];
+}
+
 export default function ClientQA({ problemId }: { problemId: string }) {
-  const [threads, setThreads] = useState<any[]>([]);
+  const [threads, setThreads] = useState<QAThread[]>([]);
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);

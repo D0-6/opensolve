@@ -21,7 +21,8 @@ export default async function CompanyDashboard() {
 
   const user = await currentUser();
   const role = user?.publicMetadata?.role as string | undefined;
-  if (role && role !== "company") redirect("/dashboard/student");
+  // Redirect any non-company user to the root dispatcher
+  if (role && role !== "company") redirect("/dashboard");
 
   const orgName = user?.firstName ? `${user.firstName}'s Org` : "Your Organization";
 
@@ -39,7 +40,7 @@ export default async function CompanyDashboard() {
   }
 
   return (
-    <div className="w-full max-w-[125rem] mx-auto px-6 pt-24 pb-24 w-full bg-white min-h-screen">
+    <div className="w-full max-w-[125rem] mx-auto px-6 pt-24 pb-24 bg-white min-h-screen">
       {/* Header */}
       <div className="mb-12 border-b border-zinc-200 pb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>

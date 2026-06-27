@@ -24,7 +24,8 @@ export default async function StudentDashboard() {
 
   const user = await currentUser();
   const role = user?.publicMetadata?.role as string | undefined;
-  if (role && role !== "student") redirect("/dashboard/company");
+  // Redirect any non-student to the root dispatcher which will route correctly
+  if (role && role !== "student") redirect("/dashboard");
 
   // Fetch this user's submissions
   let submissions: Record<string, unknown>[] = [];
@@ -48,7 +49,7 @@ export default async function StudentDashboard() {
   const firstName = user?.firstName || "Builder";
 
   return (
-    <div className="w-full max-w-[125rem] mx-auto px-6 pt-24 pb-24 w-full bg-white min-h-screen">
+    <div className="w-full max-w-[125rem] mx-auto px-6 pt-24 pb-24 bg-white min-h-screen">
       {/* Welcome header */}
       <div className="mb-12 border-b border-zinc-200 pb-12">
         <div className="inline-flex items-center gap-2 bg-zinc-50 border border-zinc-200 rounded-full px-3 py-1.5 w-fit text-xs font-semibold text-zinc-600 mb-6 uppercase tracking-wide">

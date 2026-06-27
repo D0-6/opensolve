@@ -22,7 +22,7 @@ export async function submitOrganizationOnboarding(formData: FormData) {
 
   const orgItem = {
     orgId,
-    clerkUserId: user.id, // Keep a reference to the creator
+    clerkUserId: user.id,
     orgName,
     orgType,
     contactEmail,
@@ -39,9 +39,12 @@ export async function submitOrganizationOnboarding(formData: FormData) {
     })
   );
 
-  // Update Clerk user metadata with their new orgId
-  await clerkClient().users.updateUserMetadata(user.id, {
+  // Update Clerk user metadata with both role and orgId so the dashboard
+  // dispatcher can correctly route this user on subsequent visits.
+  const client = await clerkClient();
+  await client.users.updateUserMetadata(user.id, {
     publicMetadata: {
+      role: "organization",
       orgId: orgId,
     },
   });

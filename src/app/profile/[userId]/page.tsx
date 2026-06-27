@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export default async function UserProfile({ params }: { params: Promise<{ userId: string }> }) {
   const { userId } = await params;
-  const { userId: loggedInUserId } = auth();
+  const { userId: loggedInUserId } = await auth();
 
   const isOwner = loggedInUserId === userId;
 

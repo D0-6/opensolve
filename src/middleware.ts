@@ -7,20 +7,39 @@ const isProtectedRoute = createRouteMatcher([
   '/organizations/new',
 ])
 
+// Sub-routes of /onboarding that are safe to visit even after accepting terms.
+// These handle role assignment and profile setup which can legitimately happen
+// after the TOS cookie is set (e.g. new device, missing role, etc.)
+const ONBOARDING_SETUP_ROUTES = [
+  '/onboarding/routing',
+  '/onboarding/role-selection',
+  '/onboarding/organization',
+  '/onboarding/student',
+  '/onboarding/sync-role',
+]
+
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
 
-  // If user is logged in, check for onboarding cookie
   if (userId) {
-    const isOnboarding = req.nextUrl.pathname.startsWith('/onboarding');
-    const isApi = req.nextUrl.pathname.startsWith('/api');
+    const pathname = req.nextUrl.pathname;
+    const isApi = pathname.startsWith('/api');
     const hasCookie = req.cookies.has('onboarding_complete');
 
-    if (!hasCookie && !isOnboarding && !isApi) {
+    // Only the exact /onboarding TOS page should be blocked when cookie exists.
+    // Sub-routes (routing, role-selection, organization, student) must remain
+    // accessible so users can complete profile/role setup after TOS acceptance.
+    const isOnboardingRoot = pathname === '/onboarding' || pathname === '/onboarding/';
+    const isOnboardingSetup = ONBOARDING_SETUP_ROUTES.some(r => pathname.startsWith(r));
+    const isAnyOnboarding = pathname.startsWith('/onboarding');
+
+    // Redirect to onboarding TOS if cookie is not set and they're not already there
+    if (!hasCookie && !isAnyOnboarding && !isApi) {
       return Response.redirect(new URL('/onboarding', req.url));
     }
 
-    if (hasCookie && isOnboarding) {
+    // Block the TOS page only (not sub-routes) once the cookie is set
+    if (hasCookie && isOnboardingRoot && !isOnboardingSetup) {
       return Response.redirect(new URL('/', req.url));
     }
   }

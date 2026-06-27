@@ -4,8 +4,19 @@ import { useEffect, useState } from "react";
 import { GitBranch, Play, ArrowUpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+interface LeaderboardSubmission {
+  rankKey: string;
+  userId: string;
+  studentName: string;
+  githubUrl: string;
+  repoName?: string;
+  demoUrl?: string;
+  writeup: string;
+  score: number;
+}
+
 export default function ClientLeaderboard({ problemId }: { problemId: string }) {
-  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [submissions, setSubmissions] = useState<LeaderboardSubmission[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -4,10 +4,10 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 export default async function SyncRolePage({
   searchParams,
 }: {
-  searchParams: { role?: string };
+  searchParams: Promise<{ role?: string }>;
 }) {
-  const { userId } = auth();
-  const role = searchParams.role;
+  const { userId } = await auth();
+  const { role } = await searchParams;
 
   if (!userId) {
     redirect("/sign-up");
@@ -19,7 +19,8 @@ export default async function SyncRolePage({
   }
 
   // Write to Clerk's publicMetadata
-  await clerkClient().users.updateUserMetadata(userId, {
+  const client = await clerkClient();
+  await client.users.updateUserMetadata(userId, {
     publicMetadata: {
       role: role,
     },
