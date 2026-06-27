@@ -72,6 +72,7 @@ export async function POST(request: Request) {
       problemId,
       title: body.title,
       description: body.description,
+      requirements: body.requirements || "",
       source: body.source || "INDUSTRY",
       sourceUrl: body.sourceUrl || "",
       prizeAmount: Number(body.prizeAmount) || 0,
@@ -83,6 +84,9 @@ export async function POST(request: Request) {
       verified: false,
       status: "OPEN",
       resourceLinks: body.resourceLinks || [],
+      requiredSkills: Array.isArray(body.requiredSkills) ? body.requiredSkills : [],
+      allowedCountries: Array.isArray(body.allowedCountries) ? body.allowedCountries : [],
+      maxTeamSize: typeof body.maxTeamSize === "number" ? body.maxTeamSize : 4,
       notificationSent: false,
     };
 

@@ -1,6 +1,6 @@
 import { getProblem } from "@/lib/data";
 import { notFound } from "next/navigation";
-import { ExternalLink, ArrowLeft } from "lucide-react";
+import { ExternalLink, ArrowLeft, Users, Tag, Globe, Lock } from "lucide-react";
 import Link from "next/link";
 import ClientLeaderboard from "./ClientLeaderboard";
 import ClientQA from "./ClientQA";
@@ -13,14 +13,22 @@ const SOURCE_CONFIG: Record<string, { label: string }> = {
   INDUSTRY: { label: "Industry" },
 };
 
+const COUNTRY_NAMES: Record<string, string> = {
+  IN: "India", US: "United States", GB: "United Kingdom", CA: "Canada",
+  AU: "Australia", DE: "Germany", FR: "France", NL: "Netherlands",
+  SG: "Singapore", AE: "UAE", BR: "Brazil", NG: "Nigeria",
+  KE: "Kenya", ZA: "South Africa", PK: "Pakistan", BD: "Bangladesh",
+  PH: "Philippines", ID: "Indonesia", MY: "Malaysia",
+};
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const problem = await getProblem(id);
   if (!problem) return { title: "Challenge Not Found | OpenSolve" };
-  
+
   return {
     title: `${problem.title} | OpenSolve Hiring Challenge`,
-    description: problem.description.substring(0, 160) + "...",
+    description: (problem.description || "").substring(0, 160) + "...",
   };
 }
 
@@ -31,6 +39,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
   if (!problem) notFound();
 
   const cfg = SOURCE_CONFIG[problem.source] || SOURCE_CONFIG.INDUSTRY;
+  const isCountryRestricted = Array.isArray(problem.allowedCountries) && problem.allowedCountries.length > 0;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -48,7 +57,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
       "@type": "Place",
       "address": {
         "@type": "PostalAddress",
-        "addressLocality": "Remote"
+        "addressLocality": isCountryRestricted ? "Selected Countries" : "Remote / Global"
       }
     }
   };
@@ -56,7 +65,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
   return (
     <div className="pt-24 pb-16 w-full max-w-[125rem] mx-auto px-6 bg-white min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      
+
       {/* Back link */}
       <Link
         href="/"
@@ -65,7 +74,20 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
         <ArrowLeft size={16} /> Back to Directory
       </Link>
 
-      {/* Problem header (Editorial, no card) */}
+      {/* Country restriction banner */}
+      {isCountryRestricted && (
+        <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 text-amber-800 px-5 py-3.5 mb-8 text-sm font-medium">
+          <Lock size={16} className="shrink-0" />
+          <span>
+            This challenge is open only to residents of:{" "}
+            <strong>
+              {(problem.allowedCountries as string[]).map(c => COUNTRY_NAMES[c] || c).join(", ")}
+            </strong>
+          </span>
+        </div>
+      )}
+
+      {/* Problem header */}
       <div className="mb-12 relative">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
           <div className="flex flex-wrap items-center gap-3">
@@ -75,6 +97,11 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
             <span className="px-2.5 py-0.5 rounded-full border border-zinc-300 text-zinc-600 font-label-mono text-[11px] leading-tight shrink-0 uppercase tracking-wide font-semibold">
               {problem.domain}
             </span>
+            {typeof problem.maxTeamSize === "number" && (
+              <span className="px-2.5 py-0.5 rounded-full border border-zinc-300 text-zinc-600 font-label-mono text-[11px] leading-tight shrink-0 uppercase tracking-wide font-semibold flex items-center gap-1">
+                <Users size={11} /> Team up to {problem.maxTeamSize}
+              </span>
+            )}
           </div>
 
           <Link
@@ -95,13 +122,23 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
             <span className="font-medium text-zinc-900">
               {problem.prizeType === "CASH"
                 ? `$${Number(problem.prizeAmount).toLocaleString()}`
-                : problem.prizeType?.replace("_", " ")}
+                : problem.prizeType?.replace(/_/g, " ")}
             </span>
           </div>
           <div>
             <span className="text-zinc-400 uppercase tracking-wider text-xs font-bold block mb-1">Deadline</span>
             <span className="font-medium text-zinc-900">
               {new Date(problem.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+            </span>
+          </div>
+          <div>
+            <span className="text-zinc-400 uppercase tracking-wider text-xs font-bold block mb-1">Eligibility</span>
+            <span className="font-medium text-zinc-900 flex items-center gap-1.5">
+              {isCountryRestricted ? (
+                <><Lock size={13} className="text-amber-500" /> Country Restricted</>
+              ) : (
+                <><Globe size={13} className="text-zinc-400" /> Global / Remote</>
+              )}
             </span>
           </div>
           {problem.sourceUrl && (
@@ -119,11 +156,56 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
           )}
         </div>
 
+        {/* Description */}
         <div className="prose prose-zinc max-w-none border-t border-zinc-200 pt-8">
           <p className="text-base md:text-lg text-zinc-700 leading-relaxed whitespace-pre-wrap">
             {problem.description}
           </p>
         </div>
+
+        {/* Success criteria / requirements */}
+        {problem.requirements && (
+          <div className="mt-8 bg-zinc-50 border border-zinc-200 p-6">
+            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Success Criteria</h3>
+            <p className="text-sm text-zinc-700 leading-relaxed whitespace-pre-wrap">{problem.requirements}</p>
+          </div>
+        )}
+
+        {/* Required skills */}
+        {Array.isArray(problem.requiredSkills) && problem.requiredSkills.length > 0 && (
+          <div className="mt-6">
+            <div className="flex items-center gap-2 text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">
+              <Tag size={13} /> Required Skills
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {(problem.requiredSkills as string[]).map(skill => (
+                <span key={skill} className="text-xs font-bold text-zinc-700 bg-white border border-zinc-200 px-3 py-1.5 uppercase tracking-wider">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Resource Links */}
+        {Array.isArray(problem.resourceLinks) && problem.resourceLinks.length > 0 && (
+          <div className="mt-6">
+            <div className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Resources & Datasets</div>
+            <div className="flex flex-col gap-2">
+              {(problem.resourceLinks as string[]).map((link, i) => (
+                <a
+                  key={i}
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-[#1a3a5c] hover:underline flex items-center gap-1.5 font-mono"
+                >
+                  <ExternalLink size={13} /> {link}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Leaderboard + QA */}

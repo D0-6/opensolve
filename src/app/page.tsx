@@ -1,6 +1,7 @@
-import { getProblems, type Problem } from "@/lib/data";
+import { getProblems, getPlatformStats, type Problem } from "@/lib/data";
 import Link from "next/link";
 import { formatDistanceToNow, differenceInHours } from "date-fns";
+import { Lock } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,7 @@ function ProblemRow({ problem }: { problem: Problem }) {
   const cfg = SOURCE_CONFIG[problem.source] || SOURCE_CONFIG.INDUSTRY;
   const hoursLeft = differenceInHours(new Date(problem.deadline), new Date());
   const isPast = hoursLeft <= 0;
+  const isRestricted = Array.isArray(problem.allowedCountries) && problem.allowedCountries.length > 0;
 
   const timeText = isPast ? "Closed" : `Closes in ${formatDistanceToNow(new Date(problem.deadline))}`;
 
@@ -32,6 +34,11 @@ function ProblemRow({ problem }: { problem: Problem }) {
             <span className="text-zinc-500 font-label-mono text-[11px] uppercase tracking-wide">
               {problem.domain}
             </span>
+            {isRestricted && (
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full border border-amber-300 text-amber-700 text-[10px] uppercase tracking-wide font-bold bg-amber-50">
+                <Lock size={9} /> Country Restricted
+              </span>
+            )}
           </div>
           <h3 className="font-body-lg text-lg font-semibold text-zinc-900 group-hover:text-[#1a3a5c] transition-colors truncate">
             {problem.title}
@@ -49,7 +56,7 @@ function ProblemRow({ problem }: { problem: Problem }) {
               <span className="block font-body-md text-zinc-900 font-bold">${problem.prizeAmount.toLocaleString()}</span>
             ) : (
               <span className="block font-label-mono text-[11px] uppercase tracking-wide text-zinc-600 font-bold">
-                {problem.prizeType ? problem.prizeType.replace("_", " ") : "BOUNTY"}
+                {problem.prizeType ? problem.prizeType.replace(/_/g, " ") : "BOUNTY"}
               </span>
             )}
             <span className="block font-label-mono text-[11px] text-zinc-400 uppercase tracking-wide mt-1">
@@ -65,7 +72,10 @@ function ProblemRow({ problem }: { problem: Problem }) {
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ source?: string; domain?: string }> }) {
   const sp = await searchParams;
-  const problems = await getProblems(sp.source, sp.domain);
+  const [problems, stats] = await Promise.all([
+    getProblems(sp.source, sp.domain),
+    getPlatformStats(),
+  ]);
   const totalPrize = problems.reduce((sum: number, p: Problem) => sum + (Number(p.prizeAmount) || 0), 0);
   
   const newThisWeek = problems.filter((p: Problem) => {
@@ -124,14 +134,23 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
           
           <div className="py-4 md:py-8 w-full md:flex-1 text-center md:pl-8 md:pr-8">
             <div className="text-3xl font-medium text-zinc-900">
+              {stats.builderCount > 0 ? `${stats.builderCount.toLocaleString()}` : "Open"}
+            </div>
+            <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">Builders Registered</p>
+          </div>
+          
+          <div className="py-4 md:py-8 w-full md:flex-1 text-center md:pl-8 md:pr-8">
+            <div className="text-3xl font-medium text-zinc-900">
               {totalPrize > 0 ? `$${(totalPrize / 1000).toFixed(0)}k+` : "Varied"}
             </div>
             <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">In Prizes</p>
           </div>
-          
+
           <div className="py-4 md:py-8 w-full md:flex-1 text-center md:text-right md:pl-8">
-            <div className="text-3xl font-medium text-zinc-900">Open</div>
-            <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">To All Builders</p>
+            <div className="text-3xl font-medium text-zinc-900">
+              {stats.submissionCount > 0 ? stats.submissionCount.toLocaleString() : "0"}
+            </div>
+            <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">Solutions Submitted</p>
           </div>
         </div>
       </section>

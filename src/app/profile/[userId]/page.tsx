@@ -17,6 +17,8 @@ export default async function UserProfile({ params }: { params: Promise<{ userId
   let profile;
   let fallbackName = "";
   let imageUrl = "";
+  let viewerRole = "";
+
   try {
     const res = await docClient.send(new GetCommand({ TableName: PROFILES_TABLE, Key: { userId } }));
     profile = res.Item;
@@ -25,15 +27,20 @@ export default async function UserProfile({ params }: { params: Promise<{ userId
   }
 
   try {
-    // Fallback to pulling name from Clerk if the user bypassed the old onboarding flow
     const clerk = await clerkClient();
     const targetUser = await clerk.users.getUser(userId);
     if (targetUser) {
       fallbackName = [targetUser.firstName, targetUser.lastName].filter(Boolean).join(" ");
       imageUrl = targetUser.imageUrl;
     }
+
+    // Fetch the viewer's role so we know whether to expose the candidate's phone number
+    if (loggedInUserId && loggedInUserId !== userId) {
+      const loggedInUser = await clerk.users.getUser(loggedInUserId);
+      viewerRole = (loggedInUser.publicMetadata?.role as string) || "";
+    }
   } catch (err) {
-    console.error("Failed to fetch fallback user from Clerk", err);
+    console.error("Failed to fetch user from Clerk", err);
   }
 
   let submissions: Record<string, unknown>[] = [];
@@ -50,13 +57,14 @@ export default async function UserProfile({ params }: { params: Promise<{ userId
   }
 
   return (
-    <ProfileClient 
-      isOwner={isOwner} 
-      profile={profile} 
-      submissions={submissions} 
-      userId={userId} 
+    <ProfileClient
+      isOwner={isOwner}
+      profile={profile || {}}
+      submissions={submissions}
+      userId={userId}
       fallbackName={fallbackName}
       imageUrl={imageUrl}
+      viewerRole={viewerRole}
     />
   );
 }

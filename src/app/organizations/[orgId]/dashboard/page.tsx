@@ -1,8 +1,9 @@
 import { getOrganization, getProblems, getSubmissions } from "@/lib/data";
 import { notFound, redirect } from "next/navigation";
-import { Mail, ExternalLink, Play, Trophy, Users, Briefcase, PlusCircle } from "lucide-react";
+import { ExternalLink, Play, Trophy, Users, Briefcase, PlusCircle, FileText } from "lucide-react";
 import Link from "next/link";
 import { currentUser } from "@clerk/nextjs/server";
+import EvaluationActions from "@/app/organizations/dashboard/EvaluationActions";
 
 export const dynamic = "force-dynamic";
 
@@ -97,9 +98,7 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
 
                 {/* Submissions */}
                 <div className="p-6">
-                  <div className="bg-zinc-50 p-3 text-xs text-zinc-600 border border-zinc-200 mb-4">
-                    <strong>Note:</strong> &quot;Contact&quot; opens a pre-filled mailto link. Phase 2 adds in-app messaging.
-                  </div>
+
                   {problem.submissions.length === 0 ? (
                     <div className="py-8 text-center text-zinc-400 text-sm italic border border-dashed border-zinc-200">
                       Awaiting submissions...
@@ -132,13 +131,20 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
                               )}
                             </div>
                           </div>
-                          <div className="shrink-0 mt-4 md:mt-0 w-full md:w-auto">
-                            <a
-                              href={`mailto:${sub.userId}@placeholder.com?subject=Regarding your solution to: ${problem.title}`}
-                              className="flex items-center justify-center gap-2 bg-zinc-900 hover:bg-black text-white px-5 py-2.5 text-sm font-medium transition-colors w-full md:w-auto"
+                          <div className="shrink-0 mt-4 md:mt-0 w-full md:w-auto flex flex-col gap-2">
+                            <Link
+                              href={`/profile/${sub.userId}`}
+                              className="flex items-center justify-center gap-2 bg-zinc-50 border border-zinc-200 hover:border-[#1a3a5c] hover:text-[#1a3a5c] text-zinc-600 px-5 py-2 text-sm font-medium transition-colors w-full md:w-auto"
                             >
-                              <Mail className="w-4 h-4" /> Contact
-                            </a>
+                              <FileText className="w-4 h-4" /> View Profile
+                            </Link>
+                            <EvaluationActions
+                              problemId={problem.problemId}
+                              rankKey={sub.rankKey}
+                              prizeType={problem.prizeType || "CONTRACT"}
+                              submitterName={sub.studentName}
+                              studentUserId={sub.userId}
+                            />
                           </div>
                         </div>
                       ))}

@@ -5,6 +5,7 @@ export interface Problem {
   problemId: string;
   title: string;
   description?: string;
+  requirements?: string;
   source: string;
   sourceUrl?: string;
   prizeAmount: number;
@@ -16,6 +17,9 @@ export interface Problem {
   verified: boolean;
   status: string;
   resourceLinks?: string[];
+  requiredSkills?: string[];
+  allowedCountries?: string[];
+  maxTeamSize?: number;
   [key: string]: unknown;
 }
 
@@ -113,5 +117,37 @@ export async function getOrganization(orgId: string) {
   } catch (error) {
     console.error("Error fetching organization:", error);
     return null;
+  }
+}
+
+const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
+
+export interface PlatformStats {
+  builderCount: number;
+  submissionCount: number;
+  activeProblemCount: number;
+}
+
+export async function getPlatformStats(): Promise<PlatformStats> {
+  try {
+    const [profilesRes, submissionsRes] = await Promise.all([
+      docClient.send(new ScanCommand({
+        TableName: PROFILES_TABLE,
+        Select: "COUNT",
+      })),
+      docClient.send(new ScanCommand({
+        TableName: SUBMISSIONS_TABLE,
+        Select: "COUNT",
+      })),
+    ]);
+
+    return {
+      builderCount: profilesRes.Count || 0,
+      submissionCount: submissionsRes.Count || 0,
+      activeProblemCount: 0, // populated separately from getProblems length
+    };
+  } catch (error) {
+    console.error("Error fetching platform stats:", error);
+    return { builderCount: 0, submissionCount: 0, activeProblemCount: 0 };
   }
 }
