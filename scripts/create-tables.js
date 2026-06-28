@@ -14,6 +14,8 @@ const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_S
 const ORGS_TABLE = process.env.DYNAMODB_TABLE_ORGANIZATIONS || "OpenSolve_Organizations";
 const QATHREADS_TABLE = process.env.DYNAMODB_TABLE_QATHREADS || "OpenSolve_QAThreads";
 const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
+const NOTIFICATIONS_TABLE = process.env.DYNAMODB_TABLE_NOTIFICATIONS || "OpenSolve_Notifications";
+const APPLICATIONS_TABLE = process.env.DYNAMODB_TABLE_APPLICATIONS || "OpenSolve_Applications";
 
 async function createTable(params) {
   try {
@@ -151,6 +153,36 @@ async function setupDynamoDB() {
       { AttributeName: "userId", KeyType: "HASH" }
     ],
     AttributeDefinitions: [
+      { AttributeName: "userId", AttributeType: "S" }
+    ],
+    BillingMode: "PROVISIONED",
+    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
+  });
+
+  // 6. Notifications Table
+  await createTable({
+    TableName: NOTIFICATIONS_TABLE,
+    KeySchema: [
+      { AttributeName: "userId", KeyType: "HASH" },
+      { AttributeName: "createdAt", KeyType: "RANGE" }
+    ],
+    AttributeDefinitions: [
+      { AttributeName: "userId", AttributeType: "S" },
+      { AttributeName: "createdAt", AttributeType: "S" }
+    ],
+    BillingMode: "PROVISIONED",
+    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
+  });
+
+  // 7. Applications Table
+  await createTable({
+    TableName: APPLICATIONS_TABLE,
+    KeySchema: [
+      { AttributeName: "problemId", KeyType: "HASH" },
+      { AttributeName: "userId", KeyType: "RANGE" }
+    ],
+    AttributeDefinitions: [
+      { AttributeName: "problemId", AttributeType: "S" },
       { AttributeName: "userId", AttributeType: "S" }
     ],
     BillingMode: "PROVISIONED",
