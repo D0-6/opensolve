@@ -9,43 +9,13 @@ const TABLE_NAME = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const source = searchParams.get("source");
-  const domain = searchParams.get("domain");
+  const source = searchParams.get("source") || undefined;
+  const domain = searchParams.get("domain") || undefined;
 
   try {
-    let command;
-    
-    if (source) {
-      // Query by GSI1: source-deadline-index
-      command = new QueryCommand({
-        TableName: TABLE_NAME,
-        IndexName: "source-deadline-index",
-        KeyConditionExpression: "#src = :src",
-        ExpressionAttributeNames: { "#src": "source" },
-        ExpressionAttributeValues: { ":src": source },
-      });
-    } else if (domain) {
-      // Query by GSI2: domain-deadline-index
-      command = new QueryCommand({
-        TableName: TABLE_NAME,
-        IndexName: "domain-deadline-index",
-        KeyConditionExpression: "#dom = :dom",
-        ExpressionAttributeNames: { "#dom": "domain" },
-        ExpressionAttributeValues: { ":dom": domain },
-      });
-    } else {
-      // Query by GSI3: status-deadline-index natively sorts by deadline
-      command = new QueryCommand({
-        TableName: TABLE_NAME,
-        IndexName: "status-deadline-index",
-        KeyConditionExpression: "#status = :status",
-        ExpressionAttributeNames: { "#status": "status" },
-        ExpressionAttributeValues: { ":status": "OPEN" },
-      });
-    }
-
-    const result = await docClient.send(command);
-    return NextResponse.json({ problems: result.Items });
+    const { getProblems } = await import("@/lib/data");
+    const result = await getProblems(source, domain);
+    return NextResponse.json({ problems: result.items });
   } catch (error) {
     console.error("Error fetching problems:", error);
     return NextResponse.json({ error: "Failed to fetch problems" }, { status: 500 });
@@ -72,13 +42,11 @@ export async function POST(request: Request) {
     const problemId = uuidv4();
     const now = new Date().toISOString();
 
-    const newProblem = {
+    const newProblem: Record<string, any> = {
       problemId,
       title: body.title,
       description: body.description,
-      requirements: body.requirements || "",
       source: body.source || "INDUSTRY",
-      sourceUrl: body.sourceUrl || "",
       prizeAmount: Number(body.prizeAmount) || 0,
       prizeType: body.prizeType || "CASH",
       deadline: body.deadline,
@@ -93,6 +61,9 @@ export async function POST(request: Request) {
       maxTeamSize: typeof body.maxTeamSize === "number" ? body.maxTeamSize : 4,
       notificationSent: false,
     };
+
+    if (body.requirements) newProblem.requirements = body.requirements;
+    if (body.sourceUrl) newProblem.sourceUrl = body.sourceUrl;
 
     await docClient.send(new PutCommand({
       TableName: TABLE_NAME,
