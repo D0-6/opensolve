@@ -1,11 +1,12 @@
 import { getProblem } from "@/lib/data";
 import { notFound } from "next/navigation";
-import { ExternalLink, ArrowLeft, Users, Tag, Globe, Lock } from "lucide-react";
+import { ExternalLink, ArrowLeft, Users, Tag, Globe, Lock, Megaphone } from "lucide-react";
 import Link from "next/link";
 import { docClient } from "@/lib/dynamodb";
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
 import ClientLeaderboard from "./ClientLeaderboard";
 import ClientQA from "./ClientQA";
+import AnnouncementsPanel from "./AnnouncementsPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -251,9 +252,16 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
           <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2">Leaderboard</h2>
           <ClientLeaderboard problemId={problem.problemId} />
         </div>
-        <div>
-          <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2">Q&amp;A Thread</h2>
-          <ClientQA problemId={problem.problemId} />
+        <div className="space-y-8">
+          {/* Announcements (Devpost-style challenge updates) */}
+          <AnnouncementsPanel
+            problemId={problem.problemId}
+            announcements={Array.isArray(problem.announcements) ? problem.announcements as any[] : []}
+          />
+          <div>
+            <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2">Q&amp;A Thread</h2>
+            <ClientQA problemId={problem.problemId} />
+          </div>
         </div>
       </div>
     </div>

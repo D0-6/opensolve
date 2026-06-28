@@ -4,6 +4,7 @@ import { ExternalLink, Play, Trophy, Users, Briefcase, PlusCircle, FileText } fr
 import Link from "next/link";
 import { currentUser } from "@clerk/nextjs/server";
 import EvaluationActions from "@/app/organizations/dashboard/EvaluationActions";
+import PostAnnouncementButton from "@/app/organizations/dashboard/PostAnnouncementButton";
 
 export const dynamic = "force-dynamic";
 
@@ -11,12 +12,15 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
   const { orgId } = await params;
   
   const user = await currentUser();
-  // Redirect unauthenticated users to sign-in; redirect authenticated users
-  // with wrong role to the dashboard dispatcher rather than sign-in.
   if (!user) {
     redirect("/sign-in");
   }
-  if (user.publicMetadata?.role !== "organization" || user.publicMetadata?.orgId !== orgId) {
+  
+  const role = user.publicMetadata?.role as string | undefined;
+  const userOrgId = user.publicMetadata?.orgId as string | undefined;
+  
+  // Accept both 'organization' and 'company' roles
+  if ((role !== "organization" && role !== "company") || (userOrgId && userOrgId !== orgId)) {
     redirect("/dashboard");
   }
 
@@ -27,7 +31,12 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
   if (!org) notFound();
 
   const allProblems = problemsRes.items;
-  const orgProblems = allProblems.filter(p => p.postedByOrgId === org.orgId);
+  // Match problems by both orgId AND by the org's clerkUserId (for backwards compat)
+  const orgProblems = allProblems.filter(p =>
+    p.postedByOrgId === orgId ||
+    p.postedByOrgId === org.clerkUserId ||
+    p.postedByOrgId === user.id
+  );
 
   // Fetch submissions for ALL problems (not just the first)
   const problemsWithSubmissions = await Promise.all(
@@ -95,9 +104,12 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
                       <span>Deadline: {new Date(problem.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                     </div>
                   </div>
+                  <div className="flex items-center gap-3">
                   <Link href={`/problems/${problem.problemId}`} className="text-zinc-500 text-sm font-medium hover:text-[#1a3a5c] transition-colors whitespace-nowrap flex items-center gap-1.5">
                     View Public Page <ExternalLink size={14} />
                   </Link>
+                  <PostAnnouncementButton problemId={problem.problemId} />
+                </div>
                 </div>
 
                 {/* Submissions */}

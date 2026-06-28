@@ -54,7 +54,11 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const user = await currentUser();
-  if (!user || user.publicMetadata?.role !== "organization" || !user.publicMetadata?.orgId) {
+  const role = user?.publicMetadata?.role as string | undefined;
+  const orgId = user?.publicMetadata?.orgId as string | undefined;
+
+  // Accept both 'organization' and 'company' roles for backwards compatibility
+  if (!user || (role !== "organization" && role !== "company")) {
     return NextResponse.json({ error: "Sign in as an organization to post a challenge" }, { status: 401 });
   }
 
@@ -80,7 +84,7 @@ export async function POST(request: Request) {
       deadline: body.deadline,
       domain: body.domain,
       postedAt: now,
-      postedByOrgId: user.publicMetadata.orgId, // pulled securely from clerk metadata
+      postedByOrgId: orgId || user.id, // orgId from metadata, fallback to userId
       verified: false,
       status: "OPEN",
       resourceLinks: body.resourceLinks || [],
@@ -95,13 +99,12 @@ export async function POST(request: Request) {
       Item: newProblem
     }));
 
-    // PHASE 10: Trigger Automated Blast to Students
-    const { sendEmail } = await import("@/lib/email");
-    await sendEmail({
-      to: "all-active-students@opensolve.talent",
-      subject: `New Hiring Challenge: ${newProblem.title}`,
-      body: `A new ${newProblem.prizeType} challenge has been posted by an organization in the ${newProblem.domain} domain.\n\nPrize/Budget: $${newProblem.prizeAmount}\nDeadline: ${new Date(newProblem.deadline).toLocaleDateString()}\n\nLog in to OpenSolve to assemble your team and start building!`
-    });
+    // Atomic stat increments
+    const { incrementPlatformStat } = await import("@/lib/data");
+    await Promise.all([
+      incrementPlatformStat("activeProblems", 1),
+      newProblem.prizeAmount > 0 ? incrementPlatformStat("totalPrizePool", newProblem.prizeAmount) : Promise.resolve(),
+    ]);
 
     return NextResponse.json({ problem: newProblem }, { status: 201 });
   } catch (error: unknown) {

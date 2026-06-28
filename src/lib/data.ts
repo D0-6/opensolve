@@ -43,7 +43,17 @@ const PROBLEMS_TABLE = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problem
 const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
 const ORGS_TABLE = process.env.DYNAMODB_TABLE_ORGANIZATIONS || "OpenSolve_Organizations";
 
+/**
+ * getProblems — fetches challenges from DynamoDB.
+ * 
+ * Strategy:
+ * 1. Try GSI-based queries for source/domain/status filtering.
+ * 2. If the GSI doesn't exist or fails, fall back to a full ScanCommand
+ *    with a FilterExpression to only return OPEN, non-metadata problems.
+ *    This guarantees problems always appear even before GSIs are configured.
+ */
 export async function getProblems(source?: string, domain?: string, lastEvaluatedKey?: Record<string, any>) {
+  // --- Attempt 1: Try GSI-based queries ---
   try {
     let command;
     if (source) {
@@ -51,39 +61,75 @@ export async function getProblems(source?: string, domain?: string, lastEvaluate
         TableName: PROBLEMS_TABLE,
         IndexName: "source-deadline-index",
         KeyConditionExpression: "#src = :src",
-        ExpressionAttributeNames: { "#src": "source" },
-        ExpressionAttributeValues: { ":src": source },
+        FilterExpression: "#status = :open AND problemId <> :meta",
+        ExpressionAttributeNames: { "#src": "source", "#status": "status" },
+        ExpressionAttributeValues: { ":src": source, ":open": "OPEN", ":meta": "GLOBAL_METADATA" },
       });
     } else if (domain) {
       command = new QueryCommand({
         TableName: PROBLEMS_TABLE,
         IndexName: "domain-deadline-index",
         KeyConditionExpression: "#dom = :dom",
-        ExpressionAttributeNames: { "#dom": "domain" },
-        ExpressionAttributeValues: { ":dom": domain },
+        FilterExpression: "#status = :open AND problemId <> :meta",
+        ExpressionAttributeNames: { "#dom": "domain", "#status": "status" },
+        ExpressionAttributeValues: { ":dom": domain, ":open": "OPEN", ":meta": "GLOBAL_METADATA" },
       });
     } else {
       command = new QueryCommand({
         TableName: PROBLEMS_TABLE,
         IndexName: "status-deadline-index",
         KeyConditionExpression: "#status = :status",
+        FilterExpression: "problemId <> :meta",
         ExpressionAttributeNames: { "#status": "status" },
-        ExpressionAttributeValues: { ":status": "OPEN" },
+        ExpressionAttributeValues: { ":status": "OPEN", ":meta": "GLOBAL_METADATA" },
       });
     }
 
     if (lastEvaluatedKey) {
-      command.input.ExclusiveStartKey = lastEvaluatedKey;
+      (command.input as any).ExclusiveStartKey = lastEvaluatedKey;
     }
-    
+
     const result = await docClient.send(command);
     return {
       items: result.Items || [],
-      lastEvaluatedKey: result.LastEvaluatedKey
+      lastEvaluatedKey: result.LastEvaluatedKey,
     };
-  } catch (error) {
-    console.error("Error fetching problems:", error);
-    return { items: [], lastEvaluatedKey: undefined };
+  } catch (gsiError: any) {
+    // --- Attempt 2: GSI failed (doesn't exist yet), fallback to Scan ---
+    console.warn("GSI query failed, falling back to scan:", gsiError?.message || gsiError);
+    try {
+      const scanInput: any = {
+        TableName: PROBLEMS_TABLE,
+        FilterExpression: "#status = :open AND problemId <> :meta",
+        ExpressionAttributeNames: { "#status": "status" },
+        ExpressionAttributeValues: { ":open": "OPEN", ":meta": "GLOBAL_METADATA" },
+      };
+
+      // Apply secondary filters on top of the scan
+      if (source) {
+        scanInput.FilterExpression += " AND #src = :src";
+        scanInput.ExpressionAttributeNames["#src"] = "source";
+        scanInput.ExpressionAttributeValues[":src"] = source;
+      }
+      if (domain) {
+        scanInput.FilterExpression += " AND #dom = :dom";
+        scanInput.ExpressionAttributeNames["#dom"] = "domain";
+        scanInput.ExpressionAttributeValues[":dom"] = domain;
+      }
+
+      if (lastEvaluatedKey) {
+        scanInput.ExclusiveStartKey = lastEvaluatedKey;
+      }
+
+      const scanResult = await docClient.send(new ScanCommand(scanInput));
+      return {
+        items: scanResult.Items || [],
+        lastEvaluatedKey: scanResult.LastEvaluatedKey,
+      };
+    } catch (scanError) {
+      console.error("Both GSI and scan failed for getProblems:", scanError);
+      return { items: [], lastEvaluatedKey: undefined };
+    }
   }
 }
 
