@@ -1,32 +1,40 @@
-// In-memory rate limiting map for MVP purposes
-// Production would use Redis or DynamoDB TTL
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
-type RateLimitEntry = {
-  count: number;
-  resetAt: number;
-};
+// Create a new ratelimiter that allows 5 requests per 10 minutes by default
+// We initialize Redis only if the env vars are present to avoid crashing locally if not setup.
+let ratelimit: Ratelimit | null = null;
 
-const limits = new Map<string, RateLimitEntry>();
+if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+  const redis = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  });
 
-export function checkRateLimit(ip: string, limit: number = 5, windowMs: number = 10 * 60 * 1000): boolean {
-  const now = Date.now();
-  const entry = limits.get(ip);
+  ratelimit = new Ratelimit({
+    redis: redis,
+    limiter: Ratelimit.slidingWindow(5, "10 m"),
+    analytics: true,
+  });
+}
 
-  if (!entry) {
-    limits.set(ip, { count: 1, resetAt: now + windowMs });
-    return true; // Allowed
+/**
+ * Checks if the given IP has exceeded the rate limit.
+ * Uses Upstash Redis for distributed edge-compatible rate limiting.
+ * Falls back to allowing the request if Upstash is not configured.
+ */
+export async function checkRateLimit(ip: string): Promise<boolean> {
+  if (!ratelimit) {
+    console.warn("⚠️ Rate limiter is bypassed because UPSTASH_REDIS_REST_URL is missing.");
+    return true; // Fail open if no redis configured
   }
 
-  if (now > entry.resetAt) {
-    // Window expired, reset
-    limits.set(ip, { count: 1, resetAt: now + windowMs });
+  try {
+    const { success } = await ratelimit.limit(ip);
+    return success;
+  } catch (error) {
+    console.error("[CRITICAL] Rate limit check failed:", error);
+    // If Redis goes down, we fail open so legitimate users aren't blocked
     return true;
   }
-
-  if (entry.count >= limit) {
-    return false; // Rate limited
-  }
-
-  entry.count++;
-  return true;
 }

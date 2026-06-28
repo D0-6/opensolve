@@ -5,9 +5,7 @@ const client = new DynamoDBClient({
   region: process.env.AWS_REGION || "us-east-1",
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY}});
 
 const PROBLEMS_TABLE = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
 const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
@@ -49,7 +47,8 @@ async function setupDynamoDB() {
       { AttributeName: "domain", AttributeType: "S" },
       { AttributeName: "status", AttributeType: "S" },
       { AttributeName: "deadline", AttributeType: "S" },
-      { AttributeName: "sourceUrl", AttributeType: "S" }
+      { AttributeName: "sourceUrl", AttributeType: "S" },
+      { AttributeName: "entityType", AttributeType: "S" }
     ],
     GlobalSecondaryIndexes: [
       {
@@ -58,39 +57,36 @@ async function setupDynamoDB() {
           { AttributeName: "source", KeyType: "HASH" },
           { AttributeName: "deadline", KeyType: "RANGE" }
         ],
-        Projection: { ProjectionType: "ALL" },
-        ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-      },
+        Projection: { ProjectionType: "ALL" }},
       {
         IndexName: "domain-deadline-index",
         KeySchema: [
           { AttributeName: "domain", KeyType: "HASH" },
           { AttributeName: "deadline", KeyType: "RANGE" }
         ],
-        Projection: { ProjectionType: "ALL" },
-        ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-      },
+        Projection: { ProjectionType: "ALL" }},
       {
         IndexName: "status-deadline-index",
         KeySchema: [
           { AttributeName: "status", KeyType: "HASH" },
           { AttributeName: "deadline", KeyType: "RANGE" }
         ],
-        Projection: { ProjectionType: "ALL" },
-        ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-      },
+        Projection: { ProjectionType: "ALL" }},
       {
         IndexName: "sourceUrl-index",
         KeySchema: [
           { AttributeName: "sourceUrl", KeyType: "HASH" }
         ],
-        Projection: { ProjectionType: "ALL" },
-        ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-      }
+        Projection: { ProjectionType: "ALL" }},
+      {
+        IndexName: "entityType-deadline-index",
+        KeySchema: [
+          { AttributeName: "entityType", KeyType: "HASH" },
+          { AttributeName: "deadline", KeyType: "RANGE" }
+        ],
+        Projection: { ProjectionType: "ALL" }}
     ],
-    BillingMode: "PROVISIONED",
-    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-  });
+    BillingMode: "PAY_PER_REQUEST"});
 
   // 2. Submissions Table
   await createTable({
@@ -103,7 +99,9 @@ async function setupDynamoDB() {
       { AttributeName: "problemId", AttributeType: "S" },
       { AttributeName: "rankKey", AttributeType: "S" },
       { AttributeName: "userId", AttributeType: "S" },
-      { AttributeName: "submittedAt", AttributeType: "S" }
+      { AttributeName: "submittedAt", AttributeType: "S" },
+      { AttributeName: "entityType", AttributeType: "S" },
+      { AttributeName: "score", AttributeType: "N" }
     ],
     GlobalSecondaryIndexes: [
       {
@@ -112,13 +110,23 @@ async function setupDynamoDB() {
           { AttributeName: "userId", KeyType: "HASH" },
           { AttributeName: "submittedAt", KeyType: "RANGE" }
         ],
-        Projection: { ProjectionType: "ALL" },
-        ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-      }
+        Projection: { ProjectionType: "ALL" }},
+      {
+        IndexName: "entityType-score-index",
+        KeySchema: [
+          { AttributeName: "entityType", KeyType: "HASH" },
+          { AttributeName: "score", KeyType: "RANGE" }
+        ],
+        Projection: { ProjectionType: "ALL" }},
+      {
+        IndexName: "entityType-submittedAt-index",
+        KeySchema: [
+          { AttributeName: "entityType", KeyType: "HASH" },
+          { AttributeName: "submittedAt", KeyType: "RANGE" }
+        ],
+        Projection: { ProjectionType: "ALL" }}
     ],
-    BillingMode: "PROVISIONED",
-    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-  });
+    BillingMode: "PAY_PER_REQUEST"});
 
   // 3. Organizations Table
   await createTable({
@@ -129,9 +137,7 @@ async function setupDynamoDB() {
     AttributeDefinitions: [
       { AttributeName: "orgId", AttributeType: "S" }
     ],
-    BillingMode: "PROVISIONED",
-    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-  });
+    BillingMode: "PAY_PER_REQUEST"});
 
   // 4. QA Threads Table
   await createTable({
@@ -144,9 +150,7 @@ async function setupDynamoDB() {
       { AttributeName: "problemId", AttributeType: "S" },
       { AttributeName: "sk", AttributeType: "S" }
     ],
-    BillingMode: "PROVISIONED",
-    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-  });
+    BillingMode: "PAY_PER_REQUEST"});
 
   // 5. Profiles Table
   await createTable({
@@ -157,9 +161,7 @@ async function setupDynamoDB() {
     AttributeDefinitions: [
       { AttributeName: "userId", AttributeType: "S" }
     ],
-    BillingMode: "PROVISIONED",
-    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-  });
+    BillingMode: "PAY_PER_REQUEST"});
 
   // 6. Notifications Table
   await createTable({
@@ -172,9 +174,7 @@ async function setupDynamoDB() {
       { AttributeName: "userId", AttributeType: "S" },
       { AttributeName: "createdAt", AttributeType: "S" }
     ],
-    BillingMode: "PROVISIONED",
-    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-  });
+    BillingMode: "PAY_PER_REQUEST"});
 
   // 7. Applications Table
   await createTable({
@@ -187,9 +187,15 @@ async function setupDynamoDB() {
       { AttributeName: "problemId", AttributeType: "S" },
       { AttributeName: "userId", AttributeType: "S" }
     ],
-    BillingMode: "PROVISIONED",
-    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-  });
+    GlobalSecondaryIndexes: [
+      {
+        IndexName: "userId-index",
+        KeySchema: [
+          { AttributeName: "userId", KeyType: "HASH" }
+        ],
+        Projection: { ProjectionType: "ALL" }}
+    ],
+    BillingMode: "PAY_PER_REQUEST"});
 
   // 8. Teams Table
   await createTable({
@@ -200,9 +206,7 @@ async function setupDynamoDB() {
     AttributeDefinitions: [
       { AttributeName: "teamId", AttributeType: "S" }
     ],
-    BillingMode: "PROVISIONED",
-    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-  });
+    BillingMode: "PAY_PER_REQUEST"});
 
   // 9. Messages Table
   await createTable({
@@ -215,9 +219,7 @@ async function setupDynamoDB() {
       { AttributeName: "threadId", AttributeType: "S" },
       { AttributeName: "createdAt", AttributeType: "S" }
     ],
-    BillingMode: "PROVISIONED",
-    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-  });
+    BillingMode: "PAY_PER_REQUEST"});
 
   console.log("\n✅ All table creation requests sent.");
 }

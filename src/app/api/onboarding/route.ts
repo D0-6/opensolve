@@ -9,8 +9,9 @@ export async function POST(req: Request) {
   }
 
   const { role } = await req.json();
-  if (!["student", "company"].includes(role)) {
-    return NextResponse.json({ error: "Invalid role. Must be 'student' or 'company'." }, { status: 400 });
+  // Accept both "organization" (used by role-selection page) and "company" (legacy) for backward compatibility
+  if (!["student", "company", "organization"].includes(role)) {
+    return NextResponse.json({ error: "Invalid role. Must be 'student', 'organization', or 'company'." }, { status: 400 });
   }
 
   try {

@@ -6,7 +6,7 @@ import { Users, Copy, Plus, LogIn, Loader2, ShieldCheck, Check, AlertCircle, Che
 
 export default function TeamsPage() {
   const { user } = useUser();
-  const [team, setTeam] = useState<unknown>(null);
+  const [team, setTeam] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [inviteCode, setInviteCode] = useState("");
@@ -69,7 +69,7 @@ export default function TeamsPage() {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(team.teamId);
+    navigator.clipboard.writeText(team?.teamId);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

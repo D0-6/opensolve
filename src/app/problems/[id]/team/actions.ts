@@ -4,6 +4,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
 import { UpdateCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { revalidatePath } from "next/cache";
+import { TeamMember } from "@/types";
 
 const APPLICATIONS_TABLE = process.env.DYNAMODB_TABLE_APPLICATIONS || "OpenSolve_Applications";
 const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
@@ -27,7 +28,7 @@ export async function searchUsers(query: string) {
   }));
 }
 
-export async function addTeammate(problemId: string, teammateId: string, teammateName: string, currentMembers: any[]) {
+export async function addTeammate(problemId: string, teammateId: string, teammateName: string, currentMembers: TeamMember[], maxTeamSize: number) {
   try {
     const user = await currentUser();
     if (!user) return { error: "Unauthorized" };
@@ -51,30 +52,36 @@ export async function addTeammate(problemId: string, teammateId: string, teammat
       ExpressionAttributeValues: { ":pid": problemId }
     }));
     
-    if (subRes.Items && subRes.Items.some(sub => sub.userId === teammateId || (sub.teamMembers && sub.teamMembers.some((m: any) => m.userId === teammateId)))) {
+    if (subRes.Items && subRes.Items.some(sub => sub.userId === teammateId || (sub.teamMembers && sub.teamMembers.some((m: TeamMember) => m.userId === teammateId)))) {
       return { error: "This user has already submitted a solution to this problem." };
     }
 
-    // Add the teammate to the teamMembers array of the application
+    // Add the teammate to the teamMembers array of the application, ensuring it does not exceed maxTeamSize atomically.
+    // The maxTeamSize check must account for the creator (+1)
     await docClient.send(new UpdateCommand({
       TableName: APPLICATIONS_TABLE,
       Key: { problemId, userId: user.id },
       UpdateExpression: "SET teamMembers = list_append(if_not_exists(teamMembers, :emptyList), :newMember)",
+      ConditionExpression: "attribute_not_exists(teamMembers) OR size(teamMembers) < :maxAllowed",
       ExpressionAttributeValues: {
         ":emptyList": [],
-        ":newMember": [{ userId: teammateId, name: teammateName }]
+        ":newMember": [{ userId: teammateId, name: teammateName }],
+        ":maxAllowed": Math.max(0, maxTeamSize - 1)
       }
     }));
 
     revalidatePath(`/problems/${problemId}/team`);
     return { success: true };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Add teammate error:", err);
-    return { error: err.message || "An unexpected error occurred." };
+    if (err instanceof Error && (err.name === "ConditionalCheckFailedException" || (err as any).name === "TransactionCanceledException")) {
+      return { error: "Team is already full." };
+    }
+    return { error: err instanceof Error ? err.message : "An unexpected error occurred." };
   }
 }
 
-export async function removeTeammate(problemId: string, teammateId: string, currentMembers: any[]) {
+export async function removeTeammate(problemId: string, teammateId: string, currentMembers: TeamMember[]) {
   const user = await currentUser();
   if (!user) throw new Error("Unauthorized");
 

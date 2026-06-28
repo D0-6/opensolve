@@ -1,7 +1,8 @@
 import { docClient } from "@/lib/dynamodb";
-import { GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand } from "@aws-sdk/lib-dynamodb";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import ProfileClient from "./ProfileClient";
+import { getUserSubmissions } from "@/lib/data";
 
 const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
 const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
@@ -43,15 +44,9 @@ export default async function UserProfile({ params }: { params: Promise<{ userId
     console.error("Failed to fetch user from Clerk", err);
   }
 
-  let submissions: Record<string, unknown>[] = [];
+  let submissions: any[] = [];
   try {
-    const res = await docClient.send(new QueryCommand({
-      TableName: SUBMISSIONS_TABLE,
-      IndexName: "userId-submittedAt-index",
-      KeyConditionExpression: "userId = :uid",
-      ExpressionAttributeValues: { ":uid": userId }
-    }));
-    submissions = res.Items || [];
+    submissions = await getUserSubmissions(userId);
   } catch (err) {
     console.error(err);
   }

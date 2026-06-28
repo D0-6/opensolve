@@ -15,10 +15,8 @@ export function NavBar() {
   // Resolve the dashboard link based on the user's role and orgId.
   // Falls back to /dashboard which is a server-side dispatcher.
   const dashboardLink =
-    role === "organization" && user?.publicMetadata?.orgId
+    (role === "organization" || role === "company") && user?.publicMetadata?.orgId
       ? `/organizations/${user.publicMetadata.orgId}/dashboard`
-      : role === "company"
-      ? `/dashboard/company`
       : role === "student"
       ? `/dashboard/student`
       : "/dashboard";
@@ -45,6 +43,11 @@ export function NavBar() {
           <Link href="/about" className={navLinkClass("/about")}>About</Link>
           <Link href="/solutions" className={navLinkClass("/solutions")}>Solutions</Link>
           <Link href="/leaderboard" className={navLinkClass("/leaderboard")}>Leaderboard</Link>
+          {isLoaded && isSignedIn && role === "student" && (
+            <Link href="/submit-challenge" className={navLinkClass("/submit-challenge")}>
+              🕵️ Scout
+            </Link>
+          )}
         </nav>
         
         {/* Actions */}
@@ -63,7 +66,7 @@ export function NavBar() {
                 </Link>
               )}
               <div className="ml-2">
-                <UserButton afterSignOutUrl="/" />
+                <UserButton />
               </div>
             </>
           )}
@@ -93,6 +96,9 @@ export function NavBar() {
           <Link href="/about" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>About</Link>
           <Link href="/solutions" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Solutions</Link>
           <Link href="/leaderboard" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Leaderboard</Link>
+          {isLoaded && isSignedIn && role === "student" && (
+            <Link href="/submit-challenge" className="text-purple-700 font-body-md font-medium py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>🕵️ Scout a Challenge</Link>
+          )}
           
           {isLoaded && isSignedIn && (
             <>
@@ -101,7 +107,7 @@ export function NavBar() {
                 <Link href="/organizations/new" className="text-[#1a3a5c] font-body-md font-medium py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Post Challenge</Link>
               )}
               <div className="pt-2">
-                <UserButton afterSignOutUrl="/" />
+                <UserButton />
               </div>
             </>
           )}

@@ -6,6 +6,8 @@ import { Search, Plus, Trash2, Users, ArrowRight, Loader2, User } from "lucide-r
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { TeamMember } from "@/types";
+
 export default function TeamFormationClient({
   problemId,
   maxTeamSize,
@@ -13,11 +15,11 @@ export default function TeamFormationClient({
 }: {
   problemId: string;
   maxTeamSize: number;
-  currentMembers: any[];
+  currentMembers: TeamMember[];
 }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<{userId: string, name: string, githubUrl?: string, country?: string}[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -40,15 +42,15 @@ export default function TeamFormationClient({
   const handleAdd = async (userId: string, name: string) => {
     setIsUpdating(true);
     try {
-      const result: any = await addTeammate(problemId, userId, name, currentMembers);
+      const result = await addTeammate(problemId, userId, name, currentMembers, maxTeamSize);
       if (result && result.error) {
         alert(result.error);
       } else {
         setQuery("");
         setResults([]);
       }
-    } catch (error: any) {
-      alert(error.message || "Failed to add teammate.");
+    } catch (error: unknown) {
+      alert(error instanceof Error ? error.message : "Failed to add teammate.");
     }
     setIsUpdating(false);
     router.refresh();

@@ -74,7 +74,8 @@ export async function runIngestion() {
               postedAt: new Date().toISOString(),
               postedByOrgId: "aggregated",
               verified: false,
-              status: "OPEN"
+              status: "OPEN",
+              entityType: "PROBLEM"
             }
           }));
           added++;

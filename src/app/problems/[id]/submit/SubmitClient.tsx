@@ -20,6 +20,8 @@ export default function SubmitClient({
   const [formData, setFormData] = useState({
     githubUrl: "",
     demoUrl: "",
+    videoUrl: "",
+    techStack: "",
     writeup: "",
   });
   const [loading, setLoading] = useState(false);
@@ -49,6 +51,7 @@ export default function SubmitClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
+          techStack: formData.techStack.split(",").map(t => t.trim()).filter(Boolean),
           problemId,
           studentName: user?.fullName || user?.username || "Anonymous",
         }),
@@ -142,6 +145,37 @@ export default function SubmitClient({
               placeholder="https://your-demo.vercel.app"
               className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
             />
+          </div>
+
+          {/* Video URL */}
+          <div>
+            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+              Video Walkthrough / Pitch <span className="font-normal normal-case tracking-normal">(optional)</span>
+            </label>
+            <input
+              type="url"
+              name="videoUrl"
+              value={formData.videoUrl}
+              onChange={handleChange}
+              placeholder="https://youtube.com/watch?v=... or https://loom.com/share/..."
+              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
+            />
+          </div>
+
+          {/* Tech Stack */}
+          <div>
+            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+              Tech Stack
+            </label>
+            <input
+              type="text"
+              name="techStack"
+              value={formData.techStack}
+              onChange={handleChange}
+              placeholder="Next.js, Python, DynamoDB, Tailwind..."
+              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
+            />
+            <p className="text-xs text-zinc-500 mt-2">Comma separated (e.g. React, Node.js, AWS)</p>
           </div>
 
           {/* Writeup */}

@@ -38,7 +38,7 @@ export default async function TeamFormationPage({ params }: { params: Promise<{ 
     redirect(`/problems/${id}/apply`);
   }
 
-  const maxTeamSize = typeof problem.maxTeamSize === "number" ? problem.maxTeamSize : 4;
+  const maxTeamSize = typeof (problem as any).maxTeamSize === "number" ? (problem as any).maxTeamSize : 4;
   const currentMembers = Array.isArray(application.teamMembers) ? application.teamMembers : [];
 
   return (

@@ -1,9 +1,9 @@
 import { docClient } from "@/lib/dynamodb";
-import { ScanCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { QueryCommand, ScanCommand, GetCommand, BatchGetCommand } from "@aws-sdk/lib-dynamodb";
 import Link from "next/link";
 import { GitBranch, Play, Trophy, ExternalLink, Layers } from "lucide-react";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // Regenerate at most once per minute
 
 export const metadata = {
   title: "Solutions Gallery | OpenSolve",
@@ -14,23 +14,42 @@ const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_S
 const PROBLEMS_TABLE = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
 
 export default async function SolutionsPage({ searchParams }: {
-  searchParams: Promise<{ domain?: string }>
+  searchParams: Promise<{ [key: string]: string | undefined }>
 }) {
   const sp = await searchParams;
   const domainFilter = sp.domain;
+  const startKeyParam = sp.startKey;
 
   let allSubmissions: Record<string, unknown>[] = [];
+  let lastEvaluatedKey: Record<string, unknown> | undefined = undefined;
+
   try {
-    const res = await docClient.send(new ScanCommand({
+    let exclusiveStartKey = undefined;
+    if (typeof startKeyParam === "string") {
+      try {
+        exclusiveStartKey = JSON.parse(Buffer.from(startKeyParam, "base64url").toString("utf-8"));
+      } catch (e) {
+        console.error("Failed to parse startKey:", e);
+      }
+    }
+
+    const res = await docClient.send(new QueryCommand({
       TableName: SUBMISSIONS_TABLE,
-      Limit: 200,
+      IndexName: "entityType-score-index",
+      KeyConditionExpression: "entityType = :type",
+      ExpressionAttributeValues: { ":type": "SUBMISSION" },
+      ScanIndexForward: false, // Sort descending by score natively in DynamoDB!
+      Limit: 50,
+      ExclusiveStartKey: exclusiveStartKey,
     }));
     allSubmissions = res.Items || [];
-  } catch (err) {
-    console.error("Solutions gallery scan error:", err);
+    lastEvaluatedKey = res.LastEvaluatedKey;
+  } catch (err: unknown) {
+    console.error("[CRITICAL] Solutions gallery query error:", err instanceof Error ? err.message : err);
   }
 
-  // Sort by score descending, then by date descending
+  // We no longer need to manually sort by score since the GSI handles it natively!
+  // We only fallback sort by submittedAt if scores are perfectly equal.
   allSubmissions.sort((a, b) => {
     const scoreDiff = (Number(b.score) || 0) - (Number(a.score) || 0);
     if (scoreDiff !== 0) return scoreDiff;
@@ -41,12 +60,22 @@ export default async function SolutionsPage({ searchParams }: {
   const problemIds = [...new Set(allSubmissions.map(s => String(s.problemId)))];
   const problemCache: Record<string, Record<string, unknown>> = {};
 
-  for (const pid of problemIds.slice(0, 50)) {
+  const top50ProblemIds = problemIds.slice(0, 50);
+  if (top50ProblemIds.length > 0) {
     try {
-      const res = await docClient.send(new GetCommand({ TableName: PROBLEMS_TABLE, Key: { problemId: pid } }));
-      if (res.Item) problemCache[pid] = res.Item;
+      const res = await docClient.send(new BatchGetCommand({
+        RequestItems: {
+          [PROBLEMS_TABLE]: {
+            Keys: top50ProblemIds.map(pid => ({ problemId: pid }))
+          }
+        }
+      }));
+      const fetchedProblems = res.Responses?.[PROBLEMS_TABLE] || [];
+      for (const p of fetchedProblems) {
+        problemCache[p.problemId as string] = p;
+      }
     } catch (err) {
-      console.error(err);
+      console.error("BatchGetCommand error for problems:", err);
     }
   }
 
@@ -195,7 +224,7 @@ export default async function SolutionsPage({ searchParams }: {
                     >
                       <GitBranch size={13} /> Repository
                     </a>
-                    {sub.demoUrl && (
+                    {Boolean(sub.demoUrl) && (
                       <a
                         href={String(sub.demoUrl)}
                         target="_blank"
@@ -213,6 +242,17 @@ export default async function SolutionsPage({ searchParams }: {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {lastEvaluatedKey && (
+          <div className="mt-12 text-center border-t border-zinc-200 pt-8">
+            <Link
+              href={`/solutions?${domainFilter ? `domain=${encodeURIComponent(domainFilter)}&` : ""}startKey=${Buffer.from(JSON.stringify(lastEvaluatedKey)).toString("base64url")}`}
+              className="btn-primary inline-flex items-center gap-2 px-6 py-2.5 text-sm"
+            >
+              <Layers size={16} /> Load More
+            </Link>
           </div>
         )}
       </div>

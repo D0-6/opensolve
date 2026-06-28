@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
 import { QueryCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getSubmissions, incrementPlatformStat } from "@/lib/data";
+import { getPostHogClient } from "@/lib/posthog-server";
+import { z } from "zod";
 
 const TABLE_NAME = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
 
@@ -37,32 +39,39 @@ export async function GET(request: Request) {
   }
 }
 
+const SubmissionSchema = z.object({
+  problemId: z.string().min(1),
+  studentName: z.string().min(2).max(100).optional(),
+  githubUrl: z.string().regex(/^https?:\/\/(www\.)?github\.com\/([a-zA-Z0-9-]+)\/([a-zA-Z0-9_.-]+)\/?$/, "Invalid GitHub repository URL"),
+  demoUrl: z.string().url().optional().or(z.literal('')),
+  videoUrl: z.string().url().optional().or(z.literal('')),
+  techStack: z.array(z.string()).max(10).optional().default([]),
+  writeup: z.string().min(10).max(10000)
+});
+
 export async function POST(request: Request) {
-  // Auth check — userId comes from Clerk session, NOT from client body
   const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "You must be signed in to submit a solution" }, { status: 401 });
   }
 
   const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
-  if (!checkRateLimit(ip)) {
+  const isAllowed = await checkRateLimit(ip);
+  if (!isAllowed) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 
   try {
-    const body = await request.json();
-    const { problemId, studentName, githubUrl, demoUrl, writeup } = body;
-
-    if (!problemId || !githubUrl || !writeup) {
-      return NextResponse.json({ error: "Missing required fields: problemId, githubUrl, writeup" }, { status: 400 });
+    const json = await request.json();
+    const parsed = SubmissionSchema.safeParse(json);
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid payload", details: parsed.error.format() }, { status: 400 });
     }
+    const { problemId, studentName, githubUrl, demoUrl, videoUrl, techStack, writeup } = parsed.data;
 
     const githubRegex = /^https?:\/\/(www\.)?github\.com\/([a-zA-Z0-9-]+)\/([a-zA-Z0-9_.-]+)\/?$/;
     const match = githubUrl.match(githubRegex);
-    if (!match) {
-      return NextResponse.json({ error: "Invalid GitHub repository URL" }, { status: 400 });
-    }
-    const repoName = match[3];
+    const repoName = match ? match[3] : "repository";
 
     // SECURITY PASS: Verify Team Ownership
     let validatedTeamMembers = null;
@@ -94,10 +103,13 @@ export async function POST(request: Request) {
       githubUrl,
       repoName,
       demoUrl: demoUrl || "",
+      videoUrl: videoUrl || "",
+      techStack: techStack || [],
       writeup: writeup.trim().substring(0, 500),
       upvotes: 0,
       submittedAt,
       score,
+      entityType: "SUBMISSION",
       teamMembers: validatedTeamMembers,
       evaluationStatus: "PENDING", // PENDING, CONTRACT_OFFERED, HIRED, REJECTED, PRIZE_AWARDED
     };
@@ -107,22 +119,51 @@ export async function POST(request: Request) {
     // Trigger Atomic Increment!
     await incrementPlatformStat("totalSubmissions", 1);
 
-    // PHASE 10: Trigger Email Receipts
+    // PHASE 10: Send real confirmation emails via Clerk lookup
     const { sendEmail } = await import("@/lib/email");
-    
-    // Alert the Student/Team
-    await sendEmail({
-      to: `student-${userId}@opensolve.user`,
-      subject: `Submission Received: ${repoName}`,
-      body: `Congratulations! Your solution for the challenge has been successfully verified and stored on the blockchain/database.\n\nThe organization will review your code and demo. If you are selected, they will trigger a Hiring Offer or Contract through your dashboard.`
-    });
+    try {
+      const clerk = await clerkClient();
+      const studentUser = await clerk.users.getUser(userId);
+      const studentEmail = studentUser?.emailAddresses?.find(
+        e => e.id === studentUser.primaryEmailAddressId
+      )?.emailAddress;
+      if (studentEmail) {
+        await sendEmail({
+          to: studentEmail,
+          subject: `Submission Received: ${repoName}`,
+          body: `Congratulations! Your solution for the challenge has been successfully received.\n\nThe organization will review your code and demo. If you are selected, they will trigger a Hiring Offer or Contract through your dashboard.`
+        });
+      }
+    } catch (emailErr) {
+      console.error("[CRITICAL] Failed to send submission confirmation email:", emailErr);
+      const ph = getPostHogClient();
+      if (ph) {
+        ph.capture({
+          distinctId: userId,
+          event: 'system_failure',
+          properties: {
+            type: 'email_delivery_failed',
+            context: 'submission_confirmation',
+            problemId
+          }
+        });
+      }
+    }
 
-    // Alert the Organization
-    await sendEmail({
-      to: `org-admin@opensolve.company`,
-      subject: `New Solution Submitted!`,
-      body: `A new solution has just landed in your Hiring Pipeline dashboard.\n\nCandidate/Team ID: ${body.teamId || userId}\nGitHub: ${githubUrl}\n\nLog in to your Organization Dashboard to evaluate the code and extend an offer.`
-    });
+    // Server-Side Telemetry
+    const ph = getPostHogClient();
+    if (ph) {
+      ph.capture({
+        distinctId: userId,
+        event: 'solution_submitted',
+        properties: {
+          problemId,
+          score,
+          hasDemo: !!demoUrl
+        }
+      });
+      ph.flush();
+    }
 
     // PHASE 11: Trigger Auto-Scoring Engine in the background
     const { evaluateSubmissionAsynchronously } = await import("@/lib/evaluator");

@@ -77,6 +77,9 @@ interface ProfileData {
   skills?: string[];
   totalScore?: number;
   joinedAt?: string;
+  scoutPoints?: number;
+  scoutSubmissions?: number;
+  openToWork?: boolean;
 }
 
 export default function ProfileClient({
@@ -144,7 +147,14 @@ export default function ProfileClient({
 
             {/* Info */}
             <div className="flex-1">
-              <h1 className="text-3xl font-medium text-zinc-900 mb-2 tracking-tight">{displayName}</h1>
+              <div className="flex items-center gap-4 mb-2">
+                <h1 className="text-3xl font-medium text-zinc-900 tracking-tight">{displayName}</h1>
+                {!isEditing && p?.openToWork && (
+                  <span className="bg-emerald-50 text-emerald-600 border border-emerald-200 px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full shadow-sm">
+                    Open to Work
+                  </span>
+                )}
+              </div>
 
               {/* Meta row */}
               <div className="flex flex-wrap gap-3 mb-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">
@@ -195,6 +205,20 @@ export default function ProfileClient({
                   <Calendar className="w-3.5 h-3.5 text-zinc-400" />
                   Joined {p?.joinedAt ? new Date(p.joinedAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Recently"}
                 </div>
+
+                {/* Scout Points Badge */}
+                {(p?.scoutPoints || 0) > 0 && (
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200 px-3 py-1.5 uppercase tracking-wider">
+                    🕵️ {(p.scoutPoints || 0).toLocaleString()} Scout Points
+                  </div>
+                )}
+
+                {/* Elite Scout badge — earned at 500+ points */}
+                {(p?.scoutPoints || 0) >= 500 && (
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-yellow-700 bg-yellow-50 border border-yellow-300 px-3 py-1.5 uppercase tracking-wider">
+                    🏆 Elite Scout
+                  </div>
+                )}
 
                 {/* GitHub */}
                 {(p?.githubUrl || p?.githubUsername) && (
@@ -331,6 +355,19 @@ export default function ProfileClient({
               <input name="skills" type="text" defaultValue={Array.isArray(p?.skills) ? p.skills.join(", ") : ""} className={inputStyles} placeholder="React, Python, AWS" />
             </div>
 
+            <div className="flex items-center gap-3 bg-zinc-50 border border-zinc-200 p-4">
+              <input 
+                type="checkbox" 
+                id="openToWork" 
+                name="openToWork" 
+                defaultChecked={!!p?.openToWork}
+                className="w-4 h-4 text-[#1a3a5c] border-zinc-300 rounded focus:ring-[#1a3a5c]"
+              />
+              <label htmlFor="openToWork" className="text-sm font-medium text-zinc-700">
+                I am open to job opportunities and contract work
+              </label>
+            </div>
+
             <div className="flex gap-3 justify-end pt-4 border-t border-zinc-200">
               <button
                 type="button"
@@ -382,54 +419,113 @@ export default function ProfileClient({
         </div>
       )}
 
-      {/* Submissions History */}
+      {/* Submissions History (Project Gallery) */}
       <div>
         <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-3 flex items-center justify-between">
-          Submission History
-          <span className="text-sm font-normal text-zinc-500">{submissions.length} submission{submissions.length !== 1 ? "s" : ""}</span>
+          Project Gallery
+          <span className="text-sm font-normal text-zinc-500">{submissions.length} project{submissions.length !== 1 ? "s" : ""}</span>
         </h2>
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {submissions.length === 0 ? (
-            <div className="bg-white border border-dashed border-zinc-200 p-12 text-center">
+            <div className="col-span-full bg-white border border-dashed border-zinc-200 p-12 text-center">
               <LinkIcon size={24} className="mx-auto text-zinc-300 mb-3" />
-              <p className="text-zinc-500 text-sm font-medium">No submissions yet</p>
+              <p className="text-zinc-500 text-sm font-medium">No projects yet</p>
               <p className="text-zinc-400 text-xs mt-1">Browse challenges and submit your first solution to build your record.</p>
               <Link href="/challenges" className="inline-block mt-4 text-xs font-bold text-[#1a3a5c] uppercase tracking-wider hover:underline">
                 Browse Challenges →
               </Link>
             </div>
           ) : (
-            submissions.map((sub) => (
-              <div key={`${sub.problemId}-${sub.submittedAt}`} className="bg-white border border-zinc-200 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-[#1a3a5c] transition-colors">
-                <div>
-                  <Link href={`/problems/${sub.problemId}`} className="text-base font-medium text-zinc-900 hover:text-[#1a3a5c] transition-colors">
-                    View Problem
-                  </Link>
-                  <p className="text-xs text-zinc-400 mt-1 uppercase tracking-wider font-bold">
-                    {new Date(sub.submittedAt as string).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                  </p>
-                  {sub.evaluationStatus && sub.evaluationStatus !== "PENDING" && (
-                    <span className={`inline-block mt-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 ${
-                      sub.evaluationStatus === "HIRED" ? "bg-green-100 text-green-700 border border-green-200" :
-                      sub.evaluationStatus === "CONTRACT_OFFERED" ? "bg-blue-100 text-blue-700 border border-blue-200" :
-                      sub.evaluationStatus === "INTERVIEW_REQUESTED" ? "bg-yellow-100 text-yellow-700 border border-yellow-200" :
-                      "bg-zinc-100 text-zinc-600 border border-zinc-200"
-                    }`}>
-                      {String(sub.evaluationStatus).replace(/_/g, " ")}
-                    </span>
+            submissions.map((sub) => {
+              // Try to parse video URL to get an embed URL
+              let embedUrl = "";
+              const vidUrl = sub.videoUrl as string;
+              if (vidUrl) {
+                if (vidUrl.includes("youtube.com/watch?v=")) {
+                  embedUrl = vidUrl.replace("watch?v=", "embed/");
+                } else if (vidUrl.includes("youtu.be/")) {
+                  embedUrl = `https://www.youtube.com/embed/${vidUrl.split("youtu.be/")[1]}`;
+                } else if (vidUrl.includes("loom.com/share/")) {
+                  embedUrl = vidUrl.replace("share", "embed");
+                }
+              }
+
+              return (
+                <div key={`${sub.problemId}-${sub.submittedAt}`} className="bg-white border border-zinc-200 flex flex-col hover:border-[#1a3a5c] transition-colors shadow-sm overflow-hidden">
+                  
+                  {/* Video Embed or Fallback Header */}
+                  {embedUrl ? (
+                    <div className="aspect-video w-full bg-zinc-900">
+                      <iframe 
+                        src={embedUrl} 
+                        className="w-full h-full" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowFullScreen
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-32 bg-zinc-100 flex items-center justify-center border-b border-zinc-200">
+                      <Trophy size={32} className="text-zinc-300" />
+                    </div>
                   )}
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-center px-4 py-2 bg-zinc-50 border border-zinc-200">
-                    <div className="text-xs text-zinc-400 font-bold uppercase tracking-wider mb-1">Score</div>
-                    <div className="font-medium text-lg text-zinc-900">{sub.score as number}</div>
+
+                  <div className="p-6 flex-1 flex flex-col">
+                    <div className="flex justify-between items-start gap-4 mb-4">
+                      <div>
+                        <Link href={`/problems/${sub.problemId}`} className="text-lg font-semibold text-zinc-900 hover:text-[#1a3a5c] transition-colors line-clamp-1">
+                          {(sub.repoName as string) || "View Submission"}
+                        </Link>
+                        <p className="text-xs text-zinc-500 mt-1 uppercase tracking-wider font-bold">
+                          {new Date(sub.submittedAt as string).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        </p>
+                      </div>
+                      <div className="text-center px-3 py-1.5 bg-zinc-50 border border-zinc-200 shrink-0">
+                        <div className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">Score</div>
+                        <div className="font-semibold text-sm text-zinc-900">{sub.score as number}</div>
+                      </div>
+                    </div>
+
+                    <p className="text-sm text-zinc-600 mb-6 flex-1 line-clamp-3">
+                      {sub.writeup as string}
+                    </p>
+
+                    {Array.isArray(sub.techStack) && sub.techStack.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {sub.techStack.map((tech, i) => (
+                          <span key={i} className="px-2.5 py-1 text-xs font-medium bg-[#1a3a5c]/5 text-[#1a3a5c] border border-[#1a3a5c]/10 rounded-full">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-zinc-100">
+                      {Boolean(sub.evaluationStatus && sub.evaluationStatus !== "PENDING") && (
+                        <span className={`inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-1 ${
+                          sub.evaluationStatus === "HIRED" ? "bg-green-100 text-green-700 border border-green-200" :
+                          sub.evaluationStatus === "CONTRACT_OFFERED" ? "bg-blue-100 text-blue-700 border border-blue-200" :
+                          sub.evaluationStatus === "INTERVIEW_REQUESTED" ? "bg-yellow-100 text-yellow-700 border border-yellow-200" :
+                          "bg-zinc-100 text-zinc-600 border border-zinc-200"
+                        }`}>
+                          {String(sub.evaluationStatus).replace(/_/g, " ")}
+                        </span>
+                      )}
+                      
+                      <div className="flex gap-3 ml-auto">
+                        {Boolean(sub.demoUrl) && (
+                          <a href={sub.demoUrl as string} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-[#1a3a5c] uppercase tracking-wider transition-colors">
+                            <Globe size={14} /> Demo
+                          </a>
+                        )}
+                        <a href={sub.githubUrl as string} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-[#1a3a5c] uppercase tracking-wider transition-colors">
+                          <GitBranch size={14} /> Code
+                        </a>
+                      </div>
+                    </div>
                   </div>
-                  <a href={sub.githubUrl as string} target="_blank" rel="noreferrer" className="p-3 bg-white border border-zinc-200 text-zinc-400 hover:text-[#1a3a5c] hover:border-[#1a3a5c] transition-colors">
-                    <GitBranch className="w-5 h-5" />
-                  </a>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>

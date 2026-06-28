@@ -51,6 +51,8 @@ export default function ProfessionalPostChallenge() {
     domain: "",
     description: "",
     requirements: "",
+    judgingCriteria: "",
+    communityUrl: "",
     source: "INDUSTRY",
     sourceUrl: "",
     prizeAmount: "",
@@ -58,6 +60,8 @@ export default function ProfessionalPostChallenge() {
     deadline: "",
     maxTeamSize: "4",
   });
+
+  const [prizeBreakdown, setPrizeBreakdown] = useState<{ place: string; amount: string; label: string }[]>([]);
 
   const [resourceLinks, setResourceLinks] = useState<string[]>([""]);
   const [requiredSkills, setRequiredSkills] = useState<string[]>([]);
@@ -115,6 +119,11 @@ export default function ProfessionalPostChallenge() {
           requiredSkills,
           allowedCountries: allowedCountries.length > 0 ? allowedCountries : [],
           maxTeamSize: parseInt(formData.maxTeamSize, 10),
+          prizeAmount: Number(formData.prizeAmount) || 0,
+          prizeBreakdown: prizeBreakdown.filter(p => p.place && p.amount).map(p => ({
+            ...p,
+            amount: Number(p.amount)
+          })),
         }),
       });
       const data = await res.json();
@@ -230,6 +239,17 @@ export default function ProfessionalPostChallenge() {
                     value={formData.requirements}
                     onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
                     placeholder="What does a winning solution look like? e.g., Accuracy > 95%, latency < 100ms, must use Python, must include unit tests..."
+                    className={`${inputStyles} resize-y`}
+                  />
+                </div>
+
+                <div>
+                  <label className={labelStyles}>Judging Criteria</label>
+                  <textarea
+                    rows={4}
+                    value={formData.judgingCriteria}
+                    onChange={(e) => setFormData({ ...formData, judgingCriteria: e.target.value })}
+                    placeholder="How will submissions be evaluated? (e.g., 50% technical merit, 30% usability, 20% innovation)"
                     className={`${inputStyles} resize-y`}
                   />
                 </div>
@@ -370,7 +390,7 @@ export default function ProfessionalPostChallenge() {
               </div>
 
               <div>
-                <label className={labelStyles}>Budget / Prize (USD)</label>
+                <label className={labelStyles}>Total Budget / Prize (USD)</label>
                 <input
                   type="number"
                   min="0"
@@ -380,6 +400,56 @@ export default function ProfessionalPostChallenge() {
                   className={inputStyles}
                 />
                 <p className="text-xs text-zinc-400 mt-1">Leave blank if contract value is negotiable.</p>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-0">Prize Breakdown (Optional)</label>
+                  <button
+                    type="button"
+                    onClick={() => setPrizeBreakdown([...prizeBreakdown, { place: "", amount: "", label: "" }])}
+                    className="text-[10px] uppercase font-bold text-[#1a3a5c] hover:underline"
+                  >
+                    + Add Rank
+                  </button>
+                </div>
+                {prizeBreakdown.length > 0 && (
+                  <div className="space-y-2 mb-2">
+                    {prizeBreakdown.map((prize, idx) => (
+                      <div key={idx} className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="e.g. 1st Place"
+                          value={prize.place}
+                          onChange={(e) => {
+                            const updated = [...prizeBreakdown];
+                            updated[idx].place = e.target.value;
+                            setPrizeBreakdown(updated);
+                          }}
+                          className={`${inputStyles} !py-2 !px-2 flex-1`}
+                        />
+                        <input
+                          type="number"
+                          placeholder="$$$"
+                          value={prize.amount}
+                          onChange={(e) => {
+                            const updated = [...prizeBreakdown];
+                            updated[idx].amount = e.target.value;
+                            setPrizeBreakdown(updated);
+                          }}
+                          className={`${inputStyles} !py-2 !px-2 w-20`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setPrizeBreakdown(prizeBreakdown.filter((_, i) => i !== idx))}
+                          className="p-2 border border-zinc-200 bg-white text-zinc-400 hover:text-red-500 hover:border-red-200 transition-colors"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div>
@@ -417,6 +487,18 @@ export default function ProfessionalPostChallenge() {
                   placeholder="https://your-company.com"
                   className={inputStyles}
                 />
+              </div>
+
+              <div>
+                <label className={labelStyles}>Community / Mentorship URL</label>
+                <input
+                  type="url"
+                  value={formData.communityUrl}
+                  onChange={(e) => setFormData({ ...formData, communityUrl: e.target.value })}
+                  placeholder="e.g., https://discord.gg/your-server"
+                  className={inputStyles}
+                />
+                <p className="text-xs text-zinc-400 mt-1">Add a Discord, Slack, or forum link for builders to get mentored.</p>
               </div>
 
               <div className="pt-4 border-t border-zinc-200">

@@ -1,11 +1,27 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
+import { z } from "zod";
 import { docClient } from "@/lib/dynamodb";
 import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const TABLE_NAME = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
+
+const problemSchema = z.object({
+  title: z.string().min(5, "Title must be at least 5 characters").max(150, "Title is too long"),
+  description: z.string().min(20, "Description must be at least 20 characters").max(10000, "Description is too long"),
+  source: z.string().optional().default("INDUSTRY"),
+  prizeAmount: z.number().min(0).default(0),
+  prizeType: z.string().optional().default("CASH"),
+  deadline: z.string().datetime("Deadline must be a valid ISO datetime string"),
+  domain: z.string().min(2, "Domain must be provided"),
+  resourceLinks: z.array(z.string().url("Must be a valid URL")).max(10).optional().default([]),
+  requiredSkills: z.array(z.string()).max(20).optional().default([]),
+  allowedCountries: z.array(z.string()).max(50).optional().default([]),
+  communityUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  judgingCriteria: z.string().max(2000).optional().or(z.literal(""))
+});
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -27,8 +43,8 @@ export async function POST(request: Request) {
   const role = user?.publicMetadata?.role as string | undefined;
   const orgId = user?.publicMetadata?.orgId as string | undefined;
 
-  // Accept both 'organization' and 'company' roles for backwards compatibility
-  if (!user || (role !== "organization" && role !== "company")) {
+  // Enforce strictly 'organization' role
+  if (!user || role !== "organization") {
     return NextResponse.json({ error: "Sign in as an organization to post a challenge" }, { status: 401 });
   }
 
@@ -38,7 +54,17 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = await request.json();
+    const rawBody = await request.json();
+    const validation = problemSchema.safeParse(rawBody);
+
+    if (!validation.success) {
+      return NextResponse.json({ 
+        error: "Invalid input data", 
+        details: validation.error.format() 
+      }, { status: 400 });
+    }
+
+    const body = validation.data;
     const problemId = uuidv4();
     const now = new Date().toISOString();
 
@@ -46,24 +72,27 @@ export async function POST(request: Request) {
       problemId,
       title: body.title,
       description: body.description,
-      source: body.source || "INDUSTRY",
-      prizeAmount: Number(body.prizeAmount) || 0,
-      prizeType: body.prizeType || "CASH",
+      source: body.source,
+      prizeAmount: body.prizeAmount,
+      prizeType: body.prizeType,
       deadline: body.deadline,
       domain: body.domain,
       postedAt: now,
-      postedByOrgId: orgId || user.id, // orgId from metadata, fallback to userId
+      postedByOrgId: orgId,
       verified: false,
-      status: "OPEN",
-      resourceLinks: body.resourceLinks || [],
-      requiredSkills: Array.isArray(body.requiredSkills) ? body.requiredSkills : [],
-      allowedCountries: Array.isArray(body.allowedCountries) ? body.allowedCountries : [],
-      maxTeamSize: typeof body.maxTeamSize === "number" ? body.maxTeamSize : 4,
+      status: body.prizeAmount > 0 ? "PENDING_ESCROW" : "OPEN",
+      paymentStatus: body.prizeAmount > 0 ? "UNFUNDED" : "NA",
+      entityType: "PROBLEM",
+      resourceLinks: body.resourceLinks,
+      requiredSkills: body.requiredSkills,
+      allowedCountries: body.allowedCountries,
       notificationSent: false,
     };
 
-    if (body.requirements) newProblem.requirements = body.requirements;
     if (body.sourceUrl) newProblem.sourceUrl = body.sourceUrl;
+    if (body.communityUrl) newProblem.communityUrl = body.communityUrl;
+    if (body.judgingCriteria) newProblem.judgingCriteria = body.judgingCriteria;
+    if (Array.isArray(body.prizeBreakdown)) newProblem.prizeBreakdown = body.prizeBreakdown;
 
     await docClient.send(new PutCommand({
       TableName: TABLE_NAME,

@@ -141,14 +141,17 @@ export default function EvaluationActions({
   const [msgOpen, setMsgOpen] = useState(false);
   const threadId = `${problemId}#${studentUserId}`;
 
-  const handleAction = async (action: "HIRE" | "CONTRACT" | "INTERVIEW") => {
+  const [scoreModalOpen, setScoreModalOpen] = useState(false);
+  const [scores, setScores] = useState({ innovation: 5, technical: 5, design: 5 });
+
+  const handleAction = async (action: "HIRE" | "CONTRACT" | "INTERVIEW" | "REJECT" | "SCORE", rubricScores?: any) => {
     setLoading(true);
     setError("");
     try {
       const res = await fetch("/api/submissions/evaluate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ problemId, rankKey, action, submitterName, studentUserId }),
+        body: JSON.stringify({ problemId, rankKey, action, submitterName, studentUserId, rubricScores }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -194,7 +197,72 @@ export default function EvaluationActions({
         >
           <MessageCircle size={16} /> Message Candidate
         </button>
+
+        <button
+          onClick={() => setScoreModalOpen(true)}
+          className="px-6 py-2.5 font-medium text-sm flex items-center justify-center gap-2 border border-[#1a3a5c] text-[#1a3a5c] hover:bg-[#1a3a5c] hover:text-white transition-colors mt-2"
+        >
+          <Target size={16} /> Score Submission
+        </button>
+
+        <button
+          onClick={() => handleAction("REJECT")}
+          disabled={loading}
+          className="px-6 py-2.5 font-medium text-sm flex items-center justify-center gap-2 text-red-600 hover:bg-red-50 transition-colors mt-2"
+        >
+          {loading ? <Loader2 size={16} className="animate-spin" /> : <>Reject (Pass)</>}
+        </button>
       </div>
+
+      {scoreModalOpen && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-white max-w-md w-full p-6 shadow-xl border border-zinc-200">
+            <h3 className="font-bold text-lg text-zinc-900 mb-4 flex items-center gap-2">
+              <Target size={20} className="text-[#1a3a5c]" /> Judging Rubric
+            </h3>
+            <p className="text-sm text-zinc-500 mb-6">Score this submission on a scale of 1 to 10 for each category.</p>
+
+            <div className="space-y-4 mb-8">
+              <div>
+                <label className="flex justify-between text-sm font-bold text-zinc-700 mb-2 uppercase tracking-wider">
+                  <span>Innovation</span>
+                  <span className="text-[#1a3a5c]">{scores.innovation} / 10</span>
+                </label>
+                <input type="range" min="1" max="10" value={scores.innovation} onChange={e => setScores({ ...scores, innovation: parseInt(e.target.value) })} className="w-full accent-[#1a3a5c]" />
+              </div>
+              <div>
+                <label className="flex justify-between text-sm font-bold text-zinc-700 mb-2 uppercase tracking-wider">
+                  <span>Technical Difficulty</span>
+                  <span className="text-[#1a3a5c]">{scores.technical} / 10</span>
+                </label>
+                <input type="range" min="1" max="10" value={scores.technical} onChange={e => setScores({ ...scores, technical: parseInt(e.target.value) })} className="w-full accent-[#1a3a5c]" />
+              </div>
+              <div>
+                <label className="flex justify-between text-sm font-bold text-zinc-700 mb-2 uppercase tracking-wider">
+                  <span>Design & UX</span>
+                  <span className="text-[#1a3a5c]">{scores.design} / 10</span>
+                </label>
+                <input type="range" min="1" max="10" value={scores.design} onChange={e => setScores({ ...scores, design: parseInt(e.target.value) })} className="w-full accent-[#1a3a5c]" />
+              </div>
+            </div>
+
+            <div className="flex gap-3 justify-end">
+              <button onClick={() => setScoreModalOpen(false)} className="px-4 py-2 text-sm font-medium text-zinc-500 hover:text-zinc-800 transition-colors">
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setScoreModalOpen(false);
+                  handleAction("SCORE", scores);
+                }}
+                className="btn-primary px-6 py-2 text-sm font-medium"
+              >
+                Submit Score
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {msgOpen && (
         <MessageDrawer

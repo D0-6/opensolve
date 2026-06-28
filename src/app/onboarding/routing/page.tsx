@@ -44,7 +44,7 @@ export default async function OnboardingRoutingPage() {
     redirect("/dashboard/student");
   }
 
-  if (role === "organization" || role === "company") {
+  if (role === "organization") {
     const orgId = user.publicMetadata?.orgId as string | undefined;
 
     if (!orgId) {
@@ -52,11 +52,7 @@ export default async function OnboardingRoutingPage() {
       redirect("/onboarding/organization");
     }
 
-    if (role === "organization") {
-      redirect(`/organizations/${orgId}/dashboard`);
-    } else {
-      redirect("/dashboard/company");
-    }
+    redirect(`/organizations/${orgId}/dashboard`);
   }
 
   // Fallback for any unrecognized role

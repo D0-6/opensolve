@@ -1,6 +1,8 @@
 import { getProblem } from "@/lib/data";
 import { notFound } from "next/navigation";
-import { ExternalLink, ArrowLeft, Users, Tag, Globe, Lock, Megaphone } from "lucide-react";
+import { Trophy, GitBranch, Globe, ExternalLink, Activity, ArrowRight, Upload, Briefcase, FileText, Lock, Users, Target, ShieldCheck, Tag, ArrowLeft, Megaphone } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { docClient } from "@/lib/dynamodb";
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
@@ -111,9 +113,16 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
         <div className="flex items-center justify-between bg-purple-50 border border-purple-200 text-purple-800 px-5 py-3.5 mb-8 text-sm font-medium">
           <div className="flex items-center gap-3">
             <span className="text-xl">🕵️</span>
-            <span>
-              This challenge was discovered and shared by community scout <strong>{String(problem.scoutName || "Anonymous")}</strong>.
-            </span>
+            <div className="flex flex-col">
+              <span>
+                This challenge was discovered and shared by community scout <strong>{String(problem.scoutName || "Anonymous")}</strong>.
+              </span>
+              {problem.scoutBountyPercent && (
+                <span className="text-purple-600 text-xs mt-0.5 font-normal">
+                  They will earn a {String(problem.scoutBountyPercent)}% finder's fee if an OpenSolve builder wins this bounty.
+                </span>
+              )}
+            </div>
           </div>
           {scoutExists ? (
             <Link href={`/profile/${problem.scoutId}`} className="text-purple-700 hover:text-purple-900 underline underline-offset-2">
@@ -162,6 +171,16 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
                 ? `$${Number(problem.prizeAmount).toLocaleString()}`
                 : problem.prizeType?.replace(/_/g, " ")}
             </span>
+            {Array.isArray(problem.prizeBreakdown) && problem.prizeBreakdown.length > 0 && (
+              <div className="mt-2 space-y-1">
+                {(problem.prizeBreakdown as any[]).map((prize, i) => (
+                  <div key={i} className="flex items-center gap-2 text-xs">
+                    <span className="font-bold text-zinc-500">{prize.place}:</span>
+                    <span className="text-zinc-700">${Number(prize.amount).toLocaleString()}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <div>
             <span className="text-zinc-400 uppercase tracking-wider text-xs font-bold block mb-1">Deadline</span>
@@ -195,10 +214,10 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
         </div>
 
         {/* Description */}
-        <div className="prose prose-zinc max-w-none border-t border-zinc-200 pt-8">
-          <p className="text-base md:text-lg text-zinc-700 leading-relaxed whitespace-pre-wrap">
-            {problem.description}
-          </p>
+        <div className="prose prose-zinc prose-a:text-purple-600 prose-headings:text-zinc-900 max-w-none border-t border-zinc-200 pt-8 mt-8">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {problem.description || "No description provided."}
+          </ReactMarkdown>
         </div>
 
         {/* Success criteria / requirements */}
@@ -206,6 +225,14 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
           <div className="mt-8 bg-zinc-50 border border-zinc-200 p-6">
             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Success Criteria</h3>
             <p className="text-sm text-zinc-700 leading-relaxed whitespace-pre-wrap">{problem.requirements}</p>
+          </div>
+        )}
+
+        {/* Judging Criteria */}
+        {problem.judgingCriteria && (
+          <div className="mt-6 bg-zinc-50 border border-zinc-200 p-6">
+            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Judging Criteria</h3>
+            <p className="text-sm text-zinc-700 leading-relaxed whitespace-pre-wrap">{problem.judgingCriteria}</p>
           </div>
         )}
 
@@ -259,7 +286,28 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
             announcements={Array.isArray(problem.announcements) ? problem.announcements as any[] : []}
           />
           <div>
-            <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2">Q&amp;A Thread</h2>
+            <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2">Community &amp; Mentorship</h2>
+            
+            {/* Discord / Community URL CTA */}
+            {problem.communityUrl && (
+              <div className="bg-[#1a3a5c]/5 border border-[#1a3a5c]/20 p-5 mb-6 text-sm">
+                <div className="font-semibold text-[#1a3a5c] mb-2 flex items-center gap-2">
+                  <Megaphone size={16} /> Connect with the Organization
+                </div>
+                <p className="text-zinc-700 mb-4 leading-relaxed">
+                  Join the community space to ask questions, get mentorship, and interact directly with professionals reviewing this challenge.
+                </p>
+                <a
+                  href={problem.communityUrl as string}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary block text-center px-4 py-2 font-medium"
+                >
+                  Join Community
+                </a>
+              </div>
+            )}
+
             <ClientQA problemId={problem.problemId} />
           </div>
         </div>

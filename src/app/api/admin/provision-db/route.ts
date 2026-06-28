@@ -18,7 +18,20 @@ const TABLES = [
     ],
     AttributeDefinitions: [
       { AttributeName: "problemId", AttributeType: "S" },
-      { AttributeName: "rankKey", AttributeType: "S" }
+      { AttributeName: "rankKey", AttributeType: "S" },
+      { AttributeName: "userId", AttributeType: "S" },
+      { AttributeName: "submittedAt", AttributeType: "S" }
+    ],
+    GlobalSecondaryIndexes: [
+      {
+        IndexName: "userId-submittedAt-index",
+        KeySchema: [
+          { AttributeName: "userId", KeyType: "HASH" },
+          { AttributeName: "submittedAt", KeyType: "RANGE" }
+        ],
+        Projection: { ProjectionType: "ALL" },
+        ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
+      }
     ]
   },
   {
@@ -30,6 +43,16 @@ const TABLES = [
     AttributeDefinitions: [
       { AttributeName: "problemId", AttributeType: "S" },
       { AttributeName: "userId", AttributeType: "S" }
+    ],
+    GlobalSecondaryIndexes: [
+      {
+        IndexName: "userId-index",
+        KeySchema: [
+          { AttributeName: "userId", KeyType: "HASH" }
+        ],
+        Projection: { ProjectionType: "ALL" },
+        ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
+      }
     ]
   },
   {
@@ -66,8 +89,14 @@ const TABLES = [
 ];
 
 export async function GET(request: Request) {
+  // BUG-04: Secret must be explicitly set in env — no hardcoded fallback.
+  const secret = process.env.ADMIN_SETUP_SECRET;
+  if (!secret) {
+    return NextResponse.json({ error: "ADMIN_SETUP_SECRET env var is not set." }, { status: 500 });
+  }
+
   const { searchParams } = new URL(request.url);
-  if (searchParams.get("secret") !== (process.env.ADMIN_SETUP_SECRET || "super-secret-admin-key")) {
+  if (searchParams.get("secret") !== secret) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -79,7 +108,7 @@ export async function GET(request: Request) {
         ...table,
         BillingMode: "PROVISIONED",
         ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
-      }));
+      } as any));
       results.push({ table: table.TableName, status: "Created" });
     } catch (err: any) {
       if (err.name === "ResourceInUseException") {

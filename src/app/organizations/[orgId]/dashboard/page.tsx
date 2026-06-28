@@ -1,15 +1,19 @@
-import { getOrganization, getProblems, getSubmissions } from "@/lib/data";
+import { getOrganization, getProblems, getSubmissions, getEvaluations } from "@/lib/data";
 import { notFound, redirect } from "next/navigation";
-import { ExternalLink, Play, Trophy, Users, Briefcase, PlusCircle, FileText } from "lucide-react";
+import { ExternalLink, Play, Trophy, Users, Briefcase, PlusCircle, FileText, Code2, MapPin, Search } from "lucide-react";
 import Link from "next/link";
 import { currentUser } from "@clerk/nextjs/server";
+import { docClient } from "@/lib/dynamodb";
+import { GetCommand } from "@aws-sdk/lib-dynamodb";
 import EvaluationActions from "@/app/organizations/dashboard/EvaluationActions";
 import PostAnnouncementButton from "@/app/organizations/dashboard/PostAnnouncementButton";
 
 export const dynamic = "force-dynamic";
+const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
 
-export default async function OrgDashboard({ params }: { params: Promise<{ orgId: string }> }) {
+export default async function OrgDashboard({ params, searchParams }: { params: Promise<{ orgId: string }>, searchParams: Promise<{ tab?: string }> }) {
   const { orgId } = await params;
+  const tab = (await searchParams).tab || "challenges";
   
   const user = await currentUser();
   if (!user) {
@@ -43,12 +47,63 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
     orgProblems.map(async (problem) => {
       const subsRes = await getSubmissions(problem.problemId);
       const submissions = subsRes.items;
-      submissions.sort((a, b) => b.score - a.score);
+      
+      // Attach 1:N evaluations
+      for (const sub of submissions) {
+        const evals = await getEvaluations(problem.problemId, sub.rankKey);
+        (sub as any).evaluations = evals;
+        
+        if (evals.length > 0) {
+          const sum = evals.reduce((acc, ev) => acc + ev.scores.innovation + ev.scores.technical + ev.scores.design, 0);
+          (sub as any).meanScore = Math.round((sum / evals.length) * 10) / 10;
+        } else {
+          (sub as any).meanScore = 0;
+        }
+      }
+      
+      // Sort by mean score first, then fallback to basic score
+      submissions.sort((a, b) => ((b as any).meanScore || b.score) - ((a as any).meanScore || a.score));
       return { ...problem, submissions };
     })
   );
 
   const totalSubmissions = problemsWithSubmissions.reduce((sum, p) => sum + p.submissions.length, 0);
+
+  // Extract unique users across all submissions for the Talent Pool
+  const userMap = new Map<string, { submissionCount: number, topScore: number, lastActive: string, name: string }>();
+  for (const p of problemsWithSubmissions) {
+    for (const sub of p.submissions) {
+      const existing = userMap.get(sub.userId);
+      const score = (sub as any).meanScore || sub.score;
+      if (!existing) {
+        userMap.set(sub.userId, {
+          submissionCount: 1,
+          topScore: score,
+          lastActive: sub.submittedAt,
+          name: sub.studentName || "Anonymous"
+        });
+      } else {
+        existing.submissionCount += 1;
+        existing.topScore = Math.max(existing.topScore, score);
+        if (new Date(sub.submittedAt) > new Date(existing.lastActive)) {
+          existing.lastActive = sub.submittedAt;
+        }
+      }
+    }
+  }
+
+  // Fetch profiles for the talent pool
+  const talentProfiles = await Promise.all(Array.from(userMap.entries()).map(async ([uId, meta]) => {
+    try {
+      const res = await docClient.send(new GetCommand({ TableName: PROFILES_TABLE, Key: { userId: uId } }));
+      return { userId: uId, meta, profile: res.Item || null };
+    } catch(e) {
+      return { userId: uId, meta, profile: null };
+    }
+  }));
+
+  // Sort talent by top score descending
+  talentProfiles.sort((a, b) => b.meta.topScore - a.meta.topScore);
 
   return (
     <div className="w-full max-w-[125rem] mx-auto px-6 mt-12 pb-24 space-y-8">
@@ -63,8 +118,26 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
         </Link>
       </div>
 
-      {/* Metrics */}
-      <div className="flex flex-col md:flex-row border border-zinc-200 divide-y md:divide-y-0 md:divide-x divide-zinc-200">
+      {/* Tabs */}
+      <div className="flex items-center gap-6 border-b border-zinc-200">
+        <Link 
+          href={`/organizations/${orgId}/dashboard?tab=challenges`}
+          className={`pb-4 text-sm font-medium border-b-2 transition-colors ${tab === 'challenges' ? 'border-[#1a3a5c] text-[#1a3a5c]' : 'border-transparent text-zinc-500 hover:text-zinc-700'}`}
+        >
+          Challenges & Submissions
+        </Link>
+        <Link 
+          href={`/organizations/${orgId}/dashboard?tab=talent`}
+          className={`pb-4 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${tab === 'talent' ? 'border-[#1a3a5c] text-[#1a3a5c]' : 'border-transparent text-zinc-500 hover:text-zinc-700'}`}
+        >
+          Talent Pool <span className="bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded-full text-xs">{talentProfiles.length}</span>
+        </Link>
+      </div>
+
+      {tab === "challenges" ? (
+        <>
+          {/* Metrics */}
+          <div className="flex flex-col md:flex-row border border-zinc-200 divide-y md:divide-y-0 md:divide-x divide-zinc-200">
         {[
           { icon: <Briefcase size={16} />, label: "Active Problems", value: orgProblems.length },
           { icon: <Users size={16} />, label: "Total Submissions", value: totalSubmissions },
@@ -132,7 +205,7 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
                                 {sub.studentName}
                               </Link>
                               <span className="bg-zinc-100 text-zinc-700 border border-zinc-200 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider">
-                                Score: {sub.score}
+                                {((sub as any).evaluations && (sub as any).evaluations.length > 0) ? `Mean Score: ${(sub as any).meanScore} (${(sub as any).evaluations.length} Judges)` : `System Score: ${sub.score}`}
                               </span>
                             </div>
                             <p className="text-sm text-zinc-600 mb-4 line-clamp-2">{sub.writeup}</p>
@@ -160,6 +233,7 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
                               prizeType={problem.prizeType || "CONTRACT"}
                               submitterName={sub.studentName}
                               studentUserId={sub.userId}
+                              orgName={org.orgName as string || "Organization"}
                             />
                           </div>
                         </div>
@@ -172,6 +246,89 @@ export default async function OrgDashboard({ params }: { params: Promise<{ orgId
           </div>
         )}
       </div>
+      </>
+      ) : (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between border-b border-zinc-200 pb-2">
+            <h2 className="text-xl font-medium text-zinc-900">Talent Pool</h2>
+            <p className="text-sm text-zinc-500">Builders who participated in your challenges.</p>
+          </div>
+
+          {talentProfiles.length === 0 ? (
+            <div className="bg-zinc-50 border border-dashed border-zinc-200 p-16 text-center">
+              <Users size={32} className="mx-auto text-zinc-300 mb-4" />
+              <p className="font-medium text-zinc-900 text-lg mb-1">Your talent pool is empty</p>
+              <p className="text-zinc-500 text-sm">Post a challenge to start attracting builders.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {talentProfiles.map(talent => {
+                const p = talent.profile || {};
+                const name = p.name || talent.meta.name;
+                return (
+                  <div key={talent.userId} className="bg-white border border-zinc-200 hover:border-[#1a3a5c] transition-colors p-6 flex flex-col relative overflow-hidden">
+                    {p.openToWork && (
+                      <div className="absolute top-0 right-0 bg-emerald-50 text-emerald-600 border-b border-l border-emerald-200 px-3 py-1 text-[10px] font-bold uppercase tracking-wider">
+                        Open to Work
+                      </div>
+                    )}
+                    <div className="flex items-start gap-4 mb-4 mt-2">
+                      <div className="w-12 h-12 bg-zinc-100 border border-zinc-200 flex-shrink-0 flex items-center justify-center text-[#1a3a5c] text-xl font-bold">
+                        {name.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <Link href={`/profile/${talent.userId}`} className="text-lg font-semibold text-zinc-900 hover:text-[#1a3a5c] transition-colors line-clamp-1">
+                          {name}
+                        </Link>
+                        {p.country && (
+                          <div className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5">
+                            <MapPin size={12} /> {p.country}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="flex-1">
+                      {p.bio ? (
+                        <p className="text-sm text-zinc-600 line-clamp-2 mb-4">{p.bio}</p>
+                      ) : (
+                        <p className="text-sm text-zinc-400 italic mb-4">No bio provided</p>
+                      )}
+
+                      {Array.isArray(p.skills) && p.skills.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {p.skills.slice(0, 4).map((skill: string, i: number) => (
+                            <span key={i} className="px-2 py-0.5 text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200">
+                              {skill}
+                            </span>
+                          ))}
+                          {p.skills.length > 4 && (
+                            <span className="px-2 py-0.5 text-[10px] font-medium text-zinc-400">+{p.skills.length - 4}</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="pt-4 border-t border-zinc-100 grid grid-cols-2 gap-4 mt-auto mb-4">
+                      <div>
+                        <div className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-0.5">Top Score</div>
+                        <div className="text-sm font-semibold text-zinc-900">{talent.meta.topScore}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-0.5">Submissions</div>
+                        <div className="text-sm font-semibold text-zinc-900">{talent.meta.submissionCount}</div>
+                      </div>
+                    </div>
+                    <Link href={`/profile/${talent.userId}`} className="w-full py-2.5 bg-zinc-50 border border-zinc-200 text-zinc-600 text-[10px] font-bold uppercase tracking-wider text-center hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c] transition-colors mt-auto">
+                      View Profile & Contact
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

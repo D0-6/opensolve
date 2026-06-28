@@ -23,6 +23,7 @@ export async function updateProfile(formData: FormData) {
   const degree = formData.get("degree") as string;
   const graduationYear = formData.get("graduationYear") as string;
   const skillsString = formData.get("skills") as string;
+  const openToWork = formData.get("openToWork") === "on";
 
   const skills = skillsString
     ? skillsString.split(",").map((s) => s.trim()).filter((s) => s.length > 0)
@@ -51,6 +52,7 @@ export async function updateProfile(formData: FormData) {
         degree = :degree,
         graduationYear = :gradYear,
         skills = :skills,
+        openToWork = :openToWork,
         #name = :name
       `,
       ExpressionAttributeNames: {
@@ -69,6 +71,7 @@ export async function updateProfile(formData: FormData) {
         ":degree": degree || null,
         ":gradYear": graduationYear || null,
         ":skills": skills,
+        ":openToWork": openToWork,
         ":name": name || null,
       },
     })

@@ -3,11 +3,10 @@ import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({
   region: process.env.AWS_REGION || "us-east-1",
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "mock-key",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "mock-secret",
-  },
-  // Use a local endpoint if provided, useful for local testing
+  // By omitting the explicit `credentials` block, the AWS SDK v3 automatically
+  // utilizes the Default Credential Provider Chain. This means it will securely use
+  // IAM Roles (on AWS), OIDC, or securely injected environment variables (on Vercel),
+  // which is an AWS Security Best Practice.
   ...(process.env.DYNAMODB_ENDPOINT && { endpoint: process.env.DYNAMODB_ENDPOINT }),
 });
 

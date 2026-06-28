@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
 import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { checkRateLimit } from "@/lib/rate-limit";
@@ -53,12 +53,22 @@ export async function POST(
 
     if (result.Attributes && result.Attributes.askedBy) {
       const { sendEmail } = await import("@/lib/email");
-      // Ideally we would fetch the user's real email from Clerk or DB, but we'll use the routing scheme for now
-      await sendEmail({
-        to: `student-${result.Attributes.askedBy}@opensolve.user`,
-        subject: `Your question has been answered!`,
-        body: `An organization has replied to your question on the challenge thread.\n\nAnswer: "${answerText}"\n\nLog in to OpenSolve to view the full discussion.`
-      });
+      try {
+        const clerk = await clerkClient();
+        const askedByUser = await clerk.users.getUser(String(result.Attributes.askedBy));
+        const realEmail = askedByUser?.emailAddresses?.find(
+          e => e.id === askedByUser.primaryEmailAddressId
+        )?.emailAddress;
+        if (realEmail) {
+          await sendEmail({
+            to: realEmail,
+            subject: `Your question has been answered!`,
+            body: `An organization has replied to your question on the challenge thread.\n\nAnswer: "${answerText}"\n\nLog in to OpenSolve to view the full discussion.`
+          });
+        }
+      } catch (emailErr) {
+        console.error("Failed to send QA notification email:", emailErr);
+      }
     }
 
     return NextResponse.json({ thread: result.Attributes }, { status: 200 });

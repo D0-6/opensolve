@@ -3,6 +3,7 @@ import { Inter, Sora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { LayoutWrapper } from "@/components/LayoutWrapper";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const sora = Sora({ subsets: ["latin"], variable: "--font-sora" });
@@ -27,9 +28,11 @@ export default function RootLayout({
           <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
         </head>
         <body className="antialiased bg-white text-zinc-900 flex flex-col min-h-screen" style={{ fontFamily: "var(--font-inter), sans-serif" }}>
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
+          <PostHogProvider>
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
+          </PostHogProvider>
         </body>
       </html>
     </ClerkProvider>

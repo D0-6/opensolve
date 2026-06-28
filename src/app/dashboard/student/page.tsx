@@ -1,7 +1,8 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { docClient } from "@/lib/dynamodb";
-import { QueryCommand, ScanCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { ScanCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { getUserSubmissions } from "@/lib/data";
 import Link from "next/link";
 import {
   Trophy,
@@ -21,7 +22,7 @@ const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_S
 const APPLICATIONS_TABLE = process.env.DYNAMODB_TABLE_APPLICATIONS || "OpenSolve_Applications";
 const PROBLEMS_TABLE = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
 
-export const dynamic = "force-dynamic";
+// Student Dashboard is inherently dynamic due to auth()
 
 export default async function StudentDashboard() {
   const { userId } = await auth();
@@ -34,40 +35,49 @@ export default async function StudentDashboard() {
   const firstName = user?.firstName || "Builder";
   const fullName = user?.fullName || user?.firstName || "Builder";
 
-  // Fetch submissions
-  let submissions: Record<string, unknown>[] = [];
+  // Fetch submissions using the resilient helper (GSI with scan fallback)
+  let submissions: any[] = [];
   try {
-    const res = await docClient.send(
-      new QueryCommand({
-        TableName: SUBMISSIONS_TABLE,
-        IndexName: "userId-submittedAt-index",
-        KeyConditionExpression: "userId = :uid",
-        ExpressionAttributeValues: { ":uid": userId },
-        ScanIndexForward: false,
-        Limit: 20,
-      })
-    );
-    submissions = res.Items || [];
-  } catch (err) {
-    console.error("Error fetching submissions:", err);
+    submissions = await getUserSubmissions(userId);
+  } catch (err: unknown) {
+    console.error("[CRITICAL] Error fetching submissions:", err instanceof Error ? err.message : err);
   }
 
-  // Fetch applications (scan with filter — add a GSI in production for scale)
+  // Fetch applications (BUG-10: Use GSI Query with fallback to Scan for resilience)
   let applications: Record<string, unknown>[] = [];
   try {
-    const res = await docClient.send(
-      new ScanCommand({
+    const queryRes = await docClient.send(
+      new QueryCommand({
         TableName: APPLICATIONS_TABLE,
-        FilterExpression: "userId = :uid",
+        IndexName: "userId-index",
+        KeyConditionExpression: "userId = :uid",
         ExpressionAttributeValues: { ":uid": userId },
       })
     );
-    applications = (res.Items || []).sort(
-      (a, b) => String(b.appliedAt || "").localeCompare(String(a.appliedAt || ""))
-    );
-  } catch (err) {
-    console.error("Error fetching applications:", err);
+    applications = queryRes.Items || [];
+  } catch (err: unknown) {
+    if (err instanceof Error && err.name === "ValidationException") {
+      console.warn("userId-index not available on Applications table, falling back to ScanCommand.");
+      try {
+        const scanRes = await docClient.send(
+          new ScanCommand({
+            TableName: APPLICATIONS_TABLE,
+            FilterExpression: "userId = :uid",
+            ExpressionAttributeValues: { ":uid": userId },
+          })
+        );
+        applications = scanRes.Items || [];
+      } catch (scanErr: unknown) {
+        console.error("[CRITICAL] Fallback scan also failed for applications:", scanErr instanceof Error ? scanErr.message : scanErr);
+      }
+    } else {
+      console.error("[CRITICAL] Unexpected error querying applications:", err instanceof Error ? err.message : err);
+    }
   }
+
+  applications = applications.sort(
+    (a, b) => String(b.appliedAt || "").localeCompare(String(a.appliedAt || ""))
+  );
 
   // Fetch problem titles for applications and submissions
   const allProblemIds = [
@@ -81,8 +91,8 @@ export default async function StudentDashboard() {
     try {
       const res = await docClient.send(new GetCommand({ TableName: PROBLEMS_TABLE, Key: { problemId: pid } }));
       if (res.Item) problemCache[pid] = res.Item;
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
+      console.error("[CRITICAL] Error fetching problem for dashboard:", err instanceof Error ? err.message : err);
     }
   }
 
@@ -137,7 +147,7 @@ export default async function StudentDashboard() {
       {/* Quick actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
         <Link
-          href="/"
+          href="/challenges"
           className="border border-zinc-200 bg-white p-6 flex flex-col gap-4 group hover:bg-zinc-50 transition-colors"
         >
           <div className="w-10 h-10 border border-zinc-200 text-zinc-600 flex items-center justify-center bg-white group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors">
@@ -176,6 +186,20 @@ export default async function StudentDashboard() {
             <div className="text-sm text-zinc-500">See where you rank against all builders</div>
           </div>
           <ArrowRight size={18} className="text-zinc-400 mt-auto group-hover:translate-x-1 transition-transform" />
+        </Link>
+
+        <Link
+          href="/submit-challenge"
+          className="border border-purple-200 bg-purple-50 p-6 flex flex-col gap-4 group hover:bg-purple-100 transition-colors"
+        >
+          <div className="w-10 h-10 border border-purple-200 text-purple-600 flex items-center justify-center bg-white group-hover:bg-purple-700 group-hover:text-white transition-colors text-lg">
+            🕵️
+          </div>
+          <div>
+            <div className="font-medium text-zinc-900 text-lg mb-1">Scout a Challenge</div>
+            <div className="text-sm text-purple-600">Find bounties &amp; earn Scout Points</div>
+          </div>
+          <ArrowRight size={18} className="text-purple-400 mt-auto group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
 
