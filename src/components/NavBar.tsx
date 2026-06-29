@@ -24,16 +24,16 @@ export function NavBar() {
   const navLinkClass = (href: string) =>
     `font-body-md font-medium transition-colors duration-200 ${
       pathname === href || (href === "/" && pathname === "/")
-        ? "text-zinc-900 border-b-2 border-zinc-900 pb-1"
-        : "text-zinc-500 hover:text-zinc-900"
+        ? "text-white border-b-2 border-white pb-1"
+        : "text-zinc-400 hover:text-white"
     }`;
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-white border-b border-zinc-200">
+    <header className="fixed top-0 w-full z-50 bg-[#050505]/80 backdrop-blur-md border-b border-white/10">
       <div className="flex justify-between items-center px-6 max-w-[1600px] mx-auto h-20">
         {/* Brand Logo */}
-        <Link href="/" className="font-display-lg text-3xl font-bold text-zinc-900 flex items-center gap-2">
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>hexagon</span>
+        <Link href="/" className="font-display-lg text-3xl font-bold text-white flex items-center gap-2">
+          <span className="material-symbols-outlined text-blue-400" style={{ fontVariationSettings: "'FILL' 1" }}>hexagon</span>
           OpenSolve
         </Link>
         
@@ -61,22 +61,22 @@ export function NavBar() {
                 Dashboard
               </Link>
               {(role === "organization" || role === "company") && (
-                <Link href="/organizations/new" className="btn-primary px-6 py-2 font-body-md font-medium active:scale-95 transition-transform">
+                <Link href="/organizations/new" className="btn-primary px-6 py-2 font-body-md font-medium active:scale-95 transition-transform text-black bg-white hover:bg-zinc-200 border-none">
                   Post Challenge
                 </Link>
               )}
               <div className="ml-2">
-                <UserButton />
+                <UserButton appearance={{ elements: { userButtonAvatarBox: "border border-white/20" } }} />
               </div>
             </>
           )}
 
           {isLoaded && !isSignedIn && (
             <>
-              <Link href="/sign-in" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors duration-200">
+              <Link href="/sign-in" className="text-zinc-400 font-body-md hover:text-white transition-colors duration-200">
                 Sign In
               </Link>
-              <Link href="/sign-up" className="btn-primary px-6 py-2 font-body-md font-medium active:scale-95 transition-transform">
+              <Link href="/sign-up" className="btn-primary px-6 py-2 font-body-md font-medium active:scale-95 transition-transform text-black bg-white hover:bg-zinc-200 border-none">
                 Get Started
               </Link>
             </>
@@ -84,30 +84,30 @@ export function NavBar() {
         </div>
         
         {/* Mobile Menu Toggle */}
-        <button className="md:hidden text-zinc-900 p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
+        <button className="md:hidden text-white p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
           {mobileOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* Mobile Dropdown */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-zinc-200 px-6 py-4 flex flex-col gap-4">
-          <Link href="/challenges" className="text-zinc-900 font-body-md font-medium py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Challenges</Link>
-          <Link href="/about" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>About</Link>
-          <Link href="/solutions" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Solutions</Link>
-          <Link href="/leaderboard" className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Leaderboard</Link>
+        <div className="md:hidden bg-[#050505] border-t border-white/10 px-6 py-4 flex flex-col gap-4">
+          <Link href="/challenges" className="text-white font-body-md font-medium py-2 border-b border-white/5" onClick={() => setMobileOpen(false)}>Challenges</Link>
+          <Link href="/about" className="text-zinc-400 font-body-md hover:text-white transition-colors py-2 border-b border-white/5" onClick={() => setMobileOpen(false)}>About</Link>
+          <Link href="/solutions" className="text-zinc-400 font-body-md hover:text-white transition-colors py-2 border-b border-white/5" onClick={() => setMobileOpen(false)}>Solutions</Link>
+          <Link href="/leaderboard" className="text-zinc-400 font-body-md hover:text-white transition-colors py-2 border-b border-white/5" onClick={() => setMobileOpen(false)}>Leaderboard</Link>
           {isLoaded && isSignedIn && role === "student" && (
-            <Link href="/submit-challenge" className="text-purple-700 font-body-md font-medium py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>🕵️ Scout a Challenge</Link>
+            <Link href="/submit-challenge" className="text-blue-400 font-body-md font-medium py-2 border-b border-white/5" onClick={() => setMobileOpen(false)}>🕵️ Scout a Challenge</Link>
           )}
           
           {isLoaded && isSignedIn && (
             <>
-              <Link href={dashboardLink} className="text-zinc-500 font-body-md hover:text-zinc-900 transition-colors py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Dashboard</Link>
+              <Link href={dashboardLink} className="text-zinc-400 font-body-md hover:text-white transition-colors py-2 border-b border-white/5" onClick={() => setMobileOpen(false)}>Dashboard</Link>
               {(role === "organization" || role === "company") && (
-                <Link href="/organizations/new" className="text-[#1a3a5c] font-body-md font-medium py-2 border-b border-zinc-100" onClick={() => setMobileOpen(false)}>Post Challenge</Link>
+                <Link href="/organizations/new" className="text-white font-body-md font-medium py-2 border-b border-white/5" onClick={() => setMobileOpen(false)}>Post Challenge</Link>
               )}
               <div className="pt-2">
-                <UserButton />
+                <UserButton appearance={{ elements: { userButtonAvatarBox: "border border-white/20" } }} />
               </div>
             </>
           )}
@@ -117,7 +117,7 @@ export function NavBar() {
               <Link href="/sign-in" className="btn-secondary px-4 py-2 flex-1 text-center" onClick={() => setMobileOpen(false)}>
                 Sign In
               </Link>
-              <Link href="/sign-up" className="btn-primary px-4 py-2 flex-1 text-center" onClick={() => setMobileOpen(false)}>
+              <Link href="/sign-up" className="btn-primary bg-white text-black px-4 py-2 flex-1 text-center" onClick={() => setMobileOpen(false)}>
                 Get Started
               </Link>
             </div>

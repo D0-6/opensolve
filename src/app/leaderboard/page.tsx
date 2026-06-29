@@ -1,5 +1,5 @@
 import { docClient } from "@/lib/dynamodb";
-import { QueryCommand, ScanCommand, GetCommand, BatchGetCommand } from "@aws-sdk/lib-dynamodb";
+import { QueryCommand, BatchGetCommand } from "@aws-sdk/lib-dynamodb";
 import Link from "next/link";
 import { Trophy, GitBranch, Globe, ExternalLink, Medal, Search } from "lucide-react";
 
@@ -25,9 +25,6 @@ export default async function LeaderboardPage({
   // ========== BUILDERS TAB ==========
   let allSubmissions: Record<string, unknown>[] = [];
   try {
-    // Instead of scanning the entire table, we Query the GSI. 
-    // Note: A true production leaderboard uses a materialized view / CRON job to aggregate scores daily into a Profiles table.
-    // For this tier, Querying the GSI is significantly cheaper and faster than a full table scan.
     const res = await docClient.send(new QueryCommand({
       TableName: SUBMISSIONS_TABLE,
       IndexName: "entityType-score-index",
@@ -89,7 +86,6 @@ export default async function LeaderboardPage({
     console.error("[CRITICAL] Leaderboard problem fetch error (builders tab):", err instanceof Error ? err.message : err);
   }
 
-  // Aggregate by scoutId
   const scoutAgg: Record<string, {
     scoutId: string;
     scoutName: string;
@@ -114,7 +110,6 @@ export default async function LeaderboardPage({
     if (p.status === "OPEN") scoutAgg[sid].challengesApproved += 1;
   }
 
-  // Fetch scout points from profiles in a single batch request
   const scoutIds = Object.keys(scoutAgg).slice(0, 30);
   if (scoutIds.length > 0) {
     try {
@@ -142,7 +137,6 @@ export default async function LeaderboardPage({
     .sort((a, b) => b.scoutPoints - a.scoutPoints || b.challengesApproved - a.challengesApproved)
     .slice(0, 100);
 
-  // Fetch profiles for builder top 20 in a single batch request
   const profileIds = ranked.slice(0, 20).map(r => r.userId);
   const profiles: Record<string, Record<string, unknown>> = {};
   if (profileIds.length > 0) {
@@ -163,46 +157,47 @@ export default async function LeaderboardPage({
     }
   }
 
-  const medalColors = ["text-yellow-500", "text-zinc-400", "text-amber-700"];
+  const medalColors = ["text-yellow-400", "text-zinc-300", "text-amber-600"];
 
   return (
-    <div className="min-h-screen bg-white pt-24 pb-24 px-6">
-      <div className="w-full max-w-[125rem] mx-auto">
+    <div className="min-h-screen pt-32 pb-24 px-6 relative">
+      <div className="absolute inset-0 bg-grid-white/[0.02] mask-radial-faded pointer-events-none" />
+      <div className="w-full max-w-[125rem] mx-auto relative z-10">
 
         {/* Header */}
-        <div className="mb-10 border-b border-zinc-200 pb-10">
-          <div className="inline-flex items-center gap-2 bg-zinc-50 border border-zinc-200 rounded-full px-3 py-1.5 text-xs font-bold text-zinc-600 uppercase tracking-wider mb-6">
-            <Trophy size={14} /> Global Rankings
+        <div className="mb-10 border-b border-white/10 pb-10">
+          <div className="inline-flex items-center gap-2 glass-card border border-white/10 rounded-full px-4 py-1.5 text-[11px] font-bold text-zinc-300 uppercase tracking-wider mb-6 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+            <Trophy size={14} className="text-yellow-500" /> Global Rankings
           </div>
-          <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-zinc-900 mb-3">
+          <h1 className="text-4xl md:text-6xl font-display font-semibold tracking-tight text-white mb-3">
             Leaderboard
           </h1>
-          <p className="text-zinc-500 text-base max-w-xl">
-            The best builders and community scouts on OpenSolve, ranked by performance.
+          <p className="text-zinc-400 text-lg max-w-xl font-body">
+            The elite builders and community scouts on OpenSolve, ranked by verifiable performance.
           </p>
         </div>
 
         {/* Tab switcher */}
-        <div className="flex gap-1 border border-zinc-200 bg-zinc-50 p-1 rounded-lg w-fit mb-10">
+        <div className="flex gap-2 glass-card p-1.5 rounded-full w-fit mb-10 border-white/10">
           <Link
             href="/leaderboard"
-            className={`px-5 py-2 text-sm font-semibold rounded-md transition-all flex items-center gap-2 ${
+            className={`px-6 py-2.5 text-xs font-semibold rounded-full transition-all flex items-center gap-2 ${
               activeTab === "builders"
-                ? "bg-white text-zinc-900 shadow-sm border border-zinc-200"
-                : "text-zinc-500 hover:text-zinc-900"
+                ? "bg-white text-black shadow-sm"
+                : "text-zinc-400 hover:text-white hover:bg-white/5"
             }`}
           >
             <Trophy size={14} /> Top Builders
           </Link>
           <Link
             href="/leaderboard?tab=scouts"
-            className={`px-5 py-2 text-sm font-semibold rounded-md transition-all flex items-center gap-2 ${
+            className={`px-6 py-2.5 text-xs font-semibold rounded-full transition-all flex items-center gap-2 ${
               activeTab === "scouts"
-                ? "bg-purple-700 text-white shadow-sm"
-                : "text-zinc-500 hover:text-zinc-900"
+                ? "bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]"
+                : "text-zinc-400 hover:text-white hover:bg-white/5"
             }`}
           >
-            🕵️ Top Scouts
+            <Search size={14} /> Top Scouts
           </Link>
         </div>
 
@@ -210,11 +205,11 @@ export default async function LeaderboardPage({
         {activeTab === "builders" && (
           <>
             {ranked.length === 0 ? (
-              <div className="border border-dashed border-zinc-200 p-20 text-center">
-                <Trophy size={40} className="mx-auto text-zinc-200 mb-4" />
-                <p className="text-zinc-500 font-medium">No submissions yet.</p>
-                <p className="text-zinc-400 text-sm mt-1">Be the first to solve a challenge and claim your spot.</p>
-                <Link href="/challenges" className="btn-primary inline-block mt-6 px-6 py-2.5 text-sm">Browse Challenges</Link>
+              <div className="glass-card border-dashed border-white/20 p-20 text-center rounded-2xl">
+                <Trophy size={40} className="mx-auto text-zinc-600 mb-4" />
+                <p className="text-zinc-300 font-medium">No submissions yet.</p>
+                <p className="text-zinc-500 text-sm mt-1">Be the first to solve a challenge and claim your spot.</p>
+                <Link href="/challenges" className="btn-primary bg-white text-black mt-6 px-6 py-2.5 text-sm">Browse Challenges</Link>
               </div>
             ) : (
               <>
@@ -227,36 +222,33 @@ export default async function LeaderboardPage({
                         <Link
                           key={builder.userId}
                           href={`/profile/${builder.userId}`}
-                          className={`border p-8 flex flex-col items-center text-center hover:border-[#1a3a5c] transition-colors group ${
-                            i === 0 ? "border-yellow-300 bg-yellow-50 order-first md:order-2" :
-                            i === 1 ? "border-zinc-300 bg-zinc-50 order-2 md:order-1" :
-                            "border-amber-200 bg-amber-50 order-3"
+                          className={`glass-card p-8 flex flex-col items-center text-center transition-all group rounded-2xl relative overflow-hidden ${
+                            i === 0 ? "border-yellow-500/30 bg-yellow-500/5 order-first md:order-2 shadow-[0_0_30px_rgba(234,179,8,0.1)]" :
+                            i === 1 ? "border-zinc-300/30 bg-zinc-400/5 order-2 md:order-1" :
+                            "border-amber-600/30 bg-amber-600/5 order-3"
                           }`}
                         >
-                          <Medal size={28} className={`mb-4 ${medalColors[i]}`} />
-                          <div className="w-16 h-16 bg-white border border-zinc-200 flex items-center justify-center text-[#1a3a5c] text-3xl font-bold mb-4 rounded-full">
+                          <div className={`absolute inset-0 bg-gradient-to-b opacity-0 group-hover:opacity-10 transition-opacity ${
+                            i === 0 ? "from-yellow-500" : i === 1 ? "from-white" : "from-amber-600"
+                          } to-transparent`} />
+                          
+                          <Medal size={32} className={`mb-6 relative z-10 ${medalColors[i]} drop-shadow-lg`} />
+                          <div className="w-20 h-20 bg-[#0a0a0a] border-2 border-white/10 flex items-center justify-center text-white text-3xl font-display font-bold mb-5 rounded-full relative z-10 shadow-inner">
                             {builder.studentName.charAt(0).toUpperCase()}
                           </div>
-                          <div className="font-semibold text-zinc-900 text-lg group-hover:text-[#1a3a5c] transition-colors">{builder.studentName}</div>
+                          <div className="font-display font-semibold text-white text-xl relative z-10">{builder.studentName}</div>
                           {profile?.country && (
-                            <div className="flex items-center gap-1 text-xs text-zinc-500 mt-1">
-                              <Globe size={11} /> {String(profile.country)}
+                            <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-400 mt-2 bg-white/5 px-3 py-1 rounded-full relative z-10">
+                              <Globe size={11} className="text-zinc-500" /> {String(profile.country)}
                             </div>
                           )}
-                          <div className="mt-4 text-3xl font-bold text-zinc-900">{builder.totalScore}</div>
-                          <div className="text-xs text-zinc-400 uppercase tracking-wider font-bold mt-1">Total Score</div>
-                          <div className="mt-3 flex gap-4 text-xs text-zinc-500">
+                          <div className="mt-6 text-4xl font-display font-bold text-white relative z-10 tracking-tight">{builder.totalScore}</div>
+                          <div className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mt-2 relative z-10">Total Score</div>
+                          <div className="mt-4 flex gap-4 text-xs font-medium text-zinc-400 relative z-10 bg-[#0a0a0a]/50 px-4 py-2 rounded-lg border border-white/5">
                             <span>{builder.submissionCount} submission{builder.submissionCount !== 1 ? "s" : ""}</span>
+                            <span className="w-[1px] bg-white/10"></span>
                             <span>{builder.uniqueProblems} problem{builder.uniqueProblems !== 1 ? "s" : ""}</span>
                           </div>
-                          {profile?.githubUrl && (
-                            <a href={String(profile.githubUrl)} target="_blank" rel="noreferrer"
-                              onClick={e => e.stopPropagation()}
-                              className="mt-4 flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
-                            >
-                              <GitBranch size={12} /> GitHub
-                            </a>
-                          )}
                         </Link>
                       );
                     })}
@@ -264,8 +256,8 @@ export default async function LeaderboardPage({
                 )}
 
                 {/* Full ranking table */}
-                <div className="border border-zinc-200">
-                  <div className="grid grid-cols-12 bg-zinc-50 border-b border-zinc-200 px-6 py-3 text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                <div className="glass-card rounded-2xl overflow-hidden border-white/10">
+                  <div className="grid grid-cols-12 bg-white/5 border-b border-white/10 px-8 py-4 text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
                     <div className="col-span-1">#</div>
                     <div className="col-span-4">Builder</div>
                     <div className="col-span-2 text-center">Total Score</div>
@@ -273,37 +265,39 @@ export default async function LeaderboardPage({
                     <div className="col-span-2 text-center">Problems</div>
                     <div className="col-span-1 text-right">Profile</div>
                   </div>
-                  {ranked.map((builder, i) => {
-                    const profile = profiles[builder.userId];
-                    return (
-                      <div key={builder.userId} className={`grid grid-cols-12 items-center px-6 py-4 border-b border-zinc-100 hover:bg-zinc-50 transition-colors ${i < 3 ? "font-semibold" : ""}`}>
-                        <div className="col-span-1">
-                          <span className={`text-sm ${i === 0 ? "text-yellow-500" : i === 1 ? "text-zinc-400" : i === 2 ? "text-amber-700" : "text-zinc-500"} font-bold`}>
-                            {i + 1}
-                          </span>
-                        </div>
-                        <div className="col-span-4 flex items-center gap-3 min-w-0">
-                          <div className="w-9 h-9 bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-700 font-bold text-sm rounded-full shrink-0">
-                            {builder.studentName.charAt(0).toUpperCase()}
+                  <div className="divide-y divide-white/5">
+                    {ranked.map((builder, i) => {
+                      const profile = profiles[builder.userId];
+                      return (
+                        <div key={builder.userId} className={`grid grid-cols-12 items-center px-8 py-5 hover:bg-white/[0.02] transition-colors ${i < 3 ? "bg-white/[0.01]" : ""}`}>
+                          <div className="col-span-1">
+                            <span className={`text-sm font-display font-bold ${i === 0 ? "text-yellow-500 drop-shadow-md" : i === 1 ? "text-zinc-300" : i === 2 ? "text-amber-600" : "text-zinc-600"}`}>
+                              {i + 1}
+                            </span>
                           </div>
-                          <div className="min-w-0">
-                            <Link href={`/profile/${builder.userId}`} className="text-sm font-medium text-zinc-900 hover:text-[#1a3a5c] transition-colors truncate block">
-                              {builder.studentName}
+                          <div className="col-span-4 flex items-center gap-4 min-w-0">
+                            <div className="w-10 h-10 bg-white/5 border border-white/10 flex items-center justify-center text-zinc-300 font-display font-bold text-sm rounded-full shrink-0">
+                              {builder.studentName.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="min-w-0">
+                              <Link href={`/profile/${builder.userId}`} className="text-sm font-medium text-white hover:text-blue-400 transition-colors truncate block">
+                                {builder.studentName}
+                              </Link>
+                              {profile?.country && <div className="text-xs text-zinc-500 mt-0.5">{String(profile.country)}</div>}
+                            </div>
+                          </div>
+                          <div className="col-span-2 text-center"><span className="text-base font-display font-semibold text-white tracking-tight">{builder.totalScore}</span></div>
+                          <div className="col-span-2 text-center"><span className="text-sm text-zinc-400 font-medium">{builder.bestScore}</span></div>
+                          <div className="col-span-2 text-center"><span className="text-sm text-zinc-400 font-medium">{builder.uniqueProblems}</span></div>
+                          <div className="col-span-1 text-right flex justify-end">
+                            <Link href={`/profile/${builder.userId}`} className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all">
+                              <ExternalLink size={14} />
                             </Link>
-                            {profile?.country && <div className="text-xs text-zinc-400">{String(profile.country)}</div>}
                           </div>
                         </div>
-                        <div className="col-span-2 text-center"><span className="text-sm font-bold text-zinc-900">{builder.totalScore}</span></div>
-                        <div className="col-span-2 text-center"><span className="text-sm text-zinc-600">{builder.bestScore}</span></div>
-                        <div className="col-span-2 text-center"><span className="text-sm text-zinc-600">{builder.uniqueProblems}</span></div>
-                        <div className="col-span-1 text-right">
-                          <Link href={`/profile/${builder.userId}`} className="text-zinc-400 hover:text-[#1a3a5c] transition-colors inline-block p-1">
-                            <ExternalLink size={14} />
-                          </Link>
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </>
             )}
@@ -313,68 +307,73 @@ export default async function LeaderboardPage({
         {/* ===== SCOUTS TAB ===== */}
         {activeTab === "scouts" && (
           <>
-            <div className="bg-purple-50 border border-purple-100 p-5 mb-8 flex items-start gap-3">
-              <span className="text-2xl mt-0.5 shrink-0">🕵️</span>
-              <div>
-                <div className="font-semibold text-purple-900 mb-1">How Scout Points Work</div>
-                <p className="text-sm text-purple-700 leading-relaxed">
-                  Scouts discover real challenges from the internet and share them with the OpenSolve community. Every approved challenge earns <strong>100 Scout Points</strong>. If someone wins prize money from your scouted challenge, you earn a <strong>5% finder's fee</strong>. Rank up and display the <strong>Elite Scout 🏆</strong> badge on your profile.
+            <div className="glass-card bg-blue-900/10 border-blue-500/20 p-6 mb-10 flex items-start gap-4 rounded-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[80px] rounded-full mix-blend-screen pointer-events-none" />
+              <div className="w-12 h-12 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+                <Search size={20} className="text-blue-400" />
+              </div>
+              <div className="relative z-10 pt-1">
+                <div className="font-semibold text-blue-100 mb-2 text-lg">How Scout Points Work</div>
+                <p className="text-sm text-blue-200/70 leading-relaxed max-w-4xl">
+                  Scouts discover real challenges from the internet and share them with the OpenSolve community. Every approved challenge earns <strong className="text-blue-300">100 Scout Points</strong>. If someone wins prize money from your scouted challenge, you earn a <strong className="text-blue-300">5% finder's fee</strong>. Rank up and display the <strong className="text-blue-300">Elite Scout 🏆</strong> badge on your profile.
                 </p>
               </div>
             </div>
 
             {rankedScouts.length === 0 ? (
-              <div className="border border-dashed border-purple-200 p-20 text-center">
-                <div className="text-5xl mb-4">🕵️</div>
-                <p className="text-zinc-500 font-medium">No scouts yet.</p>
-                <p className="text-zinc-400 text-sm mt-1">Be the first to discover and share a real bounty.</p>
-                <Link href="/submit-challenge" className="inline-block mt-6 px-6 py-2.5 text-sm font-medium bg-purple-700 text-white hover:bg-purple-800 transition-colors">
+              <div className="glass-card border-dashed border-white/20 p-20 text-center rounded-2xl">
+                <Search size={40} className="mx-auto text-zinc-600 mb-4" />
+                <p className="text-zinc-300 font-medium">No scouts yet.</p>
+                <p className="text-zinc-500 text-sm mt-1">Be the first to discover and share a real bounty.</p>
+                <Link href="/submit-challenge" className="inline-flex items-center justify-center mt-6 px-6 py-2.5 text-sm font-medium bg-blue-600 text-white rounded-full hover:bg-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all">
                   Scout a Challenge
                 </Link>
               </div>
             ) : (
-              <div className="border border-zinc-200">
-                <div className="grid grid-cols-12 bg-purple-50 border-b border-purple-200 px-6 py-3 text-xs font-bold text-purple-600 uppercase tracking-wider">
+              <div className="glass-card rounded-2xl overflow-hidden border-white/10">
+                <div className="grid grid-cols-12 bg-white/5 border-b border-white/10 px-8 py-4 text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
                   <div className="col-span-1">#</div>
                   <div className="col-span-4">Scout</div>
                   <div className="col-span-3 text-center">Scout Points</div>
                   <div className="col-span-2 text-center">Challenges</div>
                   <div className="col-span-2 text-center">Approved</div>
                 </div>
-                {rankedScouts.map((scout, i) => (
-                  <div key={scout.scoutId} className={`grid grid-cols-12 items-center px-6 py-4 border-b border-zinc-100 hover:bg-purple-50 transition-colors ${i < 3 ? "font-semibold" : ""}`}>
-                    <div className="col-span-1">
-                      <span className={`text-sm font-bold ${i === 0 ? "text-yellow-500" : i === 1 ? "text-zinc-400" : i === 2 ? "text-amber-700" : "text-zinc-500"}`}>
-                        {i + 1}
-                      </span>
-                    </div>
-                    <div className="col-span-4 flex items-center gap-3">
-                      <div className="w-9 h-9 bg-purple-100 border border-purple-200 flex items-center justify-center text-purple-700 font-bold text-sm rounded-full shrink-0">
-                        {scout.scoutName.charAt(0).toUpperCase()}
+                <div className="divide-y divide-white/5">
+                  {rankedScouts.map((scout, i) => (
+                    <div key={scout.scoutId} className={`grid grid-cols-12 items-center px-8 py-5 hover:bg-white/[0.02] transition-colors ${i < 3 ? "bg-blue-900/5" : ""}`}>
+                      <div className="col-span-1">
+                        <span className={`text-sm font-display font-bold ${i === 0 ? "text-yellow-500 drop-shadow-md" : i === 1 ? "text-zinc-300" : i === 2 ? "text-amber-600" : "text-zinc-600"}`}>
+                          {i + 1}
+                        </span>
                       </div>
-                      <div>
-                        <Link href={`/profile/${scout.scoutId}`} className="text-sm font-medium text-zinc-900 hover:text-purple-700 transition-colors block">
-                          {scout.scoutName}
-                        </Link>
-                        {i === 0 && <span className="text-[10px] font-bold text-purple-600 uppercase tracking-wider">Elite Scout 🏆</span>}
+                      <div className="col-span-4 flex items-center gap-4">
+                        <div className="w-10 h-10 bg-white/5 border border-white/10 flex items-center justify-center text-zinc-300 font-display font-bold text-sm rounded-full shrink-0">
+                          {scout.scoutName.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <Link href={`/profile/${scout.scoutId}`} className="text-sm font-medium text-white hover:text-blue-400 transition-colors block">
+                            {scout.scoutName}
+                          </Link>
+                          {i === 0 && <span className="inline-block mt-1 bg-blue-500/20 border border-blue-500/30 px-2 py-0.5 rounded text-[9px] font-bold text-blue-400 uppercase tracking-widest shadow-[0_0_10px_rgba(59,130,246,0.2)]">Elite Scout 🏆</span>}
+                        </div>
+                      </div>
+                      <div className="col-span-3 text-center">
+                        <span className="text-base font-display font-semibold text-white tracking-tight">{scout.scoutPoints.toLocaleString()} <span className="text-zinc-500 text-xs font-medium ml-1">PTS</span></span>
+                      </div>
+                      <div className="col-span-2 text-center"><span className="text-sm text-zinc-400 font-medium">{scout.challengesSubmitted}</span></div>
+                      <div className="col-span-2 text-center">
+                        <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold border ${scout.challengesApproved > 0 ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]" : "border-white/5 bg-white/5 text-zinc-500"}`}>
+                          {scout.challengesApproved}
+                        </span>
                       </div>
                     </div>
-                    <div className="col-span-3 text-center">
-                      <span className="text-sm font-bold text-purple-700">{scout.scoutPoints.toLocaleString()} pts</span>
-                    </div>
-                    <div className="col-span-2 text-center"><span className="text-sm text-zinc-600">{scout.challengesSubmitted}</span></div>
-                    <div className="col-span-2 text-center">
-                      <span className={`text-sm font-semibold ${scout.challengesApproved > 0 ? "text-green-600" : "text-zinc-400"}`}>
-                        {scout.challengesApproved}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
 
-            <div className="mt-8 text-center">
-              <Link href="/submit-challenge" className="inline-flex items-center gap-2 px-6 py-3 bg-purple-700 text-white font-medium text-sm hover:bg-purple-800 transition-colors">
+            <div className="mt-12 text-center">
+              <Link href="/submit-challenge" className="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 text-white font-medium text-sm rounded-full hover:bg-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all">
                 <Search size={16} /> Scout a Challenge &amp; Earn Points
               </Link>
             </div>
