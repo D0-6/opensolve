@@ -3,64 +3,86 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
   body {
-    background-color: #ffffff;
-    color: #18181b; /* zinc-900 */
+    @apply bg-background text-foreground;
+    background-color: #050505;
     overflow-x: hidden;
   }
   
   input, textarea, select {
-    background-color: #ffffff;
-    color: #18181b;
-    border-color: #e4e4e7; /* zinc-200 */
+    @apply bg-background text-foreground border-border;
   }
 }
 
 @layer components {
-  .text-gradient-primary {
-    color: #18181b;
-  }
-
   .btn-primary {
-    background: #1a3a5c; /* Rust Accent */
-    color: #ffffff;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #112740;
-    border-radius: 4px;
-  }
-  .btn-primary:hover {
-    background: #112740;
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-6 py-2;
   }
 
   .btn-secondary {
-    background: #ffffff;
-    border: 1px solid #e4e4e7; /* zinc-200 */
-    color: #18181b;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-  }
-  .btn-secondary:hover {
-    background: #fafafa; /* zinc-50 */
-    border-color: #d4d4d8; /* zinc-300 */
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-6 py-2;
   }
 }
 
 @layer utilities {
   .fade-in-up {
     opacity: 0;
-    transform: translateY(10px);
-    animation: fadeInUp 0.5s ease forwards;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .delay-100 { animation-delay: 100ms; }
   .delay-200 { animation-delay: 200ms; }
   .delay-300 { animation-delay: 300ms; }
+  
+  /* 21st.dev Grid Background */
+  .bg-grid-white {
+    background-size: 40px 40px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  }
+
+  /* Radial gradient mask to fade out the grid edges */
+  .mask-radial-faded {
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+  }
+
+  /* Glassmorphism Card */
+  .glass-card {
+    background: rgba(20, 20, 22, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
 }
 
 @keyframes fadeInUp {
