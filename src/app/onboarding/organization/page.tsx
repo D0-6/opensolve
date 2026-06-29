@@ -40,7 +40,7 @@ export default async function OrganizationOnboardingPage() {
 
   const defaultEmail = user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress || "";
 
-  const inputStyles = "w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm";
+  const inputStyles = "w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-blue-400 transition-colors text-sm";
   const labelStyles = "block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider";
 
   return (
@@ -205,7 +205,7 @@ export default async function OrganizationOnboardingPage() {
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full bg-[#1a3a5c] text-white font-medium py-3.5 hover:bg-[#112740] transition-colors text-sm flex items-center justify-center gap-2"
+              className="w-full bg-blue-600 text-white font-medium py-3.5 hover:bg-[#112740] transition-colors text-sm flex items-center justify-center gap-2"
             >
               Register Organization & Go to Dashboard
             </button>

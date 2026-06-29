@@ -210,7 +210,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
                 href={problem.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 font-medium text-white hover:text-[#1a3a5c] transition-colors"
+                className="flex items-center gap-1.5 font-medium text-white hover:text-blue-400 transition-colors"
               >
                 View Original <ExternalLink size={14} />
               </a>
@@ -268,7 +268,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
                   href={link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-[#1a3a5c] hover:underline flex items-center gap-1.5 font-mono"
+                  className="text-sm text-blue-400 hover:underline flex items-center gap-1.5 font-mono"
                 >
                   <ExternalLink size={13} /> {link}
                 </a>
@@ -295,8 +295,8 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
             
             {/* Discord / Community URL CTA */}
             {problem.communityUrl && (
-              <div className="bg-[#1a3a5c]/5 border border-[#1a3a5c]/20 p-5 mb-6 text-sm">
-                <div className="font-semibold text-[#1a3a5c] mb-2 flex items-center gap-2">
+              <div className="bg-blue-600/5 border border-blue-400/20 p-5 mb-6 text-sm">
+                <div className="font-semibold text-blue-400 mb-2 flex items-center gap-2">
                   <Megaphone size={16} /> Connect with the Organization
                 </div>
                 <p className="text-zinc-300 mb-4 leading-relaxed">

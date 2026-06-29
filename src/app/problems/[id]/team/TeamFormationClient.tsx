@@ -119,7 +119,7 @@ export default function TeamFormationClient({
               type="text"
               value={query}
               onChange={handleSearch}
-              className="w-full bg-white/5 border border-white/10 pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#1a3a5c] transition-colors placeholder:text-zinc-400"
+              className="w-full bg-white/5 border border-white/10 pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition-colors placeholder:text-zinc-400"
               placeholder="Search by name, github handle, or university..."
             />
           </div>
@@ -131,7 +131,7 @@ export default function TeamFormationClient({
                 return (
                   <div key={r.userId} className="flex items-center justify-between p-4 bg-white/5 border border-white/10">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-transparent border border-white/10 flex items-center justify-center text-[#1a3a5c] font-medium text-lg">
+                      <div className="w-10 h-10 bg-transparent border border-white/10 flex items-center justify-center text-blue-400 font-medium text-lg">
                         <User size={18} />
                       </div>
                       <div>

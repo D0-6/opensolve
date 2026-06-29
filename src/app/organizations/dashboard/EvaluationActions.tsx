@@ -71,7 +71,7 @@ function MessageDrawer({
 
   return (
     <div className="fixed bottom-8 right-8 w-96 bg-transparent border border-white/10 shadow-2xl z-50 flex flex-col" style={{ height: "440px" }}>
-      <div className="flex items-center justify-between px-4 py-3 bg-[#1a3a5c] text-white">
+      <div className="flex items-center justify-between px-4 py-3 bg-blue-600 text-white">
         <div>
           <div className="text-sm font-semibold">Message Candidate</div>
           <div className="text-[10px] text-blue-200 uppercase tracking-wider">{threadId.split("#")[1]?.slice(0, 8)}…</div>
@@ -89,7 +89,7 @@ function MessageDrawer({
             <div key={msg.createdAt} className={`flex ${msg.senderId === user?.id ? "justify-end" : "justify-start"}`}>
               <div className={`max-w-[80%] px-3 py-2 text-sm rounded-sm ${
                 msg.senderId === user?.id
-                  ? "bg-[#1a3a5c] text-white"
+                  ? "bg-blue-600 text-white"
                   : "bg-transparent border border-white/10 text-white"
               }`}>
                 <div className="text-[10px] font-bold mb-1 opacity-60 uppercase tracking-wider">{msg.senderName}</div>
@@ -106,12 +106,12 @@ function MessageDrawer({
           onChange={e => setText(e.target.value)}
           onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()}
           placeholder="Type a message..."
-          className="flex-1 text-sm border border-white/10 px-3 py-2 focus:outline-none focus:border-[#1a3a5c] transition-colors"
+          className="flex-1 text-sm border border-white/10 px-3 py-2 focus:outline-none focus:border-blue-400 transition-colors"
         />
         <button
           onClick={handleSend}
           disabled={sending || !text.trim()}
-          className="p-2 bg-[#1a3a5c] text-white hover:opacity-90 disabled:opacity-40"
+          className="p-2 bg-blue-600 text-white hover:opacity-90 disabled:opacity-40"
         >
           {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
         </button>
@@ -170,7 +170,7 @@ export default function EvaluationActions({
     <>
       <div className="flex flex-col gap-2 w-full md:w-auto">
         {error && (
-          <div className="text-[#1a3a5c] text-xs mb-1 flex items-center gap-1">
+          <div className="text-blue-400 text-xs mb-1 flex items-center gap-1">
             <AlertCircle size={12} /> {error}
           </div>
         )}
@@ -200,7 +200,7 @@ export default function EvaluationActions({
 
         <button
           onClick={() => setScoreModalOpen(true)}
-          className="px-6 py-2.5 font-medium text-sm flex items-center justify-center gap-2 border border-[#1a3a5c] text-[#1a3a5c] hover:bg-[#1a3a5c] hover:text-white transition-colors mt-2"
+          className="px-6 py-2.5 font-medium text-sm flex items-center justify-center gap-2 border border-blue-400 text-blue-400 hover:bg-blue-600 hover:text-white transition-colors mt-2"
         >
           <Target size={16} /> Score Submission
         </button>
@@ -218,7 +218,7 @@ export default function EvaluationActions({
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
           <div className="bg-transparent max-w-md w-full p-6 shadow-xl border border-white/10">
             <h3 className="font-bold text-lg text-white mb-4 flex items-center gap-2">
-              <Target size={20} className="text-[#1a3a5c]" /> Judging Rubric
+              <Target size={20} className="text-blue-400" /> Judging Rubric
             </h3>
             <p className="text-sm text-zinc-400 mb-6">Score this submission on a scale of 1 to 10 for each category.</p>
 
@@ -226,21 +226,21 @@ export default function EvaluationActions({
               <div>
                 <label className="flex justify-between text-sm font-bold text-zinc-300 mb-2 uppercase tracking-wider">
                   <span>Innovation</span>
-                  <span className="text-[#1a3a5c]">{scores.innovation} / 10</span>
+                  <span className="text-blue-400">{scores.innovation} / 10</span>
                 </label>
                 <input type="range" min="1" max="10" value={scores.innovation} onChange={e => setScores({ ...scores, innovation: parseInt(e.target.value) })} className="w-full accent-[#1a3a5c]" />
               </div>
               <div>
                 <label className="flex justify-between text-sm font-bold text-zinc-300 mb-2 uppercase tracking-wider">
                   <span>Technical Difficulty</span>
-                  <span className="text-[#1a3a5c]">{scores.technical} / 10</span>
+                  <span className="text-blue-400">{scores.technical} / 10</span>
                 </label>
                 <input type="range" min="1" max="10" value={scores.technical} onChange={e => setScores({ ...scores, technical: parseInt(e.target.value) })} className="w-full accent-[#1a3a5c]" />
               </div>
               <div>
                 <label className="flex justify-between text-sm font-bold text-zinc-300 mb-2 uppercase tracking-wider">
                   <span>Design & UX</span>
-                  <span className="text-[#1a3a5c]">{scores.design} / 10</span>
+                  <span className="text-blue-400">{scores.design} / 10</span>
                 </label>
                 <input type="range" min="1" max="10" value={scores.design} onChange={e => setScores({ ...scores, design: parseInt(e.target.value) })} className="w-full accent-[#1a3a5c]" />
               </div>

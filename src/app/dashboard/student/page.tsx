@@ -134,7 +134,7 @@ export default async function StudentDashboard() {
           href="/challenges"
           className="border border-white/10 bg-transparent p-6 flex flex-col gap-4 group hover:bg-transparent/5 transition-colors"
         >
-          <div className="w-10 h-10 border border-white/10 text-zinc-400 flex items-center justify-center bg-transparent group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors">
+          <div className="w-10 h-10 border border-white/10 text-zinc-400 flex items-center justify-center bg-transparent group-hover:text-blue-400 group-hover:border-blue-400 transition-colors">
             <Search size={18} />
           </div>
           <div>
@@ -148,7 +148,7 @@ export default async function StudentDashboard() {
           href={`/profile/${userId}`}
           className="border border-white/10 bg-transparent p-6 flex flex-col gap-4 group hover:bg-transparent/5 transition-colors"
         >
-          <div className="w-10 h-10 border border-white/10 text-zinc-400 flex items-center justify-center bg-transparent group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors">
+          <div className="w-10 h-10 border border-white/10 text-zinc-400 flex items-center justify-center bg-transparent group-hover:text-blue-400 group-hover:border-blue-400 transition-colors">
             <Star size={18} />
           </div>
           <div>
@@ -162,7 +162,7 @@ export default async function StudentDashboard() {
           href="/leaderboard"
           className="border border-white/10 bg-transparent p-6 flex flex-col gap-4 group hover:bg-transparent/5 transition-colors"
         >
-          <div className="w-10 h-10 border border-white/10 text-zinc-400 flex items-center justify-center bg-transparent group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors">
+          <div className="w-10 h-10 border border-white/10 text-zinc-400 flex items-center justify-center bg-transparent group-hover:text-blue-400 group-hover:border-blue-400 transition-colors">
             <Trophy size={18} />
           </div>
           <div>
@@ -215,7 +215,7 @@ export default async function StudentDashboard() {
                   <div className="flex-1 min-w-0">
                     <Link
                       href={`/problems/${app.problemId}`}
-                      className="font-semibold text-white hover:text-[#1a3a5c] transition-colors text-base block truncate"
+                      className="font-semibold text-white hover:text-blue-400 transition-colors text-base block truncate"
                     >
                       {problem ? String(problem.title) : `Problem ${String(app.problemId).slice(-8)}`}
                     </Link>
@@ -231,7 +231,7 @@ export default async function StudentDashboard() {
                         <CheckCircle2 size={12} /> Solution Submitted
                       </span>
                     ) : (
-                      <Link href={`/problems/${app.problemId}/team`} className="text-xs font-bold text-[#1a3a5c] hover:underline uppercase tracking-wider">
+                      <Link href={`/problems/${app.problemId}/team`} className="text-xs font-bold text-blue-400 hover:underline uppercase tracking-wider">
                         Continue →
                       </Link>
                     )}
@@ -275,7 +275,7 @@ export default async function StudentDashboard() {
                   <div className="flex-1 min-w-0">
                     <Link
                       href={`/problems/${sub.problemId}`}
-                      className="font-semibold text-white hover:text-[#1a3a5c] transition-colors text-lg block truncate"
+                      className="font-semibold text-white hover:text-blue-400 transition-colors text-lg block truncate"
                     >
                       {problem ? String(problem.title) : `Challenge #${String(sub.problemId).slice(-8)}`}
                     </Link>

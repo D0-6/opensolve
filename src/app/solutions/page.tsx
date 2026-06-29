@@ -154,7 +154,7 @@ export default async function SolutionsPage({ searchParams }: {
               const teamMembers = Array.isArray(sub.teamMembers) ? sub.teamMembers : [];
 
               return (
-                <div key={`${sub.problemId}-${sub.submittedAt}`} className="border border-white/10 bg-transparent flex flex-col hover:border-[#1a3a5c] transition-colors group">
+                <div key={`${sub.problemId}-${sub.submittedAt}`} className="border border-white/10 bg-transparent flex flex-col hover:border-blue-400 transition-colors group">
                   {/* Score badge */}
                   <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/5">
                     <div className="flex items-center gap-2">
@@ -186,7 +186,7 @@ export default async function SolutionsPage({ searchParams }: {
                     {problem && (
                       <Link href={`/problems/${sub.problemId}`} className="block mb-3">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-1">{String(problem.domain || "")}</span>
-                        <span className="text-sm font-semibold text-white group-hover:text-[#1a3a5c] transition-colors line-clamp-2">
+                        <span className="text-sm font-semibold text-white group-hover:text-blue-400 transition-colors line-clamp-2">
                           {String(problem.title)}
                         </span>
                       </Link>
@@ -197,7 +197,7 @@ export default async function SolutionsPage({ searchParams }: {
                       <div className="w-7 h-7 bg-transparent/10 border border-white/10 rounded-full flex items-center justify-center text-xs font-bold text-zinc-400 shrink-0">
                         {String(sub.studentName || "?").charAt(0).toUpperCase()}
                       </div>
-                      <Link href={`/profile/${sub.userId}`} className="text-sm font-medium text-white hover:text-[#1a3a5c] transition-colors truncate">
+                      <Link href={`/profile/${sub.userId}`} className="text-sm font-medium text-white hover:text-blue-400 transition-colors truncate">
                         {String(sub.studentName || "Anonymous")}
                       </Link>
                       {teamMembers.length > 0 && (
@@ -219,7 +219,7 @@ export default async function SolutionsPage({ searchParams }: {
                       href={String(sub.githubUrl)}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
+                      className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-blue-400 transition-colors uppercase tracking-wider"
                       onClick={e => e.stopPropagation()}
                     >
                       <GitBranch size={13} /> Repository
@@ -229,7 +229,7 @@ export default async function SolutionsPage({ searchParams }: {
                         href={String(sub.demoUrl)}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
+                        className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-blue-400 transition-colors uppercase tracking-wider"
                         onClick={e => e.stopPropagation()}
                       >
                         <Play size={13} /> Live Demo

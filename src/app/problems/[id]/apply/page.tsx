@@ -76,7 +76,7 @@ export default async function ApplyPage({ params }: { params: Promise<{ id: stri
     );
   }
 
-  const inputStyles = "w-full bg-white/5 border border-white/10 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] focus:bg-transparent transition-colors text-sm";
+  const inputStyles = "w-full bg-white/5 border border-white/10 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-blue-400 focus:bg-transparent transition-colors text-sm";
   const labelStyles = "block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider";
 
   return (
@@ -107,7 +107,7 @@ export default async function ApplyPage({ params }: { params: Promise<{ id: stri
             <div className="flex items-center gap-1.5"><GitBranch size={14} className="text-zinc-400" /> <span className="text-zinc-400 truncate">{profile.githubUrl || "Not provided"}</span></div>
           </div>
           <div className="mt-4 text-right">
-            <Link href={`/profile/${user.id}`} target="_blank" className="text-xs font-bold text-[#1a3a5c] uppercase tracking-wider hover:underline">
+            <Link href={`/profile/${user.id}`} target="_blank" className="text-xs font-bold text-blue-400 uppercase tracking-wider hover:underline">
               Edit Profile in New Tab →
             </Link>
           </div>

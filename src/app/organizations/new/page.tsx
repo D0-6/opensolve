@@ -136,7 +136,7 @@ export default function ProfessionalPostChallenge() {
     }
   };
 
-  const inputStyles = "w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-all text-sm";
+  const inputStyles = "w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-blue-400 transition-all text-sm";
   const labelStyles = "block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider";
 
   if (!isLoaded || !user || (user.publicMetadata?.role !== "organization" && user.publicMetadata?.role !== "company")) {
@@ -174,7 +174,7 @@ export default function ProfessionalPostChallenge() {
             {/* Section 1: Challenge Details */}
             <section className="bg-transparent border border-white/10 p-8">
               <div className="flex items-center gap-2 mb-6 pb-3 border-b border-white/10">
-                <FileText size={18} className="text-[#1a3a5c]" />
+                <FileText size={18} className="text-blue-400" />
                 <h2 className="text-base font-semibold text-white">Challenge Details</h2>
               </div>
               <div className="space-y-6">
@@ -259,7 +259,7 @@ export default function ProfessionalPostChallenge() {
             {/* Section 2: Required Skills */}
             <section className="bg-transparent border border-white/10 p-8">
               <div className="flex items-center gap-2 mb-6 pb-3 border-b border-white/10">
-                <Tag size={18} className="text-[#1a3a5c]" />
+                <Tag size={18} className="text-blue-400" />
                 <h2 className="text-base font-semibold text-white">Required Skills</h2>
               </div>
               <p className="text-sm text-zinc-400 mb-4">Tag skills builders need. This helps surface the challenge to the right talent.</p>
@@ -300,7 +300,7 @@ export default function ProfessionalPostChallenge() {
             <section className="bg-transparent border border-white/10 p-8">
               <div className="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
                 <div className="flex items-center gap-2">
-                  <LinkIcon size={18} className="text-[#1a3a5c]" />
+                  <LinkIcon size={18} className="text-blue-400" />
                   <h2 className="text-base font-semibold text-white">Datasets & Resources</h2>
                 </div>
                 <button
@@ -339,7 +339,7 @@ export default function ProfessionalPostChallenge() {
             {/* Section 4: Country Restrictions */}
             <section className="bg-transparent border border-white/10 p-8">
               <div className="flex items-center gap-2 mb-6 pb-3 border-b border-white/10">
-                <Globe size={18} className="text-[#1a3a5c]" />
+                <Globe size={18} className="text-blue-400" />
                 <h2 className="text-base font-semibold text-white">Country Eligibility</h2>
               </div>
               <p className="text-sm text-zinc-400 mb-5">
@@ -355,7 +355,7 @@ export default function ProfessionalPostChallenge() {
                       onClick={() => handleCountryToggle(code)}
                       className={`text-left px-3 py-2.5 text-xs font-medium border transition-all ${
                         isSelected
-                          ? "border-[#1a3a5c] bg-[#1a3a5c]/5 text-[#1a3a5c] font-bold"
+                          ? "border-blue-400 bg-blue-600/5 text-blue-400 font-bold"
                           : "border-white/10 text-zinc-400 hover:border-zinc-400"
                       }`}
                     >
@@ -371,7 +371,7 @@ export default function ProfessionalPostChallenge() {
           <div>
             <div className="bg-transparent/5 border border-white/10 p-6 sticky top-24 space-y-6">
               <h3 className="text-base font-semibold text-white flex items-center gap-2 pb-3 border-b border-white/10">
-                <Briefcase size={18} className="text-[#1a3a5c]" /> Outcome & Logistics
+                <Briefcase size={18} className="text-blue-400" /> Outcome & Logistics
               </h3>
 
               <div>
@@ -408,7 +408,7 @@ export default function ProfessionalPostChallenge() {
                   <button
                     type="button"
                     onClick={() => setPrizeBreakdown([...prizeBreakdown, { place: "", amount: "", label: "" }])}
-                    className="text-[10px] uppercase font-bold text-[#1a3a5c] hover:underline"
+                    className="text-[10px] uppercase font-bold text-blue-400 hover:underline"
                   >
                     + Add Rank
                   </button>
@@ -505,7 +505,7 @@ export default function ProfessionalPostChallenge() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#1a3a5c] text-white font-medium py-3 hover:bg-[#112740] transition-colors text-sm flex items-center justify-center gap-2 disabled:opacity-60"
+                  className="w-full bg-blue-600 text-white font-medium py-3 hover:bg-[#112740] transition-colors text-sm flex items-center justify-center gap-2 disabled:opacity-60"
                 >
                   {loading ? <Loader2 size={18} className="animate-spin" /> : <><CheckCircle2 size={18} /> Publish to Talent Pool</>}
                 </button>

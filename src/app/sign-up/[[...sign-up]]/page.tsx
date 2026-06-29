@@ -22,9 +22,9 @@ export default function SignUpPage() {
         <div className="w-full max-w-md space-y-4">
           <button
             onClick={() => setRole("student")}
-            className="w-full bg-transparent border border-white/10 hover:border-[#1a3a5c] p-6 text-left transition-colors flex items-start gap-4 group"
+            className="w-full bg-transparent border border-white/10 hover:border-blue-400 p-6 text-left transition-colors flex items-start gap-4 group"
           >
-            <div className="w-10 h-10 border border-white/10 bg-white/5 flex items-center justify-center text-zinc-400 group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors shrink-0">
+            <div className="w-10 h-10 border border-white/10 bg-white/5 flex items-center justify-center text-zinc-400 group-hover:text-blue-400 group-hover:border-blue-400 transition-colors shrink-0">
               <UserCircle size={20} />
             </div>
             <div>
@@ -35,9 +35,9 @@ export default function SignUpPage() {
 
           <button
             onClick={() => setRole("organization")}
-            className="w-full bg-transparent border border-white/10 hover:border-[#1a3a5c] p-6 text-left transition-colors flex items-start gap-4 group"
+            className="w-full bg-transparent border border-white/10 hover:border-blue-400 p-6 text-left transition-colors flex items-start gap-4 group"
           >
-            <div className="w-10 h-10 border border-white/10 bg-white/5 flex items-center justify-center text-zinc-400 group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors shrink-0">
+            <div className="w-10 h-10 border border-white/10 bg-white/5 flex items-center justify-center text-zinc-400 group-hover:text-blue-400 group-hover:border-blue-400 transition-colors shrink-0">
               <Building2 size={20} />
             </div>
             <div>

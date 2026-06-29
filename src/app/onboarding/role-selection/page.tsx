@@ -47,9 +47,9 @@ export default async function RoleSelectionPage() {
             type="submit"
             name="role"
             value="student"
-            className="group text-left bg-transparent border-2 border-white/10 p-6 hover:border-[#1a3a5c] transition-all focus:outline-none focus:border-[#1a3a5c]"
+            className="group text-left bg-transparent border-2 border-white/10 p-6 hover:border-blue-400 transition-all focus:outline-none focus:border-blue-400"
           >
-            <div className="w-12 h-12 border border-white/10 bg-transparent/5 flex items-center justify-center mb-4 group-hover:border-[#1a3a5c] group-hover:text-[#1a3a5c] transition-colors">
+            <div className="w-12 h-12 border border-white/10 bg-transparent/5 flex items-center justify-center mb-4 group-hover:border-blue-400 group-hover:text-blue-400 transition-colors">
               <Users size={24} />
             </div>
             <h2 className="text-lg font-semibold text-white mb-1">Builder / Student</h2>
@@ -62,9 +62,9 @@ export default async function RoleSelectionPage() {
             type="submit"
             name="role"
             value="organization"
-            className="group text-left bg-transparent border-2 border-white/10 p-6 hover:border-[#1a3a5c] transition-all focus:outline-none focus:border-[#1a3a5c]"
+            className="group text-left bg-transparent border-2 border-white/10 p-6 hover:border-blue-400 transition-all focus:outline-none focus:border-blue-400"
           >
-            <div className="w-12 h-12 border border-white/10 bg-transparent/5 flex items-center justify-center mb-4 group-hover:border-[#1a3a5c] group-hover:text-[#1a3a5c] transition-colors">
+            <div className="w-12 h-12 border border-white/10 bg-transparent/5 flex items-center justify-center mb-4 group-hover:border-blue-400 group-hover:text-blue-400 transition-colors">
               <Building2 size={24} />
             </div>
             <h2 className="text-lg font-semibold text-white mb-1">Organization</h2>

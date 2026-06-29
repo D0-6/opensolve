@@ -7,7 +7,7 @@ export default function Privacy() {
         
         {/* Header Section */}
         <div className="border-b border-white/10 pb-12">
-          <div className="w-16 h-16 bg-transparent/5 border border-white/10 text-[#1a3a5c] flex items-center justify-center mb-8">
+          <div className="w-16 h-16 bg-transparent/5 border border-white/10 text-blue-400 flex items-center justify-center mb-8">
             <ShieldAlert size={32} strokeWidth={1.5} />
           </div>
           <h1 className="text-4xl md:text-5xl font-medium text-white tracking-tight mb-6">Privacy Policy</h1>

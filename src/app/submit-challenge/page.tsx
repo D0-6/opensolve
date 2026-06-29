@@ -31,7 +31,7 @@ export default function SubmitChallengePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const inputStyles = "w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-all text-sm";
+  const inputStyles = "w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-blue-400 transition-all text-sm";
   const labelStyles = "block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider";
 
   const handleSubmit = async (e: React.FormEvent) => {

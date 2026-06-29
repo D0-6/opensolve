@@ -139,7 +139,7 @@ export default function ChallengesClient({
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder="Search by title, domain, or skill…"
-            className="w-full pl-11 pr-4 py-3 border border-white/10 bg-transparent/5 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] focus:bg-transparent transition-colors text-sm"
+            className="w-full pl-11 pr-4 py-3 border border-white/10 bg-transparent/5 text-white placeholder:text-zinc-400 focus:outline-none focus:border-blue-400 focus:bg-transparent transition-colors text-sm"
           />
           {query && (
             <button
@@ -157,7 +157,7 @@ export default function ChallengesClient({
             id="challenge-sort"
             value={sortBy}
             onChange={e => setSortBy(e.target.value)}
-            className="appearance-none w-full md:w-48 pl-4 pr-10 py-3 border border-white/10 bg-transparent/5 text-zinc-300 text-sm focus:outline-none focus:border-[#1a3a5c] cursor-pointer"
+            className="appearance-none w-full md:w-48 pl-4 pr-10 py-3 border border-white/10 bg-transparent/5 text-zinc-300 text-sm focus:outline-none focus:border-blue-400 cursor-pointer"
           >
             <option value="deadline">Sort: Deadline</option>
             <option value="prize">Sort: Prize Amount</option>
@@ -172,14 +172,14 @@ export default function ChallengesClient({
           onClick={() => setShowFilters(!showFilters)}
           className={`flex items-center gap-2 px-5 py-3 border text-sm font-medium transition-colors ${
             showFilters || activeFilterCount > 0
-              ? "border-[#1a3a5c] bg-[#1a3a5c] text-white"
+              ? "border-blue-400 bg-blue-600 text-white"
               : "border-white/10 text-zinc-300 hover:border-zinc-400"
           }`}
         >
           <SlidersHorizontal size={15} />
           Filters
           {activeFilterCount > 0 && (
-            <span className="ml-1 w-5 h-5 bg-transparent text-[#1a3a5c] text-[11px] font-bold rounded-full flex items-center justify-center">
+            <span className="ml-1 w-5 h-5 bg-transparent text-blue-400 text-[11px] font-bold rounded-full flex items-center justify-center">
               {activeFilterCount}
             </span>
           )}
@@ -200,7 +200,7 @@ export default function ChallengesClient({
                   onClick={() => setSource(val)}
                   className={`text-left px-3 py-2 text-sm border transition-colors ${
                     source === val
-                      ? "border-[#1a3a5c] bg-[#1a3a5c] text-white"
+                      ? "border-blue-400 bg-blue-600 text-white"
                       : "border-white/10 text-zinc-400 hover:border-zinc-400 bg-transparent"
                   }`}
                 >
@@ -217,7 +217,7 @@ export default function ChallengesClient({
               <select
                 value={domain}
                 onChange={e => setDomain(e.target.value)}
-                className="w-full appearance-none pl-3 pr-10 py-2 border border-white/10 bg-transparent text-zinc-300 text-sm focus:outline-none focus:border-[#1a3a5c]"
+                className="w-full appearance-none pl-3 pr-10 py-2 border border-white/10 bg-transparent text-zinc-300 text-sm focus:outline-none focus:border-blue-400"
               >
                 <option value="ALL">All Domains</option>
                 {allDomains.map(d => <option key={d} value={d}>{d}</option>)}
@@ -236,7 +236,7 @@ export default function ChallengesClient({
                   onClick={() => setPrizeType(val)}
                   className={`text-left px-3 py-2 text-sm border transition-colors ${
                     prizeType === val
-                      ? "border-[#1a3a5c] bg-[#1a3a5c] text-white"
+                      ? "border-blue-400 bg-blue-600 text-white"
                       : "border-white/10 text-zinc-400 hover:border-zinc-400 bg-transparent"
                   }`}
                 >
@@ -253,7 +253,7 @@ export default function ChallengesClient({
               onClick={() => setCountryOnly(!countryOnly)}
               className={`flex items-center gap-2 w-full px-3 py-2 text-sm border transition-colors ${
                 countryOnly
-                  ? "border-[#1a3a5c] bg-[#1a3a5c] text-white"
+                  ? "border-blue-400 bg-blue-600 text-white"
                   : "border-white/10 text-zinc-400 hover:border-zinc-400 bg-transparent"
               }`}
             >
@@ -337,7 +337,7 @@ export default function ChallengesClient({
                       )}
                     </div>
 
-                    <h3 className="text-base font-semibold text-white group-hover:text-[#1a3a5c] transition-colors truncate mb-1">
+                    <h3 className="text-base font-semibold text-white group-hover:text-blue-400 transition-colors truncate mb-1">
                       {problem.title}
                     </h3>
 
@@ -386,7 +386,7 @@ export default function ChallengesClient({
                       <span className="font-mono">{problem.domain}</span>
                     </div>
 
-                    <ArrowRight size={16} className="text-zinc-300 group-hover:text-[#1a3a5c] group-hover:translate-x-1 transition-all hidden md:block" />
+                    <ArrowRight size={16} className="text-zinc-300 group-hover:text-blue-400 group-hover:translate-x-1 transition-all hidden md:block" />
                   </div>
                 </div>
               </Link>

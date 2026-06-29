@@ -27,7 +27,7 @@ export default async function OrganizationProfile({ params }: { params: Promise<
         <div className="flex-1 text-center md:text-left">
           <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
             <h1 className="text-3xl font-medium text-white tracking-tight">{org.orgName}</h1>
-            {org.verified && <BadgeCheck className="w-6 h-6 text-[#1a3a5c]" />}
+            {org.verified && <BadgeCheck className="w-6 h-6 text-blue-400" />}
           </div>
           
           <div className="flex flex-wrap justify-center md:justify-start gap-4 text-xs font-bold text-zinc-400 mt-4 uppercase tracking-wider">
@@ -35,7 +35,7 @@ export default async function OrganizationProfile({ params }: { params: Promise<
               {org.orgType.replace("_", " ")}
             </div>
             {org.website && (
-              <a href={org.website} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3 py-1.5 hover:border-[#1a3a5c] transition-colors">
+              <a href={org.website} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3 py-1.5 hover:border-blue-400 transition-colors">
                 <Globe className="w-4 h-4" /> Website
               </a>
             )}
@@ -56,7 +56,7 @@ export default async function OrganizationProfile({ params }: { params: Promise<
         <h2 className="text-xl font-medium text-white border-b border-white/10 pb-2 mb-6">Posted Problems</h2>
         <div className="bg-white/5 border border-white/10 p-8 text-center text-zinc-400 text-sm">
           Fetching problems for this organization is simplified for the MVP. 
-          See the <Link href="/" className="text-[#1a3a5c] font-bold hover:underline">homepage feed</Link> instead.
+          See the <Link href="/" className="text-blue-400 font-bold hover:underline">homepage feed</Link> instead.
         </div>
       </div>
     </div>

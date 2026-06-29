@@ -66,7 +66,7 @@ export default function ModerationClient({ initialProblems }: { initialProblems:
             <h3 className="text-lg font-semibold text-white mb-1">{problem.title}</h3>
             
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-zinc-400 mt-3">
-              <a href={problem.sourceUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-[#1a3a5c] hover:underline font-medium">
+              <a href={problem.sourceUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-blue-400 hover:underline font-medium">
                 <ExternalLink size={14} /> View Original Source
               </a>
               <span className="hidden sm:block text-zinc-300">•</span>

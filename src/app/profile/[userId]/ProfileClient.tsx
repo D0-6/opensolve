@@ -113,7 +113,7 @@ export default function ProfileClient({
     window.location.reload();
   };
 
-  const inputStyles = "w-full bg-transparent border border-white/20 px-3 py-2.5 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm";
+  const inputStyles = "w-full bg-transparent border border-white/20 px-3 py-2.5 text-white placeholder:text-zinc-400 focus:outline-none focus:border-blue-400 transition-colors text-sm";
   const labelStyles = "block text-xs font-bold text-zinc-400 mb-1.5 uppercase tracking-wider";
 
   const displayName = p?.name || fallbackName || `User ${userId.slice(0, 8)}`;
@@ -126,7 +126,7 @@ export default function ProfileClient({
         {isOwner && !isEditing && (
           <button
             onClick={() => setIsEditing(true)}
-            className="absolute top-4 right-4 text-zinc-400 hover:text-[#1a3a5c] transition-colors bg-transparent border border-white/10 p-2 hover:bg-white/5"
+            className="absolute top-4 right-4 text-zinc-400 hover:text-blue-400 transition-colors bg-transparent border border-white/10 p-2 hover:bg-white/5"
             title="Edit Profile"
           >
             <Pencil size={18} />
@@ -136,7 +136,7 @@ export default function ProfileClient({
         {!isEditing ? (
           <div className="flex flex-col md:flex-row gap-8 items-start">
             {/* Avatar */}
-            <div className="w-28 h-28 bg-white/10 border border-white/10 flex-shrink-0 flex items-center justify-center text-[#1a3a5c] text-5xl font-medium overflow-hidden">
+            <div className="w-28 h-28 bg-white/10 border border-white/10 flex-shrink-0 flex items-center justify-center text-blue-400 text-5xl font-medium overflow-hidden">
               {imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={imageUrl} alt="Profile Avatar" className="w-full h-full object-cover" />
@@ -198,7 +198,7 @@ export default function ProfileClient({
               {/* Links & Stats */}
               <div className="flex flex-wrap gap-3 pt-4 border-t border-white/5">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 uppercase tracking-wider">
-                  <Trophy className="w-3.5 h-3.5 text-[#1a3a5c]" />
+                  <Trophy className="w-3.5 h-3.5 text-blue-400" />
                   {p?.totalScore || 0} Score
                 </div>
                 <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 uppercase tracking-wider">
@@ -226,7 +226,7 @@ export default function ProfileClient({
                     href={p.githubUrl || `https://github.com/${p.githubUsername}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 hover:border-[#1a3a5c] hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
+                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 hover:border-blue-400 hover:text-blue-400 transition-colors uppercase tracking-wider"
                   >
                     <GitBranch className="w-3.5 h-3.5" /> GitHub
                   </a>
@@ -238,7 +238,7 @@ export default function ProfileClient({
                     href={p.linkedinUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 hover:border-[#1a3a5c] hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
+                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 hover:border-blue-400 hover:text-blue-400 transition-colors uppercase tracking-wider"
                   >
                     <ExternalLink className="w-3.5 h-3.5" /> LinkedIn
                   </a>
@@ -250,7 +250,7 @@ export default function ProfileClient({
                     href={p.portfolioUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 hover:border-[#1a3a5c] hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
+                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 hover:border-blue-400 hover:text-blue-400 transition-colors uppercase tracking-wider"
                   >
                     <Globe className="w-3.5 h-3.5" /> Portfolio
                   </a>
@@ -361,7 +361,7 @@ export default function ProfileClient({
                 id="openToWork" 
                 name="openToWork" 
                 defaultChecked={!!p?.openToWork}
-                className="w-4 h-4 text-[#1a3a5c] border-white/20 rounded focus:ring-[#1a3a5c]"
+                className="w-4 h-4 text-blue-400 border-white/20 rounded focus:ring-[#1a3a5c]"
               />
               <label htmlFor="openToWork" className="text-sm font-medium text-zinc-300">
                 I am open to job opportunities and contract work
@@ -380,7 +380,7 @@ export default function ProfileClient({
               <button
                 type="submit"
                 disabled={loading}
-                className="px-5 py-2.5 text-sm font-medium text-white bg-[#1a3a5c] hover:bg-[#112740] transition-colors flex items-center gap-2"
+                className="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-[#112740] transition-colors flex items-center gap-2"
               >
                 {loading ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
                 Save Changes
@@ -431,7 +431,7 @@ export default function ProfileClient({
               <LinkIcon size={24} className="mx-auto text-zinc-300 mb-3" />
               <p className="text-zinc-400 text-sm font-medium">No projects yet</p>
               <p className="text-zinc-400 text-xs mt-1">Browse challenges and submit your first solution to build your record.</p>
-              <Link href="/challenges" className="inline-block mt-4 text-xs font-bold text-[#1a3a5c] uppercase tracking-wider hover:underline">
+              <Link href="/challenges" className="inline-block mt-4 text-xs font-bold text-blue-400 uppercase tracking-wider hover:underline">
                 Browse Challenges →
               </Link>
             </div>
@@ -451,7 +451,7 @@ export default function ProfileClient({
               }
 
               return (
-                <div key={`${sub.problemId}-${sub.submittedAt}`} className="bg-transparent border border-white/10 flex flex-col hover:border-[#1a3a5c] transition-colors shadow-sm overflow-hidden">
+                <div key={`${sub.problemId}-${sub.submittedAt}`} className="bg-transparent border border-white/10 flex flex-col hover:border-blue-400 transition-colors shadow-sm overflow-hidden">
                   
                   {/* Video Embed or Fallback Header */}
                   {embedUrl ? (
@@ -472,7 +472,7 @@ export default function ProfileClient({
                   <div className="p-6 flex-1 flex flex-col">
                     <div className="flex justify-between items-start gap-4 mb-4">
                       <div>
-                        <Link href={`/problems/${sub.problemId}`} className="text-lg font-semibold text-white hover:text-[#1a3a5c] transition-colors line-clamp-1">
+                        <Link href={`/problems/${sub.problemId}`} className="text-lg font-semibold text-white hover:text-blue-400 transition-colors line-clamp-1">
                           {(sub.repoName as string) || "View Submission"}
                         </Link>
                         <p className="text-xs text-zinc-400 mt-1 uppercase tracking-wider font-bold">
@@ -492,7 +492,7 @@ export default function ProfileClient({
                     {Array.isArray(sub.techStack) && sub.techStack.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-6">
                         {sub.techStack.map((tech, i) => (
-                          <span key={i} className="px-2.5 py-1 text-xs font-medium bg-[#1a3a5c]/5 text-[#1a3a5c] border border-[#1a3a5c]/10 rounded-full">
+                          <span key={i} className="px-2.5 py-1 text-xs font-medium bg-blue-600/5 text-blue-400 border border-blue-400/10 rounded-full">
                             {tech}
                           </span>
                         ))}
@@ -513,11 +513,11 @@ export default function ProfileClient({
                       
                       <div className="flex gap-3 ml-auto">
                         {Boolean(sub.demoUrl) && (
-                          <a href={sub.demoUrl as string} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#1a3a5c] uppercase tracking-wider transition-colors">
+                          <a href={sub.demoUrl as string} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-blue-400 uppercase tracking-wider transition-colors">
                             <Globe size={14} /> Demo
                           </a>
                         )}
-                        <a href={sub.githubUrl as string} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#1a3a5c] uppercase tracking-wider transition-colors">
+                        <a href={sub.githubUrl as string} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-blue-400 uppercase tracking-wider transition-colors">
                           <GitBranch size={14} /> Code
                         </a>
                       </div>

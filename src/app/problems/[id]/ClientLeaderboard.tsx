@@ -86,7 +86,7 @@ export default function ClientLeaderboard({ problemId }: { problemId: string }) 
                   <a 
                     href={`/profile/${sub.userId}`} 
                     onClick={(e) => e.stopPropagation()} 
-                    className="font-semibold text-white hover:text-[#1a3a5c] transition-colors truncate"
+                    className="font-semibold text-white hover:text-blue-400 transition-colors truncate"
                   >
                     {sub.studentName}
                   </a>
@@ -115,7 +115,7 @@ export default function ClientLeaderboard({ problemId }: { problemId: string }) 
                             />
                           </div>
                         ) : (
-                          <a href={sub.demoUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-[#1a3a5c] hover:underline text-sm font-medium flex items-center gap-1">
+                          <a href={sub.demoUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-400 hover:underline text-sm font-medium flex items-center gap-1">
                             <Play className="w-4 h-4" /> Watch Demo
                           </a>
                         )}

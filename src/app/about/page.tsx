@@ -7,7 +7,7 @@ export default function About() {
         
         {/* Header Section */}
         <div className="border-b border-white/10 pb-12">
-          <div className="w-16 h-16 bg-transparent/5 border border-white/10 text-[#1a3a5c] flex items-center justify-center mb-8">
+          <div className="w-16 h-16 bg-transparent/5 border border-white/10 text-blue-400 flex items-center justify-center mb-8">
             <Zap size={32} strokeWidth={1.5} />
           </div>
           
@@ -39,7 +39,7 @@ export default function About() {
             {/* Verified vs Aggregated */}
             <div>
               <h3 className="text-xl font-medium text-white mb-4 flex items-center gap-2">
-                <ShieldCheck size={24} className="text-[#1a3a5c]" strokeWidth={1.5} />
+                <ShieldCheck size={24} className="text-blue-400" strokeWidth={1.5} />
                 Verified vs. Aggregated
               </h3>
               <p className="text-zinc-400 text-base leading-relaxed mb-4">

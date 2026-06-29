@@ -26,7 +26,7 @@ export default function OnboardingForm() {
           required 
           checked={accepted}
           onChange={(e) => setAccepted(e.target.checked)}
-          className="mt-1 w-5 h-5 text-[#1a3a5c] border-white/20 focus:ring-[#1a3a5c] rounded-sm"
+          className="mt-1 w-5 h-5 text-blue-400 border-white/20 focus:ring-[#1a3a5c] rounded-sm"
         />
         <span className="text-sm text-zinc-300 font-medium leading-relaxed">
           I confirm that I have read and agree to the OpenSolve Terms of Service and Privacy Policy. I agree that any platform funds are subject to the 99.5% payout and 0.5% platform fee structure.

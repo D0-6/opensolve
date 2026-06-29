@@ -119,18 +119,18 @@ export default async function OrgDashboard({ params, searchParams }: { params: P
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-6 border-b border-white/10">
+      <div className="flex items-center gap-6 border-b border-white/10 mb-8 mt-4">
         <Link 
           href={`/organizations/${orgId}/dashboard?tab=challenges`}
-          className={`pb-4 text-sm font-medium border-b-2 transition-colors ${tab === 'challenges' ? 'border-[#1a3a5c] text-[#1a3a5c]' : 'border-transparent text-zinc-400 hover:text-zinc-300'}`}
+          className={`pb-4 text-sm font-medium border-b-2 transition-colors ${tab === 'challenges' ? 'border-blue-400 text-blue-400' : 'border-transparent text-zinc-400 hover:text-zinc-300'}`}
         >
           Challenges & Submissions
         </Link>
         <Link 
           href={`/organizations/${orgId}/dashboard?tab=talent`}
-          className={`pb-4 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${tab === 'talent' ? 'border-[#1a3a5c] text-[#1a3a5c]' : 'border-transparent text-zinc-400 hover:text-zinc-300'}`}
+          className={`pb-4 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${tab === 'talent' ? 'border-blue-400 text-blue-400' : 'border-transparent text-zinc-400 hover:text-zinc-300'}`}
         >
-          Talent Pool <span className="bg-white/10 text-zinc-400 px-2 py-0.5 rounded-full text-xs">{talentProfiles.length}</span>
+          Talent Pool <span className="bg-white/10 text-white px-2 py-0.5 rounded-full text-xs leading-none">{talentProfiles.length}</span>
         </Link>
       </div>
 
@@ -178,7 +178,7 @@ export default async function OrgDashboard({ params, searchParams }: { params: P
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                  <Link href={`/problems/${problem.problemId}`} className="text-zinc-400 text-sm font-medium hover:text-[#1a3a5c] transition-colors whitespace-nowrap flex items-center gap-1.5">
+                  <Link href={`/problems/${problem.problemId}`} className="text-zinc-400 text-sm font-medium hover:text-blue-400 transition-colors whitespace-nowrap flex items-center gap-1.5">
                     View Public Page <ExternalLink size={14} />
                   </Link>
                   <PostAnnouncementButton problemId={problem.problemId} />
@@ -201,7 +201,7 @@ export default async function OrgDashboard({ params, searchParams }: { params: P
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
-                              <Link href={`/profile/${sub.userId}`} className="font-medium text-white text-lg hover:text-[#1a3a5c] transition-colors">
+                              <Link href={`/profile/${sub.userId}`} className="font-medium text-white text-lg hover:text-blue-400 transition-colors">
                                 {sub.studentName}
                               </Link>
                               <span className="bg-white/10 text-zinc-300 border border-white/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider">
@@ -210,11 +210,11 @@ export default async function OrgDashboard({ params, searchParams }: { params: P
                             </div>
                             <p className="text-sm text-zinc-400 mb-4 line-clamp-2">{sub.writeup}</p>
                             <div className="flex gap-4">
-                              <a href={sub.githubUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-zinc-400 hover:text-[#1a3a5c] flex items-center gap-1 uppercase tracking-wider">
+                              <a href={sub.githubUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-zinc-400 hover:text-blue-400 flex items-center gap-1 uppercase tracking-wider">
                                 <ExternalLink className="w-4 h-4" /> Repository
                               </a>
                               {sub.demoUrl && (
-                                <a href={sub.demoUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-zinc-400 hover:text-[#1a3a5c] flex items-center gap-1 uppercase tracking-wider">
+                                <a href={sub.demoUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-zinc-400 hover:text-blue-400 flex items-center gap-1 uppercase tracking-wider">
                                   <Play className="w-4 h-4" /> Live Demo
                                 </a>
                               )}
@@ -223,7 +223,7 @@ export default async function OrgDashboard({ params, searchParams }: { params: P
                           <div className="shrink-0 mt-4 md:mt-0 w-full md:w-auto flex flex-col gap-2">
                             <Link
                               href={`/profile/${sub.userId}`}
-                              className="flex items-center justify-center gap-2 bg-white/5 border border-white/10 hover:border-[#1a3a5c] hover:text-[#1a3a5c] text-zinc-400 px-5 py-2 text-sm font-medium transition-colors w-full md:w-auto"
+                              className="flex items-center justify-center gap-2 bg-white/5 border border-white/10 hover:border-blue-400 hover:text-blue-400 text-zinc-400 px-5 py-2 text-sm font-medium transition-colors w-full md:w-auto"
                             >
                               <FileText className="w-4 h-4" /> View Profile
                             </Link>
@@ -266,18 +266,18 @@ export default async function OrgDashboard({ params, searchParams }: { params: P
                 const p = talent.profile || {};
                 const name = p.name || talent.meta.name;
                 return (
-                  <div key={talent.userId} className="bg-transparent border border-white/10 hover:border-[#1a3a5c] transition-colors p-6 flex flex-col relative overflow-hidden">
+                  <div key={talent.userId} className="bg-transparent border border-white/10 hover:border-blue-400 transition-colors p-6 flex flex-col relative overflow-hidden">
                     {p.openToWork && (
                       <div className="absolute top-0 right-0 bg-emerald-50 text-emerald-600 border-b border-l border-emerald-200 px-3 py-1 text-[10px] font-bold uppercase tracking-wider">
                         Open to Work
                       </div>
                     )}
                     <div className="flex items-start gap-4 mb-4 mt-2">
-                      <div className="w-12 h-12 bg-white/10 border border-white/10 flex-shrink-0 flex items-center justify-center text-[#1a3a5c] text-xl font-bold">
+                      <div className="w-12 h-12 bg-white/10 border border-white/10 flex-shrink-0 flex items-center justify-center text-blue-400 text-xl font-bold">
                         {name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <Link href={`/profile/${talent.userId}`} className="text-lg font-semibold text-white hover:text-[#1a3a5c] transition-colors line-clamp-1">
+                        <Link href={`/profile/${talent.userId}`} className="text-lg font-semibold text-white hover:text-blue-400 transition-colors line-clamp-1">
                           {name}
                         </Link>
                         {p.country && (
@@ -319,7 +319,7 @@ export default async function OrgDashboard({ params, searchParams }: { params: P
                         <div className="text-sm font-semibold text-white">{talent.meta.submissionCount}</div>
                       </div>
                     </div>
-                    <Link href={`/profile/${talent.userId}`} className="w-full py-2.5 bg-white/5 border border-white/10 text-zinc-400 text-[10px] font-bold uppercase tracking-wider text-center hover:bg-[#1a3a5c] hover:text-white hover:border-[#1a3a5c] transition-colors mt-auto">
+                    <Link href={`/profile/${talent.userId}`} className="w-full py-2.5 bg-white/5 border border-white/10 text-zinc-400 text-[10px] font-bold uppercase tracking-wider text-center hover:bg-blue-600 hover:text-white hover:border-blue-400 transition-colors mt-auto">
                       View Profile & Contact
                     </Link>
                   </div>

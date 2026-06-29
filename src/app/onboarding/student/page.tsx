@@ -70,7 +70,7 @@ export default async function StudentOnboardingPage() {
   const defaultName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
   const defaultEmail = user.emailAddresses.find(e => e.id === user.primaryEmailAddressId)?.emailAddress || "";
 
-  const inputStyles = "w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm";
+  const inputStyles = "w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-blue-400 transition-colors text-sm";
   const labelStyles = "block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider";
   const sectionHeader = "text-xs font-semibold text-zinc-400 mb-5 pb-3 border-b border-white/10 uppercase tracking-wider";
 
@@ -216,7 +216,7 @@ export default async function StudentOnboardingPage() {
                   <select
                     id="countryCode"
                     name="countryCode"
-                    className="bg-transparent border border-white/20 border-r-0 px-3 py-3 text-white focus:outline-none focus:border-[#1a3a5c] text-sm w-auto min-w-[100px]"
+                    className="bg-transparent border border-white/20 border-r-0 px-3 py-3 text-white focus:outline-none focus:border-blue-400 text-sm w-auto min-w-[100px]"
                   >
                     <option value="">Dial</option>
                     {COUNTRIES_WITH_CODES.filter(c => c.dial).map(({ name, code, dial }) => (
@@ -256,7 +256,7 @@ export default async function StudentOnboardingPage() {
           <div className="pb-8">
             <button
               type="submit"
-              className="w-full bg-[#1a3a5c] text-white font-medium py-4 hover:bg-[#112740] transition-colors text-sm flex items-center justify-center gap-2"
+              className="w-full bg-blue-600 text-white font-medium py-4 hover:bg-[#112740] transition-colors text-sm flex items-center justify-center gap-2"
             >
               Save Profile & Go to Dashboard →
             </button>

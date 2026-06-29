@@ -78,7 +78,7 @@ export function NotificationsPanel({ userId }: { userId: string }) {
         <Bell size={16} />
         Notifications
         {unreadCount > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#1a3a5c] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+          <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-blue-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -114,7 +114,7 @@ export function NotificationsPanel({ userId }: { userId: string }) {
                       </div>
                     </div>
                     {!n.read && (
-                      <div className="w-2 h-2 bg-[#1a3a5c] rounded-full shrink-0 mt-1" />
+                      <div className="w-2 h-2 bg-blue-600 rounded-full shrink-0 mt-1" />
                     )}
                   </div>
                 </div>
@@ -191,7 +191,7 @@ export function MessageThread({
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#1a3a5c] uppercase tracking-wider transition-colors"
+        className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-blue-400 uppercase tracking-wider transition-colors"
       >
         <MessageCircle size={14} /> Message Org
       </button>
@@ -199,7 +199,7 @@ export function MessageThread({
       {isOpen && (
         <div className="fixed inset-x-4 bottom-4 md:inset-x-auto md:right-8 md:bottom-8 md:w-96 bg-transparent border border-white/10 shadow-2xl z-50 flex flex-col" style={{ height: "420px" }}>
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 bg-[#1a3a5c] text-white">
+          <div className="flex items-center justify-between px-4 py-3 bg-blue-600 text-white">
             <div>
               <div className="text-sm font-semibold">{recipientName}</div>
               <div className="text-[10px] text-blue-200 uppercase tracking-wider">Organization</div>
@@ -216,7 +216,7 @@ export function MessageThread({
                 <div key={msg.createdAt} className={`flex ${msg.senderId === myUserId ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-[80%] px-3 py-2 text-sm rounded ${
                     msg.senderId === myUserId
-                      ? "bg-[#1a3a5c] text-white"
+                      ? "bg-blue-600 text-white"
                       : "bg-transparent border border-white/10 text-white"
                   }`}>
                     {msg.text}
@@ -233,12 +233,12 @@ export function MessageThread({
               onChange={e => setText(e.target.value)}
               onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()}
               placeholder="Type a message..."
-              className="flex-1 text-sm border border-white/10 px-3 py-2 focus:outline-none focus:border-[#1a3a5c] transition-colors"
+              className="flex-1 text-sm border border-white/10 px-3 py-2 focus:outline-none focus:border-blue-400 transition-colors"
             />
             <button
               onClick={handleSend}
               disabled={sending || !text.trim()}
-              className="p-2 bg-[#1a3a5c] text-white hover:opacity-90 disabled:opacity-40 transition-opacity"
+              className="p-2 bg-blue-600 text-white hover:opacity-90 disabled:opacity-40 transition-opacity"
             >
               {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
             </button>

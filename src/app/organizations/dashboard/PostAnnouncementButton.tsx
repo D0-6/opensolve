@@ -77,7 +77,7 @@ export default function PostAnnouncementButton({ problemId }: { problemId: strin
                   onChange={(e) => setTitle(e.target.value)}
                   maxLength={200}
                   placeholder="e.g., Deadline Extended to August 15th"
-                  className="w-full border border-white/20 px-4 py-3 text-sm focus:outline-none focus:border-[#1a3a5c] transition-colors"
+                  className="w-full border border-white/20 px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition-colors"
                 />
               </div>
 
@@ -92,7 +92,7 @@ export default function PostAnnouncementButton({ problemId }: { problemId: strin
                   onChange={(e) => setContent(e.target.value)}
                   maxLength={2000}
                   placeholder="Provide details about this update. All builders who applied will be notified."
-                  className="w-full border border-white/20 px-4 py-3 text-sm focus:outline-none focus:border-[#1a3a5c] transition-colors resize-none"
+                  className="w-full border border-white/20 px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition-colors resize-none"
                 />
                 <div className="text-xs text-zinc-400 mt-1 text-right">{content.length}/2000</div>
               </div>
@@ -109,7 +109,7 @@ export default function PostAnnouncementButton({ problemId }: { problemId: strin
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 py-3 bg-[#1a3a5c] text-white text-sm font-medium hover:bg-[#112740] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                className="flex-1 py-3 bg-blue-600 text-white text-sm font-medium hover:bg-[#112740] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
               >
                 {loading ? <Loader2 size={16} className="animate-spin" /> : "Publish Update"}
               </button>
