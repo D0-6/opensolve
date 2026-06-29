@@ -44,7 +44,7 @@ export default async function OnboardingRoutingPage() {
     redirect("/dashboard/student");
   }
 
-  if (role === "organization") {
+  if (role === "organization" || role === "company") {
     const orgId = user.publicMetadata?.orgId as string | undefined;
 
     if (!orgId) {

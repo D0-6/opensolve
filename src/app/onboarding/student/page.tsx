@@ -1,6 +1,10 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { submitStudentOnboarding } from "./actions";
+import { docClient } from "@/lib/dynamodb";
+import { GetCommand } from "@aws-sdk/lib-dynamodb";
+
+const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
 
 // ISO 3166-1 alpha-2 codes with dial codes — subset of most common
 const COUNTRIES_WITH_CODES = [
@@ -65,6 +69,24 @@ export default async function StudentOnboardingPage() {
 
   if (!user) {
     redirect("/sign-in");
+  }
+
+  // Check if they already have a profile in DynamoDB (e.g. cross-device sync)
+  let hasProfile = false;
+  try {
+    const result = await docClient.send(
+      new GetCommand({
+        TableName: PROFILES_TABLE,
+        Key: { userId: user.id },
+      })
+    );
+    hasProfile = !!result.Item;
+  } catch (error) {
+    console.error("Error checking student profile:", error);
+  }
+
+  if (hasProfile) {
+    redirect("/api/onboarding/sync-profile");
   }
 
   const defaultName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
