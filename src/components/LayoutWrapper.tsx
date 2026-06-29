@@ -27,7 +27,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
           {/* Brand Column */}
           <div className="md:col-span-1 flex flex-col gap-4">
             <Link href="/" className="font-medium text-3xl text-white flex items-center gap-2">
-              <span className="material-symbols-outlined text-blue-400" style={{ fontVariationSettings: "'FILL' 1" }}>hexagon</span>
+              <img src="/logo.png" alt="OpenSolve Logo" className="w-8 h-8 object-contain" />
               OpenSolve
             </Link>
             <p className="text-zinc-500 text-sm">Connecting student talent with real-world challenges from YC, government, and industry.</p>

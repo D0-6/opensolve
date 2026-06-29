@@ -33,7 +33,7 @@ export function NavBar() {
       <div className="flex justify-between items-center px-6 max-w-[1600px] mx-auto h-20">
         {/* Brand Logo */}
         <Link href="/" className="font-display-lg text-3xl font-bold text-white flex items-center gap-2">
-          <span className="material-symbols-outlined text-blue-400" style={{ fontVariationSettings: "'FILL' 1" }}>hexagon</span>
+          <img src="/logo.png" alt="OpenSolve Logo" className="w-8 h-8 object-contain" />
           OpenSolve
         </Link>
         

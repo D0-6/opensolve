@@ -19,7 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-full md:w-64 bg-[#050505] text-zinc-400 flex flex-col shrink-0 min-h-[100dvh] border-r border-white/10">
         <div className="h-16 flex items-center px-6 border-b border-white/10">
           <Link href="/" className="font-bold text-lg text-white flex items-center gap-2">
-            <span className="material-symbols-outlined text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>hexagon</span>
+            <img src="/logo.png" alt="OpenSolve Logo" className="w-5 h-5 object-contain" />
             OpenSolve Admin
           </Link>
         </div>
