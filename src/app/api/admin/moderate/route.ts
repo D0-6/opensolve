@@ -70,26 +70,24 @@ export async function POST(request: Request) {
         });
       }
 
-      // 3. Increment Platform Stats (Active Problems)
-      const shardId1 = Math.floor(Math.random() * 10);
-      transactItems.push({
-        Update: {
-          TableName: TABLE_NAME,
-          Key: { problemId: `GLOBAL_METADATA#${shardId1}` },
-          UpdateExpression: "ADD activeProblems :val",
-          ExpressionAttributeValues: { ":val": 1 }
-        }
-      });
-
-      // 4. Increment Platform Stats (Prize Pool)
+      // 3 & 4. Increment Platform Stats
+      const shardId = Math.floor(Math.random() * 10);
       if (problem.prizeAmount > 0) {
-        const shardId2 = Math.floor(Math.random() * 10);
         transactItems.push({
           Update: {
             TableName: TABLE_NAME,
-            Key: { problemId: `GLOBAL_METADATA#${shardId2}` },
-            UpdateExpression: "ADD totalPrizePool :prize",
-            ExpressionAttributeValues: { ":prize": problem.prizeAmount }
+            Key: { problemId: `GLOBAL_METADATA#${shardId}` },
+            UpdateExpression: "ADD activeProblems :val, totalPrizePool :prize",
+            ExpressionAttributeValues: { ":val": 1, ":prize": problem.prizeAmount }
+          }
+        });
+      } else {
+        transactItems.push({
+          Update: {
+            TableName: TABLE_NAME,
+            Key: { problemId: `GLOBAL_METADATA#${shardId}` },
+            UpdateExpression: "ADD activeProblems :val",
+            ExpressionAttributeValues: { ":val": 1 }
           }
         });
       }
