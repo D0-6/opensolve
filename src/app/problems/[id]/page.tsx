@@ -1,5 +1,6 @@
 import { getProblem } from "@/lib/data";
 import { notFound } from "next/navigation";
+import { currentUser } from "@clerk/nextjs/server";
 import { Trophy, GitBranch, Globe, ExternalLink, Activity, ArrowRight, Upload, Briefcase, FileText, Lock, Users, Target, ShieldCheck, Tag, ArrowLeft, Megaphone } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -43,6 +44,23 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
   const problem = await getProblem(id);
 
   if (!problem) notFound();
+
+  const user = await currentUser();
+  const role = user?.publicMetadata?.role as string | undefined;
+
+  let hasApplied = false;
+  if (user && (role === "student" || !role)) {
+    try {
+      const APPLICATIONS_TABLE = process.env.DYNAMODB_TABLE_APPLICATIONS || "OpenSolve_Applications";
+      const appRes = await docClient.send(new GetCommand({
+        TableName: APPLICATIONS_TABLE,
+        Key: { problemId: id, userId: user.id }
+      }));
+      hasApplied = !!appRes.Item;
+    } catch (err) {
+      console.error("Error checking application status:", err);
+    }
+  }
 
   // Validate if scout profile still exists
   let scoutExists = false;
@@ -151,12 +169,35 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
             )}
           </div>
 
-          <Link
-            href={`/problems/${problem.problemId}/apply`}
-            className="btn-primary w-full md:w-auto text-center px-6 py-2.5 font-medium text-sm"
-          >
-            Apply to Work
-          </Link>
+          {(!user || role === "student" || !role) ? (
+            hasApplied ? (
+              <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                <Link
+                  href={`/problems/${problem.problemId}/team`}
+                  className="w-full md:w-auto text-center px-5 py-2.5 font-medium text-xs text-white border border-white/10 bg-white/5 hover:bg-white/10 transition-colors uppercase tracking-wider font-bold"
+                >
+                  Manage Team
+                </Link>
+                <Link
+                  href={`/problems/${problem.problemId}/submit`}
+                  className="w-full md:w-auto text-center px-5 py-2.5 font-medium text-xs text-white bg-blue-600 hover:bg-blue-500 transition-colors uppercase tracking-wider font-bold"
+                >
+                  Submit Solution
+                </Link>
+              </div>
+            ) : (
+              <Link
+                href={`/problems/${problem.problemId}/apply`}
+                className="btn-primary w-full md:w-auto text-center px-6 py-2.5 font-medium text-sm"
+              >
+                Apply to Work
+              </Link>
+            )
+          ) : (
+            <div className="text-zinc-400 text-xs font-bold uppercase tracking-wider border border-white/10 px-4 py-2 bg-white/5">
+              Viewing as {role}
+            </div>
+          )}
         </div>
 
         <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-white leading-tight mb-6">
