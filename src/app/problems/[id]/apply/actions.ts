@@ -24,6 +24,16 @@ export async function submitApplication(problemId: string, formData: FormData) {
   const profile = profileRes.Item;
   if (!profile) throw new Error("Profile not complete. Please complete onboarding.");
 
+  const problemRes = await docClient.send(new GetCommand({
+    TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
+    Key: { problemId }
+  }));
+
+  const problem = problemRes.Item;
+  if (!problem) throw new Error("Problem not found.");
+  if (problem.status !== "OPEN") throw new Error("This problem is no longer open for applications.");
+  if (new Date(problem.deadline) < new Date()) throw new Error("The deadline for this problem has passed.");
+
   const applicationItem = {
     problemId,
     userId: user.id,

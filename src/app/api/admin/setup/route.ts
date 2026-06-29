@@ -10,9 +10,11 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get("secret");
 
-  // In production, this should be a strong env variable.
-  // For local development, we allow a fallback or specific hardcoded string if not set.
-  const expectedSecret = process.env.ADMIN_SETUP_SECRET || "super-secret-admin-key";
+  if (!process.env.ADMIN_SETUP_SECRET) {
+    return NextResponse.json({ error: "Server misconfiguration: ADMIN_SETUP_SECRET not set" }, { status: 500 });
+  }
+
+  const expectedSecret = process.env.ADMIN_SETUP_SECRET;
 
   if (secret !== expectedSecret) {
     return NextResponse.json({ error: "Invalid setup secret" }, { status: 403 });

@@ -8,6 +8,7 @@ const isProtectedRoute = createRouteMatcher([
   '/problems/(.*)/team',
   '/organizations/new',
   '/admin(.*)',
+  '/api/admin(.*)',
 ])
 
 // Onboarding sub-routes that must remain accessible regardless of cookie state

@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
-import { clerkClient } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 // This is a one-off administrative script to clear technical debt.
 // It loops through Clerk users and migrates any user with the legacy
 // "company" role in their public metadata to the unified "organization" role.
 export async function GET(request: Request) {
-  // In a real production app, this would be guarded by an Admin secret or role.
-  // For this migration, we'll run it once to clear the debt.
+  const { sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as Record<string, string> | undefined)?.role
+    || (sessionClaims?.publicMetadata as Record<string, string> | undefined)?.role;
+
+  if (role !== "admin") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
 
   try {
     const client = await clerkClient();

@@ -59,7 +59,7 @@ export async function POST(request: Request) {
       domain: body.domain,
       postedAt: now,
       verified: false,
-      status: body.status,
+      status: "PENDING_REVIEW", // Enforced moderation for community submissions
       entityType: "PROBLEM",
       scoutId: user.id, // Tie the discovery to the submitting user
       scoutName: user.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : "Anonymous Scout",

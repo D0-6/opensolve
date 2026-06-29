@@ -21,11 +21,26 @@ export async function GET(request: Request) {
   const studentId = threadId.split("#")[1];
   const problemId = threadId.split("#")[0];
 
+  const { sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as Record<string, string> | undefined)?.role
+    || (sessionClaims?.publicMetadata as Record<string, string> | undefined)?.role;
+
   // Allow if the user is the student OR if they are an org (they can view any thread for their problems)
-  // We allow both — the security is at message creation time
   if (studentId !== userId) {
-    // Org user — they can read but we don't re-verify problem ownership here (read is low-risk)
-    // In production, add an ownership check against PROBLEMS_TABLE
+    if (role === "admin") {
+      // Admins can read anything
+    } else if (role === "organization" || role === "company") {
+      const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
+      const problemRes = await docClient.send(new GetCommand({
+        TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
+        Key: { problemId }
+      }));
+      if (!problemRes.Item || problemRes.Item.postedByOrgId !== userId) {
+        return NextResponse.json({ error: "Forbidden: You do not own this problem" }, { status: 403 });
+      }
+    } else {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
   }
 
   try {
@@ -54,6 +69,30 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
+  const studentId = threadId.split("#")[1];
+  const problemId = threadId.split("#")[0];
+
+  const { sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as Record<string, string> | undefined)?.role
+    || (sessionClaims?.publicMetadata as Record<string, string> | undefined)?.role;
+
+  if (studentId !== userId) {
+    if (role === "admin") {
+      // Admins can post
+    } else if (role === "organization" || role === "company") {
+      const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
+      const problemRes = await docClient.send(new GetCommand({
+        TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
+        Key: { problemId }
+      }));
+      if (!problemRes.Item || problemRes.Item.postedByOrgId !== userId) {
+        return NextResponse.json({ error: "Forbidden: You do not own this problem" }, { status: 403 });
+      }
+    } else {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+  }
+
   const messageId = uuidv4();
   const now = new Date().toISOString();
 
@@ -69,20 +108,15 @@ export async function POST(request: Request) {
   await docClient.send(new PutCommand({ TableName: MESSAGES_TABLE, Item: message }));
 
   // Write a notification for the recipient
-  const notificationId = uuidv4();
-  await docClient.send(new PutCommand({
-    TableName: NOTIFICATIONS_TABLE,
-    Item: {
-      userId: recipientUserId,
-      createdAt: `${now}#${notificationId}`,
-      notificationId,
-      type: "MESSAGE",
-      title: `New message from ${senderName || "OpenSolve"}`,
-      message: text.substring(0, 120) + (text.length > 120 ? "…" : ""),
-      threadId,
-      read: false,
-    }
-  }));
+  const { createNotification } = await import("@/lib/notifications");
+  await createNotification({
+    targetUserId: recipientUserId,
+    type: "MESSAGE",
+    title: `New message from ${senderName || "OpenSolve"}`,
+    message: text.substring(0, 120) + (text.length > 120 ? "…" : ""),
+    threadId,
+    problemId
+  });
 
   return NextResponse.json({ message }, { status: 201 });
 }

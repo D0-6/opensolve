@@ -26,7 +26,7 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
 export async function checkRateLimit(ip: string): Promise<boolean> {
   if (!ratelimit) {
     console.warn("⚠️ Rate limiter is bypassed because UPSTASH_REDIS_REST_URL is missing.");
-    return true; // Fail open if no redis configured
+    return process.env.NODE_ENV === "development"; // Fail closed in production if misconfigured
   }
 
   try {

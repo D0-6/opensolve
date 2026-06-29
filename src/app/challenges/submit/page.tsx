@@ -40,16 +40,13 @@ export default function SubmitChallengeLink() {
       const formData = new FormData();
       formData.append("image", file);
       
-      // Request ImgBB key from env. Fallback to a community key if missing for the hackathon MVP.
-      const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY || "e47b864bd331a9866eb89df0b67035ce"; 
-      
-      const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+      const res = await fetch(`/api/upload/image`, {
         method: "POST",
         body: formData,
       });
       
       const data = await res.json();
-      if (!data.success) throw new Error("Image upload failed");
+      if (!res.ok) throw new Error(data.error || "Image upload failed");
 
       const imageUrl = data.data.url;
       const markdownImage = `![Image](${imageUrl})\n`;

@@ -79,6 +79,20 @@ export async function POST(request: Request) {
     
     // Always fetch their application to prove they went through the gating flow
     const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
+
+    const problemRes = await docClient.send(new GetCommand({
+      TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
+      Key: { problemId }
+    }));
+
+    const problem = problemRes.Item;
+    if (!problem || problem.status !== "OPEN") {
+      return NextResponse.json({ error: "This problem is no longer open for submissions." }, { status: 403 });
+    }
+    if (new Date(problem.deadline) < new Date()) {
+      return NextResponse.json({ error: "The deadline for this problem has passed." }, { status: 403 });
+    }
+
     const appRes = await docClient.send(new GetCommand({
       TableName: APPLICATIONS_TABLE,
       Key: { problemId, userId }
@@ -105,7 +119,7 @@ export async function POST(request: Request) {
       demoUrl: demoUrl || "",
       videoUrl: videoUrl || "",
       techStack: techStack || [],
-      writeup: writeup.trim().substring(0, 500),
+      writeup: writeup.trim(), // Issue 10: Let it accept the full length up to Zod limit
       upvotes: 0,
       submittedAt,
       score,
@@ -165,10 +179,9 @@ export async function POST(request: Request) {
       ph.flush();
     }
 
-    // PHASE 11: Trigger Auto-Scoring Engine in the background
+    // PHASE 11: Trigger Auto-Scoring Engine and AWAIT it to ensure it runs
     const { evaluateSubmissionAsynchronously } = await import("@/lib/evaluator");
-    // Do not await this. Let it run asynchronously!
-    evaluateSubmissionAsynchronously({
+    await evaluateSubmissionAsynchronously({
       problemId,
       oldRankKey: newSubmission.rankKey,
       userId: newSubmission.userId,

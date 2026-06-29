@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 
@@ -9,6 +10,14 @@ export async function GET(
   { params }: { params: { userId: string } }
 ) {
   const { userId } = params;
+
+  const { userId: currentUserId, sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as Record<string, string> | undefined)?.role
+    || (sessionClaims?.publicMetadata as Record<string, string> | undefined)?.role;
+
+  if (currentUserId !== userId && role !== "admin" && role !== "organization" && role !== "company") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   try {
     const command = new QueryCommand({
