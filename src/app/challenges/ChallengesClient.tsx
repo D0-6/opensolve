@@ -12,14 +12,14 @@ const SOURCE_CONFIG: Record<string, { label: string; color: string }> = {
   YC_STARTUP: { label: "YC Startup", color: "bg-orange-50 text-orange-700 border-orange-200" },
   GOVERNMENT: { label: "Government", color: "bg-blue-50 text-blue-700 border-blue-200" },
   INDUSTRY: { label: "Industry", color: "bg-transparent/10 text-zinc-300 border-white/10" },
-  COMMUNITY: { label: "Community", color: "bg-purple-50 text-purple-700 border-purple-200" },
+  COMMUNITY: { label: "Community", color: "bg-transparent/10 text-zinc-300 border-white/10" },
 };
 
 const PRIZE_TYPE_CONFIG: Record<string, { label: string; color: string }> = {
   HIRING: { label: "Full-Time Hire", color: "bg-green-50 text-green-700 border-green-200" },
   CONTRACT: { label: "Contract", color: "bg-blue-50 text-blue-700 border-blue-200" },
   CASH: { label: "Cash Prize", color: "bg-yellow-50 text-yellow-700 border-yellow-200" },
-  PRIZE_ONLY: { label: "Prize", color: "bg-purple-50 text-purple-700 border-purple-200" },
+  PRIZE_ONLY: { label: "Prize", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
 };
 
 interface Problem {

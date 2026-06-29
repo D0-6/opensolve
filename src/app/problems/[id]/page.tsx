@@ -128,26 +128,26 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
 
       {/* Scout / Discovered By banner */}
       {problem.scoutId && (
-        <div className="flex items-center justify-between bg-purple-50 border border-purple-200 text-purple-800 px-5 py-3.5 mb-8 text-sm font-medium">
+        <div className="flex items-center justify-between bg-white/5 border border-white/10 text-zinc-300 px-5 py-3.5 mb-8 text-sm font-medium">
           <div className="flex items-center gap-3">
             <span className="text-xl">🕵️</span>
             <div className="flex flex-col">
               <span>
-                This challenge was discovered and shared by community scout <strong>{String(problem.scoutName || "Anonymous")}</strong>.
+                This challenge was discovered and shared by community scout <strong className="text-white">{String(problem.scoutName || "Anonymous")}</strong>.
               </span>
               {problem.scoutBountyPercent && (
-                <span className="text-purple-600 text-xs mt-0.5 font-normal">
+                <span className="text-blue-400 text-xs mt-0.5 font-normal">
                   They will earn a {String(problem.scoutBountyPercent)}% finder's fee if an OpenSolve builder wins this bounty.
                 </span>
               )}
             </div>
           </div>
           {scoutExists ? (
-            <Link href={`/profile/${problem.scoutId}`} className="text-purple-700 hover:text-purple-900 underline underline-offset-2">
+            <Link href={`/profile/${problem.scoutId}`} className="text-blue-400 hover:text-blue-300 underline underline-offset-2">
               View Profile
             </Link>
           ) : (
-            <span className="text-purple-400 italic text-xs">Profile Unavailable</span>
+            <span className="text-zinc-500 italic text-xs">Profile Unavailable</span>
           )}
         </div>
       )}
@@ -260,7 +260,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
         </div>
 
         {/* Description */}
-        <div className="prose prose-zinc prose-a:text-purple-600 prose-headings:text-white max-w-none border-t border-white/10 pt-8 mt-8">
+        <div className="prose prose-zinc prose-a:text-blue-400 prose-headings:text-white max-w-none border-t border-white/10 pt-8 mt-8">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {problem.description || "No description provided."}
           </ReactMarkdown>

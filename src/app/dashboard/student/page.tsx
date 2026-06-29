@@ -174,16 +174,16 @@ export default async function StudentDashboard() {
 
         <Link
           href="/submit-challenge"
-          className="border border-purple-200 bg-purple-50 p-6 flex flex-col gap-4 group hover:bg-purple-100 transition-colors"
+          className="border border-white/10 bg-transparent p-6 flex flex-col gap-4 group hover:bg-transparent/5 transition-colors"
         >
-          <div className="w-10 h-10 border border-purple-200 text-purple-600 flex items-center justify-center bg-transparent group-hover:bg-purple-700 group-hover:text-white transition-colors text-lg">
+          <div className="w-10 h-10 border border-white/10 text-zinc-400 flex items-center justify-center bg-transparent group-hover:text-blue-400 group-hover:border-blue-400 transition-colors text-lg">
             🕵️
           </div>
           <div>
             <div className="font-medium text-white text-lg mb-1">Scout a Challenge</div>
-            <div className="text-sm text-purple-600">Find bounties &amp; earn Scout Points</div>
+            <div className="text-sm text-zinc-400">Find bounties &amp; earn Scout Points</div>
           </div>
-          <ArrowRight size={18} className="text-purple-400 mt-auto group-hover:translate-x-1 transition-transform" />
+          <ArrowRight size={18} className="text-zinc-400 mt-auto group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
 

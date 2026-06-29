@@ -208,7 +208,7 @@ export default function ProfileClient({
 
                 {/* Scout Points Badge */}
                 {(p?.scoutPoints || 0) > 0 && (
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200 px-3 py-1.5 uppercase tracking-wider">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-blue-400 bg-white/5 border border-white/10 px-3 py-1.5 uppercase tracking-wider">
                     🕵️ {(p.scoutPoints || 0).toLocaleString()} Scout Points
                   </div>
                 )}

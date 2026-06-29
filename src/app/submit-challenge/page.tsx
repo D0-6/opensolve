@@ -77,7 +77,7 @@ export default function SubmitChallengePage() {
         {/* Header */}
         <div className="mb-10 border-b border-white/10 pb-8">
           <div className="flex items-center gap-4 mb-3">
-            <div className="w-12 h-12 border border-purple-200 bg-purple-50 flex items-center justify-center text-purple-700 text-xl">
+            <div className="w-12 h-12 border border-white/10 bg-white/5 flex items-center justify-center text-blue-400 text-xl">
               🕵️
             </div>
             <div>
@@ -90,15 +90,15 @@ export default function SubmitChallengePage() {
         {/* Scout System Explainer */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           {[
-            { icon: <Trophy size={18} className="text-purple-600" />, title: "Earn Scout Points", desc: "Every approved challenge earns 100 Scout Points on your profile." },
-            { icon: <Zap size={18} className="text-purple-600" />, title: "Get a Finder's Cut", desc: "If your challenge is solved and wins prize money, you earn a percentage of the payout." },
-            { icon: <Search size={18} className="text-purple-600" />, title: '"Discovered By" Badge', desc: "Your name and profile link are permanently shown on the challenge page." },
+            { icon: <Trophy size={18} className="text-blue-400" />, title: "Earn Scout Points", desc: "Every approved challenge earns 100 Scout Points on your profile." },
+            { icon: <Zap size={18} className="text-blue-400" />, title: "Get a Finder's Cut", desc: "If your challenge is solved and wins prize money, you earn a percentage of the payout." },
+            { icon: <Search size={18} className="text-blue-400" />, title: '"Discovered By" Badge', desc: "Your name and profile link are permanently shown on the challenge page." },
           ].map(({ icon, title, desc }) => (
-            <div key={title} className="bg-purple-50 border border-purple-100 p-4">
-              <div className="flex items-center gap-2 mb-2 text-purple-700 font-semibold text-sm">
+            <div key={title} className="bg-white/5 border border-white/10 p-4">
+              <div className="flex items-center gap-2 mb-2 text-white font-semibold text-sm">
                 {icon} {title}
               </div>
-              <p className="text-xs text-purple-600 leading-relaxed">{desc}</p>
+              <p className="text-xs text-zinc-400 leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
@@ -255,7 +255,7 @@ export default function SubmitChallengePage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-purple-700 text-white font-medium py-3.5 hover:bg-purple-800 transition-colors text-sm flex items-center justify-center gap-2 disabled:opacity-60"
+            className="w-full bg-blue-600 text-white font-medium py-3.5 hover:bg-blue-500 transition-colors text-sm flex items-center justify-center gap-2 disabled:opacity-60"
           >
             {loading
               ? <Loader2 size={18} className="animate-spin" />

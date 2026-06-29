@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { redirect } from "next/navigation";
@@ -13,6 +13,12 @@ const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_S
 export default async function OrgDashboard() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
+
+  const user = await currentUser();
+  const role = user?.publicMetadata?.role as string | undefined;
+  if (role !== "organization" && role !== "company" && role !== "admin") {
+    redirect("/dashboard");
+  }
 
   // Fetch problems posted by this org (Using a GSI would be better in prod, but for MVP/demo we scan or query if GSI exists)
   // Let's assume we fetch all problems and filter for now to guarantee it works without complex GSI setup

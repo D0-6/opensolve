@@ -19,6 +19,11 @@ export default async function TeamFormationPage({ params }: { params: Promise<{ 
     redirect(`/sign-in?redirect_url=/problems/${id}/team`);
   }
 
+  const role = user.publicMetadata?.role as string | undefined;
+  if (role && role !== "student") {
+    redirect(`/problems/${id}`);
+  }
+
   const problem = await getProblem(id);
   if (!problem) notFound();
 

@@ -55,7 +55,7 @@ export default function ModerationClient({ initialProblems }: { initialProblems:
           
           <div className="flex-1 p-6">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full uppercase tracking-wide">
+              <span className="text-xs font-bold text-blue-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full uppercase tracking-wide">
                 Community Submission
               </span>
               <span className="text-xs text-zinc-400">

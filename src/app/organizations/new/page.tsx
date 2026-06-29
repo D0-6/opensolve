@@ -41,8 +41,12 @@ export default function ProfessionalPostChallenge() {
   const { user, isLoaded } = useUser();
 
   useEffect(() => {
-    if (isLoaded && (!user || (user.publicMetadata?.role !== "organization" && user.publicMetadata?.role !== "company"))) {
-      router.push("/sign-in");
+    if (isLoaded) {
+      if (!user) {
+        router.push("/sign-in");
+      } else if (user.publicMetadata?.role !== "organization" && user.publicMetadata?.role !== "company") {
+        router.push("/dashboard");
+      }
     }
   }, [user, isLoaded, router]);
 

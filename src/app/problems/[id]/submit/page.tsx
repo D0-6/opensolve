@@ -17,6 +17,11 @@ export default async function SubmitSolutionPage({ params }: { params: Promise<{
     redirect(`/sign-in?redirect_url=/problems/${id}/submit`);
   }
 
+  const role = user.publicMetadata?.role as string | undefined;
+  if (role && role !== "student") {
+    redirect(`/problems/${id}`);
+  }
+
   const problem = await getProblem(id);
   if (!problem) notFound();
 
