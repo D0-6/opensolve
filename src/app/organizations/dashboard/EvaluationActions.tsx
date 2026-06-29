@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { CheckCircle2, Mail, Loader2, AlertCircle, MessageCircle, X, Send } from "lucide-react";
+import { CheckCircle2, Mail, Loader2, AlertCircle, MessageCircle, X, Send, Target } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 
@@ -144,7 +144,7 @@ export default function EvaluationActions({
   const [scoreModalOpen, setScoreModalOpen] = useState(false);
   const [scores, setScores] = useState({ innovation: 5, technical: 5, design: 5 });
 
-  const handleAction = async (action: "HIRE" | "CONTRACT" | "INTERVIEW" | "REJECT" | "SCORE", rubricScores?: any) => {
+  const handleAction = async (action: "HIRE" | "CONTRACT" | "INTERVIEW" | "REJECT" | "SCORE", rubricScores?: Record<string, number>) => {
     setLoading(true);
     setError("");
     try {

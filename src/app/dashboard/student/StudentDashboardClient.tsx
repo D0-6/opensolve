@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Bell, Check, MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { Bell, MessageCircle, X, Send, Loader2 } from "lucide-react";
 
 interface Notification {
   userId: string;
@@ -24,7 +24,7 @@ interface Message {
   text: string;
 }
 
-export function NotificationsPanel({ userId }: { userId: string }) {
+export function NotificationsPanel() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 

@@ -263,7 +263,7 @@ export default function SubmitChallengePage() {
             }
           </button>
           <p className="text-xs text-center text-zinc-400">
-            Challenges are reviewed for quality before going live. You'll earn 100 Scout Points immediately upon approval.
+            Challenges are reviewed for quality before going live. You&apos;ll earn 100 Scout Points immediately upon approval.
           </p>
         </form>
       </div>

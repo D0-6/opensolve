@@ -47,6 +47,10 @@ export async function POST(request: Request) {
     }
     const { problemId, rankKey, action, submitterName, studentUserId, rubricScores } = parsed.data;
 
+    if (!studentUserId) {
+      return NextResponse.json({ error: "studentUserId is required for evaluation" }, { status: 400 });
+    }
+
     const problemRes = await docClient.send(new GetCommand({
       TableName: PROBLEMS_TABLE,
       Key: { problemId }

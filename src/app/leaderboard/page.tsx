@@ -315,7 +315,7 @@ export default async function LeaderboardPage({
               <div className="relative z-10 pt-1">
                 <div className="font-semibold text-blue-100 mb-2 text-lg">How Scout Points Work</div>
                 <p className="text-sm text-blue-200/70 leading-relaxed max-w-4xl">
-                  Scouts discover real challenges from the internet and share them with the OpenSolve community. Every approved challenge earns <strong className="text-blue-300">100 Scout Points</strong>. If someone wins prize money from your scouted challenge, you earn a <strong className="text-blue-300">5% finder's fee</strong>. Rank up and display the <strong className="text-blue-300">Elite Scout 🏆</strong> badge on your profile.
+                  Scouts discover real challenges from the internet and share them with the OpenSolve community. Every approved challenge earns <strong className="text-blue-300">100 Scout Points</strong>. If someone wins prize money from your scouted challenge, you earn a <strong className="text-blue-300">5% finder&apos;s fee</strong>. Rank up and display the <strong className="text-blue-300">Elite Scout 🏆</strong> badge on your profile.
                 </p>
               </div>
             </div>

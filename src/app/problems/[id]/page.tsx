@@ -1,7 +1,7 @@
 import { getProblem } from "@/lib/data";
 import { notFound } from "next/navigation";
 import { currentUser } from "@clerk/nextjs/server";
-import { Trophy, GitBranch, Globe, ExternalLink, Activity, ArrowRight, Upload, Briefcase, FileText, Lock, Users, Target, ShieldCheck, Tag, ArrowLeft, Megaphone } from "lucide-react";
+import { Globe, ExternalLink, Lock, Users, Tag, ArrowLeft, Megaphone } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
@@ -137,7 +137,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
               </span>
               {problem.scoutBountyPercent && (
                 <span className="text-blue-400 text-xs mt-0.5 font-normal">
-                  They will earn a {String(problem.scoutBountyPercent)}% finder's fee if an OpenSolve builder wins this bounty.
+                  They will earn a {String(problem.scoutBountyPercent)}% finder&apos;s fee if an OpenSolve builder wins this bounty.
                 </span>
               )}
             </div>
@@ -219,7 +219,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
             )}
             {Array.isArray(problem.prizeBreakdown) && problem.prizeBreakdown.length > 0 && (
               <div className="mt-2 space-y-1">
-                {(problem.prizeBreakdown as any[]).map((prize, i) => (
+                {problem.prizeBreakdown.map((prize, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs">
                     <span className="font-bold text-zinc-400">{prize.place}:</span>
                     <span className="text-zinc-300">${Number(prize.amount).toLocaleString()}</span>
@@ -329,7 +329,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
           {/* Announcements (Devpost-style challenge updates) */}
           <AnnouncementsPanel
             problemId={problem.problemId}
-            announcements={Array.isArray(problem.announcements) ? problem.announcements as any[] : []}
+            announcements={problem.announcements || []}
           />
           <div>
             <h2 className="text-xl font-medium text-white mb-6 border-b border-white/10 pb-2">Community &amp; Mentorship</h2>

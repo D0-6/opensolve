@@ -1,7 +1,7 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { docClient } from "@/lib/dynamodb";
-import { ScanCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { getUserSubmissions } from "@/lib/data";
 import Link from "next/link";
 import {
@@ -17,8 +17,8 @@ import {
   Clock,
 } from "lucide-react";
 import { NotificationsPanel, EvalStatusBadge } from "./StudentDashboardClient";
+import { Submission } from "@/types";
 
-const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
 const APPLICATIONS_TABLE = process.env.DYNAMODB_TABLE_APPLICATIONS || "OpenSolve_Applications";
 const PROBLEMS_TABLE = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
 
@@ -33,10 +33,9 @@ export default async function StudentDashboard() {
   if (role && role !== "student") redirect("/dashboard");
 
   const firstName = user?.firstName || "Builder";
-  const fullName = user?.fullName || user?.firstName || "Builder";
 
   // Fetch submissions using the resilient helper (GSI with scan fallback)
-  let submissions: any[] = [];
+  let submissions: Submission[] = [];
   try {
     submissions = await getUserSubmissions(userId);
   } catch (err: unknown) {
@@ -103,7 +102,7 @@ export default async function StudentDashboard() {
               Keep building. Every submission moves you closer to your next opportunity.
             </p>
           </div>
-          <NotificationsPanel userId={userId} />
+          <NotificationsPanel />
         </div>
 
         {/* Stats row */}
@@ -265,7 +264,6 @@ export default async function StudentDashboard() {
               const evalStatus = sub.evaluationStatus as string || "PENDING";
               const teamMembers = Array.isArray(sub.teamMembers) ? sub.teamMembers : [];
               const orgId = problem?.postedByOrgId as string | undefined;
-              const threadId = `${sub.problemId}#${userId}`;
 
               return (
                 <div

@@ -13,7 +13,7 @@ export default function SubmitChallengeSuccess() {
           <h1 className="text-2xl font-medium text-white">Challenge Submitted!</h1>
         </div>
         <p className="text-zinc-400 text-sm mb-8 leading-relaxed">
-          Your challenge has been submitted for review. Once approved, it will appear on OpenSolve with your name as the discoverer — and you'll earn <strong className="text-white">100 Scout Points</strong>.
+          Your challenge has been submitted for review. Once approved, it will appear on OpenSolve with your name as the discoverer — and you&apos;ll earn <strong className="text-white">100 Scout Points</strong>.
         </p>
         <div className="bg-white/5 border border-white/10 p-5 mb-8 text-left space-y-3">
           <div className="flex items-start gap-2 text-sm text-zinc-300">
@@ -22,7 +22,7 @@ export default function SubmitChallengeSuccess() {
           </div>
           <div className="flex items-start gap-2 text-sm text-zinc-300">
             <span className="text-blue-400 mt-0.5 shrink-0">💰</span>
-            <span>If someone wins prize money from your challenge, you automatically receive <strong className="text-white">5% as a finder's fee</strong>.</span>
+            <span>If someone wins prize money from your challenge, you automatically receive <strong className="text-white">5% as a finder&apos;s fee</strong>.</span>
           </div>
         </div>
         <div className="flex flex-col gap-3">

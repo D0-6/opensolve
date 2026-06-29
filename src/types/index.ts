@@ -41,6 +41,18 @@ export interface TeamMember {
   name: string;
 }
 
+export interface Evaluation {
+  submissionKey: string;
+  evaluatorId: string;
+  scores: {
+    innovation: number;
+    technical: number;
+    design: number;
+  };
+  comments?: string;
+  evaluatedAt: string;
+}
+
 export interface Submission {
   problemId: string;
   rankKey: string;
@@ -57,6 +69,8 @@ export interface Submission {
   techStack?: string[];
   evaluationStatus?: string;
   repoName?: string;
+  evaluations?: Evaluation[];
+  meanScore?: number;
 }
 
 export interface Application {

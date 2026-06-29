@@ -1,6 +1,6 @@
 import { getOrganization, getProblems, getSubmissions, getEvaluations } from "@/lib/data";
 import { notFound, redirect } from "next/navigation";
-import { ExternalLink, Play, Trophy, Users, Briefcase, PlusCircle, FileText, Code2, MapPin, Search } from "lucide-react";
+import { ExternalLink, Play, Trophy, Users, Briefcase, PlusCircle, FileText, MapPin } from "lucide-react";
 import Link from "next/link";
 import { currentUser } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
@@ -51,18 +51,18 @@ export default async function OrgDashboard({ params, searchParams }: { params: P
       // Attach 1:N evaluations
       for (const sub of submissions) {
         const evals = await getEvaluations(problem.problemId, sub.rankKey);
-        (sub as any).evaluations = evals;
+        sub.evaluations = evals;
         
         if (evals.length > 0) {
           const sum = evals.reduce((acc, ev) => acc + ev.scores.innovation + ev.scores.technical + ev.scores.design, 0);
-          (sub as any).meanScore = Math.round((sum / evals.length) * 10) / 10;
+          sub.meanScore = Math.round((sum / evals.length) * 10) / 10;
         } else {
-          (sub as any).meanScore = 0;
+          sub.meanScore = 0;
         }
       }
       
       // Sort by mean score first, then fallback to basic score
-      submissions.sort((a, b) => ((b as any).meanScore || b.score) - ((a as any).meanScore || a.score));
+      submissions.sort((a, b) => (b.meanScore || b.score || 0) - (a.meanScore || a.score || 0));
       return { ...problem, submissions };
     })
   );
@@ -74,7 +74,7 @@ export default async function OrgDashboard({ params, searchParams }: { params: P
   for (const p of problemsWithSubmissions) {
     for (const sub of p.submissions) {
       const existing = userMap.get(sub.userId);
-      const score = (sub as any).meanScore || sub.score;
+      const score = sub.meanScore || sub.score || 0;
       if (!existing) {
         userMap.set(sub.userId, {
           submissionCount: 1,
@@ -97,7 +97,7 @@ export default async function OrgDashboard({ params, searchParams }: { params: P
     try {
       const res = await docClient.send(new GetCommand({ TableName: PROFILES_TABLE, Key: { userId: uId } }));
       return { userId: uId, meta, profile: res.Item || null };
-    } catch(e) {
+    } catch {
       return { userId: uId, meta, profile: null };
     }
   }));
@@ -205,7 +205,7 @@ export default async function OrgDashboard({ params, searchParams }: { params: P
                                 {sub.studentName}
                               </Link>
                               <span className="bg-white/10 text-zinc-300 border border-white/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider">
-                                {((sub as any).evaluations && (sub as any).evaluations.length > 0) ? `Mean Score: ${(sub as any).meanScore} (${(sub as any).evaluations.length} Judges)` : `System Score: ${sub.score}`}
+                                {(sub.evaluations && sub.evaluations.length > 0) ? `Mean Score: ${sub.meanScore} (${sub.evaluations.length} Judges)` : `System Score: ${sub.score}`}
                               </span>
                             </div>
                             <p className="text-sm text-zinc-400 mb-4 line-clamp-2">{sub.writeup}</p>
