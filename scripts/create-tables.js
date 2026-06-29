@@ -16,6 +16,7 @@ const NOTIFICATIONS_TABLE = process.env.DYNAMODB_TABLE_NOTIFICATIONS || "OpenSol
 const APPLICATIONS_TABLE = process.env.DYNAMODB_TABLE_APPLICATIONS || "OpenSolve_Applications";
 const TEAMS_TABLE = process.env.DYNAMODB_TABLE_TEAMS || "OpenSolve_Teams";
 const MESSAGES_TABLE = process.env.DYNAMODB_TABLE_MESSAGES || "OpenSolve_Messages";
+const EVALUATIONS_TABLE = process.env.DYNAMODB_TABLE_EVALUATIONS || "OpenSolve_Evaluations";
 
 async function createTable(params) {
   try {
@@ -218,6 +219,19 @@ async function setupDynamoDB() {
     AttributeDefinitions: [
       { AttributeName: "threadId", AttributeType: "S" },
       { AttributeName: "createdAt", AttributeType: "S" }
+    ],
+    BillingMode: "PAY_PER_REQUEST"});
+
+  // 10. Evaluations Table
+  await createTable({
+    TableName: EVALUATIONS_TABLE,
+    KeySchema: [
+      { AttributeName: "submissionKey", KeyType: "HASH" },
+      { AttributeName: "judgeId", KeyType: "RANGE" }
+    ],
+    AttributeDefinitions: [
+      { AttributeName: "submissionKey", AttributeType: "S" },
+      { AttributeName: "judgeId", AttributeType: "S" }
     ],
     BillingMode: "PAY_PER_REQUEST"});
 

@@ -47,8 +47,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "This problem does not require escrow funding" }, { status: 400 });
     }
 
-    if (problem.status !== "PENDING_ESCROW") {
-      return NextResponse.json({ error: "This problem is already funded or active" }, { status: 400 });
+    if (problem.isPaid) {
+      return NextResponse.json({ error: "This problem is already funded" }, { status: 400 });
     }
 
     const hostUrl = process.env.NEXT_PUBLIC_APP_URL || request.headers.get("origin") || "http://localhost:3000";
@@ -62,7 +62,7 @@ export async function POST(request: Request) {
             currency: "usd",
             product_data: {
               name: `Bounty Escrow: ${problem.title}`,
-              description: "Funds will be held in escrow until a winning solution is selected.",
+              description: "100% of these funds are reserved for the prize. (99.5% to the winning student, 0.5% OpenSolve processing fee).",
             },
             unit_amount: problem.prizeAmount * 100, // Stripe expects cents
           },

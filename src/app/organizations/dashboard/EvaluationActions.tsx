@@ -163,8 +163,8 @@ export default function EvaluationActions({
     }
   };
 
-  const primaryAction = prizeType === "HIRING" ? "HIRE" : "CONTRACT";
-  const primaryText = prizeType === "HIRING" ? "Extend Hire Offer" : "Offer Contract";
+  const primaryAction = prizeType === "HIRING" ? "HIRE" : prizeType === "INTERNSHIP" ? "INTERNSHIP" : prizeType === "CASH" || prizeType === "CASH_PRIZE" ? "AWARD_PRIZE" : "CONTRACT";
+  const primaryText = prizeType === "HIRING" ? "Extend Hire Offer" : prizeType === "INTERNSHIP" ? "Offer Internship" : prizeType === "CASH" || prizeType === "CASH_PRIZE" ? "Award Prize" : "Offer Contract";
 
   return (
     <>

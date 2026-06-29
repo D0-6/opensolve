@@ -14,7 +14,7 @@ export async function POST(
   if (!userId) return NextResponse.json({ error: "Sign in to answer" }, { status: 401 });
 
   const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
-  if (!checkRateLimit(ip)) {
+  if (!(await checkRateLimit(ip))) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 

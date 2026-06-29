@@ -78,6 +78,14 @@ export async function runIngestion() {
               entityType: "PROBLEM"
             }
           }));
+          
+          // Increment stats
+          const { incrementPlatformStat } = await import("@/lib/data");
+          await incrementPlatformStat("activeProblems", 1);
+          if (p.prizeAmount > 0) {
+            await incrementPlatformStat("totalPrizePool", p.prizeAmount);
+          }
+          
           added++;
         }
       }

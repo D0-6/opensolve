@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   }
 
   const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
-  if (!checkRateLimit(ip)) {
+  if (!(await checkRateLimit(ip))) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 
@@ -96,6 +96,12 @@ export async function POST(request: Request) {
 
     // Immediately reward the scout with 100 Scout Points
     await incrementScoutPoints(userId, 100);
+    
+    // Update Platform stats
+    await incrementPlatformStat("activeProblems", 1);
+    if (problem.prizeAmount > 0) {
+      await incrementPlatformStat("totalPrizePool", problem.prizeAmount);
+    }
 
     return NextResponse.json({ problem, scoutPoints: 100 }, { status: 201 });
   } catch (error: unknown) {

@@ -171,6 +171,11 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
                 ? `$${Number(problem.prizeAmount).toLocaleString()}`
                 : problem.prizeType?.replace(/_/g, " ")}
             </span>
+            {problem.prizeType === "CASH" && problem.prizeAmount > 0 && (
+              <div className="text-[10px] text-zinc-400 mt-0.5">
+                99.5% to winner, 0.5% platform fee
+              </div>
+            )}
             {Array.isArray(problem.prizeBreakdown) && problem.prizeBreakdown.length > 0 && (
               <div className="mt-2 space-y-1">
                 {(problem.prizeBreakdown as any[]).map((prize, i) => (

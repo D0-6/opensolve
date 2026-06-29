@@ -77,6 +77,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
     getPlatformStats(),
   ]);
   const problems = problemsRes.items;
+  
   const totalPrize = problems.reduce((sum: number, p: Problem) => sum + (Number(p.prizeAmount) || 0), 0);
   
   const newThisWeek = problems.filter((p: Problem) => {

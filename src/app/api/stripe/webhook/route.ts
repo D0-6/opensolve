@@ -38,12 +38,9 @@ export async function POST(request: Request) {
           new UpdateCommand({
             TableName: PROBLEMS_TABLE,
             Key: { problemId },
-            UpdateExpression: "SET #status = :open, paymentStatus = :funded, escrowSessionId = :sid",
-            ExpressionAttributeNames: {
-              "#status": "status",
-            },
+            UpdateExpression: "SET isPaid = :paid, paymentStatus = :funded, escrowSessionId = :sid",
             ExpressionAttributeValues: {
-              ":open": "OPEN",
+              ":paid": true,
               ":funded": "FUNDED",
               ":sid": session.id,
             },

@@ -15,8 +15,8 @@ export async function GET(
   const role = (sessionClaims?.metadata as Record<string, string> | undefined)?.role
     || (sessionClaims?.publicMetadata as Record<string, string> | undefined)?.role;
 
-  if (currentUserId !== userId && role !== "admin" && role !== "organization" && role !== "company") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (currentUserId !== userId && role !== "admin") {
+    return NextResponse.json({ error: "Forbidden: You can only view your own submission history." }, { status: 403 });
   }
 
   try {

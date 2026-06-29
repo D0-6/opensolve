@@ -31,8 +31,44 @@ export async function GET(request: Request) {
   }
 
   try {
+    const { auth } = await import("@clerk/nextjs/server");
+    const { userId, sessionClaims } = await auth();
+    const role = (sessionClaims?.metadata as Record<string, string> | undefined)?.role
+      || (sessionClaims?.publicMetadata as Record<string, string> | undefined)?.role;
+
+    const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
+    const problemRes = await docClient.send(new GetCommand({
+      TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
+      Key: { problemId }
+    }));
+
+    const problem = problemRes.Item;
+    if (!problem) return NextResponse.json({ error: "Problem not found" }, { status: 404 });
+
     const result = await getSubmissions(problemId, lastEvaluatedKey);
-    return NextResponse.json({ submissions: result.items, lastEvaluatedKey: result.lastEvaluatedKey });
+    let items = result.items || [];
+
+    // Submissions are hidden until the deadline passes, unless you are an admin or the owning org.
+    // Students can only see their own submission while the competition is active.
+    const isPastDeadline = new Date(problem.deadline) < new Date();
+    const isOwningOrg = problem.postedByOrgId === userId;
+    const isAdmin = role === "admin";
+
+    if (!isPastDeadline && !isOwningOrg && !isAdmin) {
+      if (userId) {
+        items = items.filter(sub => sub.userId === userId);
+      } else {
+        items = [];
+      }
+      return NextResponse.json({ 
+        submissions: items, 
+        lastEvaluatedKey: result.lastEvaluatedKey,
+        resultsHidden: true,
+        message: "Results are hidden until the deadline."
+      });
+    }
+
+    return NextResponse.json({ submissions: items, lastEvaluatedKey: result.lastEvaluatedKey });
   } catch (error) {
     console.error("Error fetching submissions:", error);
     return NextResponse.json({ error: "Failed to fetch submissions" }, { status: 500 });

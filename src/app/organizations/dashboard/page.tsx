@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Briefcase, Users, FileText, ExternalLink, Mail, CheckCircle2, Award } from "lucide-react";
 import Link from "next/link";
 import EvaluationActions from "./EvaluationActions";
+import FundButton from "./FundButton";
 
 const PROBLEMS_TABLE = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
 const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
@@ -79,13 +80,26 @@ export default async function OrgDashboard() {
                 <div className="p-6">
                   <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Candidate Pipeline</h3>
                   
-                  {problem.submissions.length === 0 ? (
+                  {problem.prizeAmount > 0 && !problem.isPaid ? (
+                    <div className="py-12 px-6 border border-zinc-200 bg-zinc-50 flex flex-col items-center justify-center text-center space-y-4 rounded-sm">
+                      <div className="w-12 h-12 bg-white border border-zinc-200 rounded-full flex items-center justify-center text-zinc-400 mb-2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                      </div>
+                      <h4 className="text-lg font-semibold text-zinc-900">Submissions Locked</h4>
+                      <p className="text-zinc-500 max-w-md text-sm">
+                        You have {problem.submissions.length} submission{problem.submissions.length === 1 ? "" : "s"} waiting. Pay the prize amount to unlock candidate code, writeups, and evaluations. Payment is due 5 days before the deadline.
+                      </p>
+                      <div className="pt-4">
+                        <FundButton problemId={problem.problemId} />
+                      </div>
+                    </div>
+                  ) : problem.submissions.length === 0 ? (
                     <div className="py-8 text-center text-zinc-400 text-sm italic">
                       Awaiting submissions...
                     </div>
                   ) : (
                     <div className="flex flex-col border-t border-zinc-200">
-                      {problem.submissions.map(sub => (
+                      {problem.submissions.map((sub: any) => (
                         <div key={sub.rankKey} className="border-b border-zinc-200 py-6 px-4 -mx-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 hover:bg-zinc-50 transition-colors">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-3 mb-2">

@@ -76,21 +76,38 @@ export async function POST(request: Request) {
   const role = (sessionClaims?.metadata as Record<string, string> | undefined)?.role
     || (sessionClaims?.publicMetadata as Record<string, string> | undefined)?.role;
 
-  if (studentId !== userId) {
+  const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
+  const problemRes = await docClient.send(new GetCommand({
+    TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
+    Key: { problemId }
+  }));
+  const problem = problemRes.Item;
+
+  if (!problem) {
+    return NextResponse.json({ error: "Problem not found" }, { status: 404 });
+  }
+
+  let calculatedRecipientId: string | undefined = undefined;
+
+  if (studentId === userId) {
+    // If the sender is the student, the recipient is the org owner
+    calculatedRecipientId = problem.postedByOrgId;
+  } else {
+    // Sender is not the student. Verify they are admin or owning org.
     if (role === "admin") {
-      // Admins can post
+      calculatedRecipientId = studentId;
     } else if (role === "organization" || role === "company") {
-      const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
-      const problemRes = await docClient.send(new GetCommand({
-        TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
-        Key: { problemId }
-      }));
-      if (!problemRes.Item || problemRes.Item.postedByOrgId !== userId) {
+      if (problem.postedByOrgId !== userId) {
         return NextResponse.json({ error: "Forbidden: You do not own this problem" }, { status: 403 });
       }
+      calculatedRecipientId = studentId;
     } else {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
+  }
+
+  if (!calculatedRecipientId) {
+    return NextResponse.json({ error: "Could not determine message recipient" }, { status: 400 });
   }
 
   const messageId = uuidv4();
@@ -110,7 +127,7 @@ export async function POST(request: Request) {
   // Write a notification for the recipient
   const { createNotification } = await import("@/lib/notifications");
   await createNotification({
-    targetUserId: recipientUserId,
+    targetUserId: calculatedRecipientId,
     type: "MESSAGE",
     title: `New message from ${senderName || "OpenSolve"}`,
     message: text.substring(0, 120) + (text.length > 120 ? "…" : ""),

@@ -16,7 +16,7 @@ const EVALUATIONS_TABLE = process.env.DYNAMODB_TABLE_EVALUATIONS || "OpenSolve_E
 const EvaluateSchema = z.object({
   problemId: z.string().min(1),
   rankKey: z.string().min(1),
-  action: z.enum(['HIRE', 'CONTRACT', 'INTERVIEW', 'REJECT', 'SCORE']),
+  action: z.enum(['HIRE', 'CONTRACT', 'INTERVIEW', 'REJECT', 'SCORE', 'INTERNSHIP', 'AWARD_PRIZE']),
   submitterName: z.string().min(1).optional().default('Student'),
   studentUserId: z.string().min(1).optional(),
   rubricScores: z.object({
@@ -36,7 +36,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 
-  // Fetch the org admin's metadata to get their orgId
   const orgAdmin = await currentUser();
   const orgId = orgAdmin?.publicMetadata?.orgId as string | undefined;
 
@@ -48,9 +47,6 @@ export async function POST(request: Request) {
     }
     const { problemId, rankKey, action, submitterName, studentUserId, rubricScores } = parsed.data;
 
-    // Security Check: only the org that posted the problem can evaluate.
-    // postedByOrgId stores the orgId UUID (from org onboarding) OR the Clerk userId (for company-role users).
-    // We check both to support both role types.
     const problemRes = await docClient.send(new GetCommand({
       TableName: PROBLEMS_TABLE,
       Key: { problemId }
@@ -72,7 +68,7 @@ export async function POST(request: Request) {
     if (action === "HIRE") {
       status = "HIRED";
       notificationTitle = "🎉 Hiring Offer Received!";
-      notificationMessage = `The organization reviewing "${problemRes.Item.title}" has extended a full-time hiring offer to you. A representative will contact you shortly.`;
+      notificationMessage = `The organization reviewing "${problemRes.Item.title}" has extended a full-time hiring offer to you.`;
       emailSubject = `🎊 Official Hiring Offer: ${problemRes.Item.title}`;
       emailBody = `Hello ${submitterName},\n\nThe organization was blown away by your submission. They would like to officially extend a full-time hiring offer!\n\nA representative will reach out to you shortly to discuss next steps and compensation.`;
     } else if (action === "CONTRACT") {
@@ -81,6 +77,18 @@ export async function POST(request: Request) {
       notificationMessage = `You have been selected for a paid contract on "${problemRes.Item.title}". Check your dashboard for details.`;
       emailSubject = `📄 Contract Offer: ${problemRes.Item.title}`;
       emailBody = `Hello ${submitterName},\n\nYour solution has been selected! The organization would like to offer you a paid contract to implement and maintain this solution.\n\nPlease check your dashboard for the contract details.`;
+    } else if (action === "INTERNSHIP") {
+      status = "INTERNSHIP_OFFERED";
+      notificationTitle = "🚀 Internship Offer!";
+      notificationMessage = `You have been selected for an internship opportunity based on your solution for "${problemRes.Item.title}".`;
+      emailSubject = `🚀 Internship Offer: ${problemRes.Item.title}`;
+      emailBody = `Hello ${submitterName},\n\nThe organization was very impressed by your submission and would like to offer you an internship role!\n\nA representative will be in touch shortly with more details.`;
+    } else if (action === "AWARD_PRIZE") {
+      status = "PRIZE_AWARDED";
+      notificationTitle = "🏆 Prize Awarded!";
+      notificationMessage = `Congratulations! You have been selected as a winner for "${problemRes.Item.title}".`;
+      emailSubject = `🏆 Prize Awarded: ${problemRes.Item.title}`;
+      emailBody = `Hello ${submitterName},\n\nCongratulations! Your solution for "${problemRes.Item.title}" has been selected as a winner and you have been awarded the prize.\n\nThe organization will reach out to process your reward.`;
     } else if (action === "INTERVIEW") {
       status = "INTERVIEW_REQUESTED";
       notificationTitle = "📅 Interview Request";
@@ -101,6 +109,25 @@ export async function POST(request: Request) {
       emailBody = `Hello ${submitterName},\n\nYour solution has been officially scored by the judging panel!`;
     } else {
       return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+    }
+
+    // Org Responsiveness check (Item 8)
+    // If within 30 days of problem deadline, we increment the org's responsiveness score
+    if (postedByOrgId && action !== "SCORE") {
+      const deadline = new Date(problemRes.Item.deadline);
+      const thirtyDaysAfter = new Date(deadline.getTime() + 30 * 24 * 60 * 60 * 1000);
+      if (new Date() <= thirtyDaysAfter && new Date() >= deadline) {
+        try {
+          await docClient.send(new UpdateCommand({
+            TableName: process.env.DYNAMODB_TABLE_ORGANIZATIONS || "OpenSolve_Organizations",
+            Key: { orgId: postedByOrgId },
+            UpdateExpression: "ADD evaluationsMetDeadline :inc",
+            ExpressionAttributeValues: { ":inc": 1 }
+          }));
+        } catch (e) {
+          console.error("Failed to increment responsiveness metric for org", e);
+        }
+      }
     }
 
     // Update Submission Status

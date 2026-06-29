@@ -49,7 +49,7 @@ export async function POST(request: Request) {
   }
 
   const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
-  if (!checkRateLimit(ip)) {
+  if (!(await checkRateLimit(ip))) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 
@@ -80,8 +80,9 @@ export async function POST(request: Request) {
       postedAt: now,
       postedByOrgId: orgId,
       verified: false,
-      status: body.prizeAmount > 0 ? "PENDING_ESCROW" : "OPEN",
+      status: "OPEN",
       paymentStatus: body.prizeAmount > 0 ? "UNFUNDED" : "NA",
+      isPaid: body.prizeAmount > 0 ? false : true,
       entityType: "PROBLEM",
       resourceLinks: body.resourceLinks,
       requiredSkills: body.requiredSkills,
