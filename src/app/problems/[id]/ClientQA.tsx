@@ -59,21 +59,21 @@ export default function ClientQA({ problemId }: { problemId: string }) {
       <div className="flex-1 overflow-y-auto space-y-4 mb-6 pr-2">
         {loading ? (
           <div className="animate-pulse space-y-4">
-            <div className="h-16 bg-zinc-100 rounded"></div>
-            <div className="h-16 bg-zinc-100 rounded"></div>
+            <div className="h-16 bg-white/10 rounded"></div>
+            <div className="h-16 bg-white/10 rounded"></div>
           </div>
         ) : threads.length === 0 ? (
-          <div className="text-center text-zinc-400 py-12 border border-zinc-200 border-dashed">
+          <div className="text-center text-zinc-400 py-12 border border-white/10 border-dashed">
             <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-50 text-zinc-300" />
             <span className="text-sm">No questions yet.</span>
           </div>
         ) : (
           threads.map((thread) => (
-            <div key={thread.sk} className="bg-zinc-50 p-4 border border-zinc-200">
-              <div className="font-semibold text-zinc-900 text-sm mb-1">User {thread.askedBy.substring(0,6)}</div>
-              <p className="text-sm text-zinc-700">{thread.questionText}</p>
+            <div key={thread.sk} className="bg-white/5 p-4 border border-white/10">
+              <div className="font-semibold text-white text-sm mb-1">User {thread.askedBy.substring(0,6)}</div>
+              <p className="text-sm text-zinc-300">{thread.questionText}</p>
               {thread.answers?.length > 0 && (
-                <div className="mt-3 pl-3 border-l-2 border-[#1a3a5c] text-xs text-zinc-500 font-medium">
+                <div className="mt-3 pl-3 border-l-2 border-[#1a3a5c] text-xs text-zinc-400 font-medium">
                   {thread.answers.length} reply
                 </div>
               )}
@@ -88,7 +88,7 @@ export default function ClientQA({ problemId }: { problemId: string }) {
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Ask a question..."
-          className="w-full bg-white border border-zinc-300 py-3 pl-4 pr-12 focus:outline-none focus:border-[#1a3a5c] text-sm text-zinc-900 placeholder:text-zinc-400 transition-colors"
+          className="w-full bg-transparent border border-white/20 py-3 pl-4 pr-12 focus:outline-none focus:border-[#1a3a5c] text-sm text-white placeholder:text-zinc-400 transition-colors"
           disabled={submitting}
         />
         <button 

@@ -68,22 +68,22 @@ export default function SubmitClient({
   };
 
   return (
-    <div className="max-w-2xl mx-auto pt-12 md:pt-24 px-6 lg:px-8 pb-24 min-h-screen bg-white">
+    <div className="max-w-2xl mx-auto pt-12 md:pt-24 px-6 lg:px-8 pb-24 min-h-screen bg-transparent">
       
-      <Link href={`/problems/${problemId}/team`} className="inline-flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-zinc-900 mb-8 transition-colors">
+      <Link href={`/problems/${problemId}/team`} className="inline-flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white mb-8 transition-colors">
         <ArrowLeft size={16} /> Back to Team Formation
       </Link>
 
       <div className="mb-12">
-        <h1 className="text-3xl md:text-5xl font-medium text-zinc-900 leading-tight mb-3 tracking-tight">
+        <h1 className="text-3xl md:text-5xl font-medium text-white leading-tight mb-3 tracking-tight">
           Submit Solution
         </h1>
-        <p className="text-base text-zinc-500">
-          Submitting final deliverable for <strong className="text-zinc-800">{problemTitle}</strong>.
+        <p className="text-base text-zinc-400">
+          Submitting final deliverable for <strong className="text-zinc-200">{problemTitle}</strong>.
         </p>
       </div>
 
-      <div className="bg-white border border-zinc-200 p-6 md:p-10">
+      <div className="bg-transparent border border-white/10 p-6 md:p-10">
         {error && (
           <div className="flex items-start gap-3 bg-[#1a3a5c]/10 border border-[#1a3a5c]/20 text-[#1a3a5c] p-4 mb-8 text-sm font-medium">
             <AlertCircle size={18} className="mt-0.5 shrink-0" />
@@ -94,21 +94,21 @@ export default function SubmitClient({
         <form onSubmit={handleSubmit} className="flex flex-col gap-8">
           
           {/* Identity Display */}
-          <div className="bg-zinc-50 border border-zinc-200 p-6">
-            <label className="block text-xs font-bold text-zinc-500 mb-3 uppercase tracking-wider">
+          <div className="bg-white/5 border border-white/10 p-6">
+            <label className="block text-xs font-bold text-zinc-400 mb-3 uppercase tracking-wider">
               Submission Identity
             </label>
             {hasTeam ? (
               <div>
-                <div className="flex items-center gap-2 text-sm font-medium text-zinc-900 mb-2">
+                <div className="flex items-center gap-2 text-sm font-medium text-white mb-2">
                   <Users size={16} className="text-zinc-400" /> Submitting as a Team
                 </div>
-                <div className="text-xs text-zinc-500">
+                <div className="text-xs text-zinc-400">
                   Members: You, {teamMembers.map(m => m.name).join(", ")}
                 </div>
               </div>
             ) : (
-              <div className="text-sm font-medium text-zinc-900">
+              <div className="text-sm font-medium text-white">
                 Submitting Solo (You)
               </div>
             )}
@@ -116,7 +116,7 @@ export default function SubmitClient({
 
           {/* GitHub URL */}
           <div>
-            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+            <label className="block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider">
               <GitBranch size={14} className="inline mr-1.5 align-text-bottom text-zinc-400" />
               GitHub Repository URL *
             </label>
@@ -127,13 +127,13 @@ export default function SubmitClient({
               value={formData.githubUrl}
               onChange={handleChange}
               placeholder="https://github.com/yourusername/your-solution"
-              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
+              className="w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
             />
           </div>
 
           {/* Demo URL */}
           <div>
-            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+            <label className="block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider">
               <Globe size={14} className="inline mr-1.5 align-text-bottom text-zinc-400" />
               Live Demo URL <span className="font-normal normal-case tracking-normal">(optional)</span>
             </label>
@@ -143,13 +143,13 @@ export default function SubmitClient({
               value={formData.demoUrl}
               onChange={handleChange}
               placeholder="https://your-demo.vercel.app"
-              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
+              className="w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
             />
           </div>
 
           {/* Video URL */}
           <div>
-            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+            <label className="block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider">
               Video Walkthrough / Pitch <span className="font-normal normal-case tracking-normal">(optional)</span>
             </label>
             <input
@@ -158,13 +158,13 @@ export default function SubmitClient({
               value={formData.videoUrl}
               onChange={handleChange}
               placeholder="https://youtube.com/watch?v=... or https://loom.com/share/..."
-              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
+              className="w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
             />
           </div>
 
           {/* Tech Stack */}
           <div>
-            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+            <label className="block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider">
               Tech Stack
             </label>
             <input
@@ -173,14 +173,14 @@ export default function SubmitClient({
               value={formData.techStack}
               onChange={handleChange}
               placeholder="Next.js, Python, DynamoDB, Tailwind..."
-              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
+              className="w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors font-mono text-sm"
             />
-            <p className="text-xs text-zinc-500 mt-2">Comma separated (e.g. React, Node.js, AWS)</p>
+            <p className="text-xs text-zinc-400 mt-2">Comma separated (e.g. React, Node.js, AWS)</p>
           </div>
 
           {/* Writeup */}
           <div>
-            <label className="block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+            <label className="block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider">
               Solution Writeup *
             </label>
             <textarea
@@ -191,7 +191,7 @@ export default function SubmitClient({
               maxLength={500}
               rows={6}
               placeholder="Explain your approach, tech stack, key decisions, and why your solution stands out..."
-              className="w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm resize-y"
+              className="w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm resize-y"
             />
             <div className="text-right text-xs text-zinc-400 mt-2 font-medium">
               {formData.writeup.length} / 500

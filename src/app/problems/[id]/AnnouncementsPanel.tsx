@@ -25,7 +25,7 @@ export default function AnnouncementsPanel({ problemId, announcements }: Announc
 
   return (
     <div>
-      <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2 flex items-center gap-2">
+      <h2 className="text-xl font-medium text-white mb-6 border-b border-white/10 pb-2 flex items-center gap-2">
         <Megaphone size={18} className="text-amber-500" />
         Updates
         <span className="ml-auto text-sm font-normal text-zinc-400">{announcements.length}</span>
@@ -33,13 +33,13 @@ export default function AnnouncementsPanel({ problemId, announcements }: Announc
 
       <div className="space-y-3">
         {announcements.map((ann) => (
-          <div key={ann.id} className="border border-zinc-200 bg-white">
+          <div key={ann.id} className="border border-white/10 bg-transparent">
             <button
               onClick={() => setExpanded(expanded === ann.id ? null : ann.id)}
-              className="w-full text-left px-5 py-4 flex items-start justify-between gap-3 hover:bg-zinc-50 transition-colors"
+              className="w-full text-left px-5 py-4 flex items-start justify-between gap-3 hover:bg-white/5 transition-colors"
             >
               <div>
-                <div className="font-semibold text-zinc-900 text-sm">{ann.title}</div>
+                <div className="font-semibold text-white text-sm">{ann.title}</div>
                 <div className="text-xs text-zinc-400 mt-1">
                   {formatDistanceToNow(new Date(ann.postedAt), { addSuffix: true })}
                 </div>
@@ -52,8 +52,8 @@ export default function AnnouncementsPanel({ problemId, announcements }: Announc
             </button>
 
             {expanded === ann.id && (
-              <div className="px-5 pb-5 border-t border-zinc-100 pt-4">
-                <p className="text-sm text-zinc-700 leading-relaxed whitespace-pre-wrap">{ann.content}</p>
+              <div className="px-5 pb-5 border-t border-white/5 pt-4">
+                <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">{ann.content}</p>
               </div>
             )}
           </div>

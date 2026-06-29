@@ -90,18 +90,18 @@ export default async function SolutionsPage({ searchParams }: {
   )].sort();
 
   return (
-    <div className="min-h-screen bg-white pt-24 pb-24 px-6">
+    <div className="min-h-screen bg-transparent pt-24 pb-24 px-6">
       <div className="w-full max-w-[125rem] mx-auto">
 
         {/* Header */}
-        <div className="mb-12 border-b border-zinc-200 pb-12">
-          <div className="inline-flex items-center gap-2 bg-zinc-50 border border-zinc-200 rounded-full px-3 py-1.5 text-xs font-bold text-zinc-600 uppercase tracking-wider mb-6">
+        <div className="mb-12 border-b border-white/10 pb-12">
+          <div className="inline-flex items-center gap-2 bg-transparent/5 border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-zinc-400 uppercase tracking-wider mb-6">
             <Layers size={14} /> Solutions Gallery
           </div>
-          <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-zinc-900 mb-3">
+          <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-white mb-3">
             Public Solutions
           </h1>
-          <p className="text-zinc-500 text-base max-w-xl">
+          <p className="text-zinc-400 text-base max-w-xl">
             Browse real solutions submitted by builders tackling real problems from companies, startups, and government. Ranked by quality score.
           </p>
         </div>
@@ -114,7 +114,7 @@ export default async function SolutionsPage({ searchParams }: {
               className={`px-4 py-2 text-xs font-bold uppercase tracking-wider border transition-colors ${
                 !domainFilter
                   ? "bg-zinc-900 text-white border-zinc-900"
-                  : "border-zinc-200 text-zinc-500 hover:border-zinc-400 hover:text-zinc-900"
+                  : "border-white/10 text-zinc-400 hover:border-zinc-400 hover:text-white"
               }`}
             >
               All ({allSubmissions.length})
@@ -128,7 +128,7 @@ export default async function SolutionsPage({ searchParams }: {
                   className={`px-4 py-2 text-xs font-bold uppercase tracking-wider border transition-colors ${
                     domainFilter === domain
                       ? "bg-zinc-900 text-white border-zinc-900"
-                      : "border-zinc-200 text-zinc-500 hover:border-zinc-400 hover:text-zinc-900"
+                      : "border-white/10 text-zinc-400 hover:border-zinc-400 hover:text-white"
                   }`}
                 >
                   {domain} ({count})
@@ -139,9 +139,9 @@ export default async function SolutionsPage({ searchParams }: {
         )}
 
         {filtered.length === 0 ? (
-          <div className="border border-dashed border-zinc-200 p-20 text-center">
+          <div className="border border-dashed border-white/10 p-20 text-center">
             <Layers size={40} className="mx-auto text-zinc-200 mb-4" />
-            <p className="text-zinc-500 font-medium">No solutions yet.</p>
+            <p className="text-zinc-400 font-medium">No solutions yet.</p>
             <p className="text-zinc-400 text-sm mt-1">Apply to a challenge and submit the first solution!</p>
             <Link href="/challenges" className="btn-primary inline-block mt-6 px-6 py-2.5 text-sm">Browse Challenges</Link>
           </div>
@@ -154,14 +154,14 @@ export default async function SolutionsPage({ searchParams }: {
               const teamMembers = Array.isArray(sub.teamMembers) ? sub.teamMembers : [];
 
               return (
-                <div key={`${sub.problemId}-${sub.submittedAt}`} className="border border-zinc-200 bg-white flex flex-col hover:border-[#1a3a5c] transition-colors group">
+                <div key={`${sub.problemId}-${sub.submittedAt}`} className="border border-white/10 bg-transparent flex flex-col hover:border-[#1a3a5c] transition-colors group">
                   {/* Score badge */}
-                  <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-zinc-100">
+                  <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/5">
                     <div className="flex items-center gap-2">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
                         Number(sub.score) >= 80 ? "bg-green-100 text-green-700 border border-green-200" :
                         Number(sub.score) >= 50 ? "bg-yellow-50 text-yellow-700 border border-yellow-200" :
-                        "bg-zinc-100 text-zinc-600 border border-zinc-200"
+                        "bg-transparent/10 text-zinc-400 border border-white/10"
                       }`}>
                         {Number(sub.score) || "—"}
                       </div>
@@ -186,7 +186,7 @@ export default async function SolutionsPage({ searchParams }: {
                     {problem && (
                       <Link href={`/problems/${sub.problemId}`} className="block mb-3">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-1">{String(problem.domain || "")}</span>
-                        <span className="text-sm font-semibold text-zinc-900 group-hover:text-[#1a3a5c] transition-colors line-clamp-2">
+                        <span className="text-sm font-semibold text-white group-hover:text-[#1a3a5c] transition-colors line-clamp-2">
                           {String(problem.title)}
                         </span>
                       </Link>
@@ -194,10 +194,10 @@ export default async function SolutionsPage({ searchParams }: {
 
                     {/* Builder info */}
                     <div className="flex items-center gap-2 mb-4">
-                      <div className="w-7 h-7 bg-zinc-100 border border-zinc-200 rounded-full flex items-center justify-center text-xs font-bold text-zinc-600 shrink-0">
+                      <div className="w-7 h-7 bg-transparent/10 border border-white/10 rounded-full flex items-center justify-center text-xs font-bold text-zinc-400 shrink-0">
                         {String(sub.studentName || "?").charAt(0).toUpperCase()}
                       </div>
-                      <Link href={`/profile/${sub.userId}`} className="text-sm font-medium text-zinc-900 hover:text-[#1a3a5c] transition-colors truncate">
+                      <Link href={`/profile/${sub.userId}`} className="text-sm font-medium text-white hover:text-[#1a3a5c] transition-colors truncate">
                         {String(sub.studentName || "Anonymous")}
                       </Link>
                       {teamMembers.length > 0 && (
@@ -208,18 +208,18 @@ export default async function SolutionsPage({ searchParams }: {
                     </div>
 
                     {/* Writeup */}
-                    <p className="text-sm text-zinc-500 line-clamp-3 leading-relaxed">
+                    <p className="text-sm text-zinc-400 line-clamp-3 leading-relaxed">
                       {String(sub.writeup || "")}
                     </p>
                   </div>
 
                   {/* Footer links */}
-                  <div className="px-6 pb-5 flex items-center gap-4 border-t border-zinc-100 pt-4">
+                  <div className="px-6 pb-5 flex items-center gap-4 border-t border-white/5 pt-4">
                     <a
                       href={String(sub.githubUrl)}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
+                      className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
                       onClick={e => e.stopPropagation()}
                     >
                       <GitBranch size={13} /> Repository
@@ -229,7 +229,7 @@ export default async function SolutionsPage({ searchParams }: {
                         href={String(sub.demoUrl)}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
+                        className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
                         onClick={e => e.stopPropagation()}
                       >
                         <Play size={13} /> Live Demo
@@ -246,7 +246,7 @@ export default async function SolutionsPage({ searchParams }: {
         )}
 
         {lastEvaluatedKey && (
-          <div className="mt-12 text-center border-t border-zinc-200 pt-8">
+          <div className="mt-12 text-center border-t border-white/10 pt-8">
             <Link
               href={`/solutions?${domainFilter ? `domain=${encodeURIComponent(domainFilter)}&` : ""}startKey=${Buffer.from(JSON.stringify(lastEvaluatedKey)).toString("base64url")}`}
               className="btn-primary inline-flex items-center gap-2 px-6 py-2.5 text-sm"

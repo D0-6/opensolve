@@ -33,11 +33,11 @@ export default async function RoleSelectionPage() {
   if (!user) redirect("/sign-in");
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex items-center justify-center py-12 px-6">
+    <div className="min-h-screen bg-transparent/5 flex items-center justify-center py-12 px-6">
       <div className="max-w-xl w-full">
         <div className="mb-8">
-          <h1 className="text-3xl font-medium text-zinc-900 tracking-tight">How are you joining?</h1>
-          <p className="text-zinc-500 text-sm mt-2">
+          <h1 className="text-3xl font-medium text-white tracking-tight">How are you joining?</h1>
+          <p className="text-zinc-400 text-sm mt-2">
             Choose your role — this determines what you can do on OpenSolve.
           </p>
         </div>
@@ -47,13 +47,13 @@ export default async function RoleSelectionPage() {
             type="submit"
             name="role"
             value="student"
-            className="group text-left bg-white border-2 border-zinc-200 p-6 hover:border-[#1a3a5c] transition-all focus:outline-none focus:border-[#1a3a5c]"
+            className="group text-left bg-transparent border-2 border-white/10 p-6 hover:border-[#1a3a5c] transition-all focus:outline-none focus:border-[#1a3a5c]"
           >
-            <div className="w-12 h-12 border border-zinc-200 bg-zinc-50 flex items-center justify-center mb-4 group-hover:border-[#1a3a5c] group-hover:text-[#1a3a5c] transition-colors">
+            <div className="w-12 h-12 border border-white/10 bg-transparent/5 flex items-center justify-center mb-4 group-hover:border-[#1a3a5c] group-hover:text-[#1a3a5c] transition-colors">
               <Users size={24} />
             </div>
-            <h2 className="text-lg font-semibold text-zinc-900 mb-1">Builder / Student</h2>
-            <p className="text-sm text-zinc-500">
+            <h2 className="text-lg font-semibold text-white mb-1">Builder / Student</h2>
+            <p className="text-sm text-zinc-400">
               Browse challenges, submit solutions, build your portfolio, and get hired by top companies.
             </p>
           </button>
@@ -62,13 +62,13 @@ export default async function RoleSelectionPage() {
             type="submit"
             name="role"
             value="organization"
-            className="group text-left bg-white border-2 border-zinc-200 p-6 hover:border-[#1a3a5c] transition-all focus:outline-none focus:border-[#1a3a5c]"
+            className="group text-left bg-transparent border-2 border-white/10 p-6 hover:border-[#1a3a5c] transition-all focus:outline-none focus:border-[#1a3a5c]"
           >
-            <div className="w-12 h-12 border border-zinc-200 bg-zinc-50 flex items-center justify-center mb-4 group-hover:border-[#1a3a5c] group-hover:text-[#1a3a5c] transition-colors">
+            <div className="w-12 h-12 border border-white/10 bg-transparent/5 flex items-center justify-center mb-4 group-hover:border-[#1a3a5c] group-hover:text-[#1a3a5c] transition-colors">
               <Building2 size={24} />
             </div>
-            <h2 className="text-lg font-semibold text-zinc-900 mb-1">Organization</h2>
-            <p className="text-sm text-zinc-500">
+            <h2 className="text-lg font-semibold text-white mb-1">Organization</h2>
+            <p className="text-sm text-zinc-400">
               Post real-world challenges, evaluate submissions, and hire directly from a vetted talent pool.
             </p>
           </button>
@@ -76,7 +76,7 @@ export default async function RoleSelectionPage() {
 
         <p className="text-xs text-zinc-400 mt-6 text-center">
           Already have an account?{" "}
-          <Link href="/sign-in" className="text-zinc-600 hover:text-zinc-900 font-medium">
+          <Link href="/sign-in" className="text-zinc-400 hover:text-white font-medium">
             Sign in instead
           </Link>
         </p>

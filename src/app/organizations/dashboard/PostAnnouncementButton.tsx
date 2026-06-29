@@ -48,14 +48,14 @@ export default function PostAnnouncementButton({ problemId }: { problemId: strin
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-6">
           <form
             onSubmit={handleSubmit}
-            className="bg-white w-full max-w-lg shadow-2xl border border-zinc-200"
+            className="bg-transparent w-full max-w-lg shadow-2xl border border-white/10"
           >
-            <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-200">
-              <h3 className="font-semibold text-zinc-900 flex items-center gap-2">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+              <h3 className="font-semibold text-white flex items-center gap-2">
                 <Megaphone size={18} className="text-amber-500" /> Post Challenge Update
               </h3>
               <button type="button" onClick={() => setOpen(false)}>
-                <X size={20} className="text-zinc-400 hover:text-zinc-700" />
+                <X size={20} className="text-zinc-400 hover:text-zinc-300" />
               </button>
             </div>
 
@@ -67,7 +67,7 @@ export default function PostAnnouncementButton({ problemId }: { problemId: strin
               )}
 
               <div>
-                <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
                   Update Title *
                 </label>
                 <input
@@ -77,12 +77,12 @@ export default function PostAnnouncementButton({ problemId }: { problemId: strin
                   onChange={(e) => setTitle(e.target.value)}
                   maxLength={200}
                   placeholder="e.g., Deadline Extended to August 15th"
-                  className="w-full border border-zinc-300 px-4 py-3 text-sm focus:outline-none focus:border-[#1a3a5c] transition-colors"
+                  className="w-full border border-white/20 px-4 py-3 text-sm focus:outline-none focus:border-[#1a3a5c] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
                   Update Content *
                 </label>
                 <textarea
@@ -92,7 +92,7 @@ export default function PostAnnouncementButton({ problemId }: { problemId: strin
                   onChange={(e) => setContent(e.target.value)}
                   maxLength={2000}
                   placeholder="Provide details about this update. All builders who applied will be notified."
-                  className="w-full border border-zinc-300 px-4 py-3 text-sm focus:outline-none focus:border-[#1a3a5c] transition-colors resize-none"
+                  className="w-full border border-white/20 px-4 py-3 text-sm focus:outline-none focus:border-[#1a3a5c] transition-colors resize-none"
                 />
                 <div className="text-xs text-zinc-400 mt-1 text-right">{content.length}/2000</div>
               </div>
@@ -102,7 +102,7 @@ export default function PostAnnouncementButton({ problemId }: { problemId: strin
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="flex-1 py-3 border border-zinc-200 text-zinc-700 text-sm font-medium hover:bg-zinc-50 transition-colors"
+                className="flex-1 py-3 border border-white/10 text-zinc-300 text-sm font-medium hover:bg-transparent/5 transition-colors"
               >
                 Cancel
               </button>

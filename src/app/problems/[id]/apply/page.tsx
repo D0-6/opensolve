@@ -61,11 +61,11 @@ export default async function ApplyPage({ params }: { params: Promise<{ id: stri
   const isRestricted = Array.isArray(problem.allowedCountries) && problem.allowedCountries.length > 0;
   if (isRestricted && (!profile.country || !problem.allowedCountries.includes(profile.country))) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-6">
-        <div className="bg-white border border-red-200 p-8 max-w-lg w-full text-center">
+      <div className="min-h-screen bg-white/5 flex items-center justify-center p-6">
+        <div className="bg-transparent border border-red-200 p-8 max-w-lg w-full text-center">
           <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">!</div>
-          <h1 className="text-xl font-medium text-zinc-900 mb-2">Not Eligible</h1>
-          <p className="text-zinc-600 mb-6 text-sm">
+          <h1 className="text-xl font-medium text-white mb-2">Not Eligible</h1>
+          <p className="text-zinc-400 mb-6 text-sm">
             This challenge is restricted to specific countries and your profile indicates you are not eligible to apply.
           </p>
           <Link href={`/problems/${id}`} className="btn-primary inline-block px-6 py-2 text-sm">
@@ -76,35 +76,35 @@ export default async function ApplyPage({ params }: { params: Promise<{ id: stri
     );
   }
 
-  const inputStyles = "w-full bg-zinc-50 border border-zinc-200 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] focus:bg-white transition-colors text-sm";
-  const labelStyles = "block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider";
+  const inputStyles = "w-full bg-white/5 border border-white/10 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] focus:bg-transparent transition-colors text-sm";
+  const labelStyles = "block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider";
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-transparent">
       <div className="max-w-3xl mx-auto px-6 py-12 md:py-20">
         
-        <Link href={`/problems/${id}`} className="inline-flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-zinc-900 mb-8 transition-colors">
+        <Link href={`/problems/${id}`} className="inline-flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white mb-8 transition-colors">
           <ArrowLeft size={16} /> Back to Problem
         </Link>
 
-        <h1 className="text-3xl font-medium text-zinc-900 mb-2 tracking-tight">Apply to Work</h1>
-        <p className="text-zinc-500 mb-8">
-          Submit your application intent for <strong className="text-zinc-800">{problem.title}</strong>. Organizations review applications to decide who gets hired or contracted.
+        <h1 className="text-3xl font-medium text-white mb-2 tracking-tight">Apply to Work</h1>
+        <p className="text-zinc-400 mb-8">
+          Submit your application intent for <strong className="text-zinc-200">{problem.title}</strong>. Organizations review applications to decide who gets hired or contracted.
         </p>
 
         {/* Profile Snapshot Warning */}
-        <div className="bg-zinc-50 border border-zinc-200 p-6 mb-10">
-          <h2 className="text-sm font-bold text-zinc-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <div className="bg-white/5 border border-white/10 p-6 mb-10">
+          <h2 className="text-sm font-bold text-zinc-300 uppercase tracking-wider mb-4 flex items-center gap-2">
             <User size={16} /> Profile Snapshot Included
           </h2>
-          <p className="text-xs text-zinc-500 mb-4">
+          <p className="text-xs text-zinc-400 mb-4">
             The organization will see the following details from your profile when reviewing your application. Make sure they are up to date.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm bg-white border border-zinc-200 p-4">
-            <div><span className="font-medium text-zinc-900">Name:</span> <span className="text-zinc-600">{profile.name}</span></div>
-            <div><span className="font-medium text-zinc-900">Country:</span> <span className="text-zinc-600">{profile.country}</span></div>
-            <div className="flex items-center gap-1.5"><GraduationCap size={14} className="text-zinc-400" /> <span className="text-zinc-600">{profile.collegeOrInstitution || profile.degree || "N/A"}</span></div>
-            <div className="flex items-center gap-1.5"><GitBranch size={14} className="text-zinc-400" /> <span className="text-zinc-600 truncate">{profile.githubUrl || "Not provided"}</span></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm bg-transparent border border-white/10 p-4">
+            <div><span className="font-medium text-white">Name:</span> <span className="text-zinc-400">{profile.name}</span></div>
+            <div><span className="font-medium text-white">Country:</span> <span className="text-zinc-400">{profile.country}</span></div>
+            <div className="flex items-center gap-1.5"><GraduationCap size={14} className="text-zinc-400" /> <span className="text-zinc-400">{profile.collegeOrInstitution || profile.degree || "N/A"}</span></div>
+            <div className="flex items-center gap-1.5"><GitBranch size={14} className="text-zinc-400" /> <span className="text-zinc-400 truncate">{profile.githubUrl || "Not provided"}</span></div>
           </div>
           <div className="mt-4 text-right">
             <Link href={`/profile/${user.id}`} target="_blank" className="text-xs font-bold text-[#1a3a5c] uppercase tracking-wider hover:underline">
@@ -117,7 +117,7 @@ export default async function ApplyPage({ params }: { params: Promise<{ id: stri
           
           <div>
             <label htmlFor="motivation" className={labelStyles}>Motivation & Approach *</label>
-            <p className="text-xs text-zinc-500 mb-3">Why do you want to work on this, and what is your high-level technical approach?</p>
+            <p className="text-xs text-zinc-400 mb-3">Why do you want to work on this, and what is your high-level technical approach?</p>
             <textarea 
               required
               id="motivation"
@@ -130,7 +130,7 @@ export default async function ApplyPage({ params }: { params: Promise<{ id: stri
 
           <div>
             <label htmlFor="experience" className={labelStyles}>Relevant Experience</label>
-            <p className="text-xs text-zinc-500 mb-3">Highlight any specific projects, hacks, or past work that proves you can build this.</p>
+            <p className="text-xs text-zinc-400 mb-3">Highlight any specific projects, hacks, or past work that proves you can build this.</p>
             <textarea 
               id="experience"
               name="experience" 
@@ -142,7 +142,7 @@ export default async function ApplyPage({ params }: { params: Promise<{ id: stri
 
           <div>
             <label htmlFor="timeline" className={labelStyles}>Estimated Timeline *</label>
-            <p className="text-xs text-zinc-500 mb-3">How many weeks or days do you estimate it will take your team to deliver a working solution?</p>
+            <p className="text-xs text-zinc-400 mb-3">How many weeks or days do you estimate it will take your team to deliver a working solution?</p>
             <input 
               required
               id="timeline"
@@ -153,8 +153,8 @@ export default async function ApplyPage({ params }: { params: Promise<{ id: stri
             />
           </div>
 
-          <div className="pt-6 border-t border-zinc-200 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-zinc-500">
+          <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-xs text-zinc-400">
               Next step: You can optionally form a team before you submit your final solution.
             </p>
             <button type="submit" className="btn-primary w-full md:w-auto px-8 py-3 text-sm font-medium">

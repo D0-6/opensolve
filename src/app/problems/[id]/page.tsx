@@ -84,13 +84,13 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
   };
 
   return (
-    <div className="pt-24 pb-16 w-full max-w-[125rem] mx-auto px-6 bg-white min-h-screen">
+    <div className="pt-24 pb-16 w-full max-w-[125rem] mx-auto px-6 bg-transparent min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Back link */}
       <Link
         href="/challenges"
-        className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-900 text-sm mb-8 transition-colors font-medium"
+        className="inline-flex items-center gap-2 text-zinc-400 hover:text-white text-sm mb-8 transition-colors font-medium"
       >
         <ArrowLeft size={16} /> Back to Challenges
       </Link>
@@ -138,14 +138,14 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
       <div className="mb-12 relative">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="px-2.5 py-0.5 rounded-full border border-zinc-300 text-zinc-600 font-label-mono text-[11px] leading-tight shrink-0 uppercase tracking-wide font-semibold">
+            <span className="px-2.5 py-0.5 rounded-full border border-white/20 text-zinc-400 font-label-mono text-[11px] leading-tight shrink-0 uppercase tracking-wide font-semibold">
               {cfg.label} {problem.verified && "· Verified"}
             </span>
-            <span className="px-2.5 py-0.5 rounded-full border border-zinc-300 text-zinc-600 font-label-mono text-[11px] leading-tight shrink-0 uppercase tracking-wide font-semibold">
+            <span className="px-2.5 py-0.5 rounded-full border border-white/20 text-zinc-400 font-label-mono text-[11px] leading-tight shrink-0 uppercase tracking-wide font-semibold">
               {problem.domain}
             </span>
             {typeof problem.maxTeamSize === "number" && (
-              <span className="px-2.5 py-0.5 rounded-full border border-zinc-300 text-zinc-600 font-label-mono text-[11px] leading-tight shrink-0 uppercase tracking-wide font-semibold flex items-center gap-1">
+              <span className="px-2.5 py-0.5 rounded-full border border-white/20 text-zinc-400 font-label-mono text-[11px] leading-tight shrink-0 uppercase tracking-wide font-semibold flex items-center gap-1">
                 <Users size={11} /> Team up to {problem.maxTeamSize}
               </span>
             )}
@@ -159,14 +159,14 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
           </Link>
         </div>
 
-        <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-zinc-900 leading-tight mb-6">
+        <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-white leading-tight mb-6">
           {problem.title}
         </h1>
 
         <div className="flex flex-wrap items-center gap-x-8 gap-y-4 mb-8 text-sm">
           <div>
             <span className="text-zinc-400 uppercase tracking-wider text-xs font-bold block mb-1">Prize</span>
-            <span className="font-medium text-zinc-900">
+            <span className="font-medium text-white">
               {problem.prizeType === "CASH"
                 ? `$${Number(problem.prizeAmount).toLocaleString()}`
                 : problem.prizeType?.replace(/_/g, " ")}
@@ -180,8 +180,8 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
               <div className="mt-2 space-y-1">
                 {(problem.prizeBreakdown as any[]).map((prize, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs">
-                    <span className="font-bold text-zinc-500">{prize.place}:</span>
-                    <span className="text-zinc-700">${Number(prize.amount).toLocaleString()}</span>
+                    <span className="font-bold text-zinc-400">{prize.place}:</span>
+                    <span className="text-zinc-300">${Number(prize.amount).toLocaleString()}</span>
                   </div>
                 ))}
               </div>
@@ -189,13 +189,13 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
           </div>
           <div>
             <span className="text-zinc-400 uppercase tracking-wider text-xs font-bold block mb-1">Deadline</span>
-            <span className="font-medium text-zinc-900">
+            <span className="font-medium text-white">
               {new Date(problem.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
             </span>
           </div>
           <div>
             <span className="text-zinc-400 uppercase tracking-wider text-xs font-bold block mb-1">Eligibility</span>
-            <span className="font-medium text-zinc-900 flex items-center gap-1.5">
+            <span className="font-medium text-white flex items-center gap-1.5">
               {isCountryRestricted ? (
                 <><Lock size={13} className="text-amber-500" /> Country Restricted</>
               ) : (
@@ -210,7 +210,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
                 href={problem.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 font-medium text-zinc-900 hover:text-[#1a3a5c] transition-colors"
+                className="flex items-center gap-1.5 font-medium text-white hover:text-[#1a3a5c] transition-colors"
               >
                 View Original <ExternalLink size={14} />
               </a>
@@ -219,7 +219,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
         </div>
 
         {/* Description */}
-        <div className="prose prose-zinc prose-a:text-purple-600 prose-headings:text-zinc-900 max-w-none border-t border-zinc-200 pt-8 mt-8">
+        <div className="prose prose-zinc prose-a:text-purple-600 prose-headings:text-white max-w-none border-t border-white/10 pt-8 mt-8">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {problem.description || "No description provided."}
           </ReactMarkdown>
@@ -227,29 +227,29 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
 
         {/* Success criteria / requirements */}
         {problem.requirements && (
-          <div className="mt-8 bg-zinc-50 border border-zinc-200 p-6">
-            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Success Criteria</h3>
-            <p className="text-sm text-zinc-700 leading-relaxed whitespace-pre-wrap">{problem.requirements}</p>
+          <div className="mt-8 bg-white/5 border border-white/10 p-6">
+            <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3">Success Criteria</h3>
+            <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">{problem.requirements}</p>
           </div>
         )}
 
         {/* Judging Criteria */}
         {problem.judgingCriteria && (
-          <div className="mt-6 bg-zinc-50 border border-zinc-200 p-6">
-            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Judging Criteria</h3>
-            <p className="text-sm text-zinc-700 leading-relaxed whitespace-pre-wrap">{problem.judgingCriteria}</p>
+          <div className="mt-6 bg-white/5 border border-white/10 p-6">
+            <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3">Judging Criteria</h3>
+            <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">{problem.judgingCriteria}</p>
           </div>
         )}
 
         {/* Required skills */}
         {Array.isArray(problem.requiredSkills) && problem.requiredSkills.length > 0 && (
           <div className="mt-6">
-            <div className="flex items-center gap-2 text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">
+            <div className="flex items-center gap-2 text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3">
               <Tag size={13} /> Required Skills
             </div>
             <div className="flex flex-wrap gap-2">
               {(problem.requiredSkills as string[]).map(skill => (
-                <span key={skill} className="text-xs font-bold text-zinc-700 bg-white border border-zinc-200 px-3 py-1.5 uppercase tracking-wider">
+                <span key={skill} className="text-xs font-bold text-zinc-300 bg-transparent border border-white/10 px-3 py-1.5 uppercase tracking-wider">
                   {skill}
                 </span>
               ))}
@@ -260,7 +260,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
         {/* Resource Links */}
         {Array.isArray(problem.resourceLinks) && problem.resourceLinks.length > 0 && (
           <div className="mt-6">
-            <div className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Resources & Datasets</div>
+            <div className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3">Resources & Datasets</div>
             <div className="flex flex-col gap-2">
               {(problem.resourceLinks as string[]).map((link, i) => (
                 <a
@@ -279,9 +279,9 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
       </div>
 
       {/* Leaderboard + QA */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 border-t border-zinc-200 pt-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 border-t border-white/10 pt-12">
         <div className="lg:col-span-2">
-          <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2">Leaderboard</h2>
+          <h2 className="text-xl font-medium text-white mb-6 border-b border-white/10 pb-2">Leaderboard</h2>
           <ClientLeaderboard problemId={problem.problemId} />
         </div>
         <div className="space-y-8">
@@ -291,7 +291,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
             announcements={Array.isArray(problem.announcements) ? problem.announcements as any[] : []}
           />
           <div>
-            <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2">Community &amp; Mentorship</h2>
+            <h2 className="text-xl font-medium text-white mb-6 border-b border-white/10 pb-2">Community &amp; Mentorship</h2>
             
             {/* Discord / Community URL CTA */}
             {problem.communityUrl && (
@@ -299,7 +299,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
                 <div className="font-semibold text-[#1a3a5c] mb-2 flex items-center gap-2">
                   <Megaphone size={16} /> Connect with the Organization
                 </div>
-                <p className="text-zinc-700 mb-4 leading-relaxed">
+                <p className="text-zinc-300 mb-4 leading-relaxed">
                   Join the community space to ask questions, get mentorship, and interact directly with professionals reviewing this challenge.
                 </p>
                 <a

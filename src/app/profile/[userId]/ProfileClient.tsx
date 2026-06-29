@@ -113,8 +113,8 @@ export default function ProfileClient({
     window.location.reload();
   };
 
-  const inputStyles = "w-full bg-white border border-zinc-300 px-3 py-2.5 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm";
-  const labelStyles = "block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wider";
+  const inputStyles = "w-full bg-transparent border border-white/20 px-3 py-2.5 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm";
+  const labelStyles = "block text-xs font-bold text-zinc-400 mb-1.5 uppercase tracking-wider";
 
   const displayName = p?.name || fallbackName || `User ${userId.slice(0, 8)}`;
 
@@ -122,11 +122,11 @@ export default function ProfileClient({
     <div className="w-full max-w-[125rem] mx-auto mt-12 space-y-8 px-6 pb-16">
 
       {/* Profile Header Card */}
-      <div className="bg-white border border-zinc-200 p-8 relative">
+      <div className="bg-transparent border border-white/10 p-8 relative">
         {isOwner && !isEditing && (
           <button
             onClick={() => setIsEditing(true)}
-            className="absolute top-4 right-4 text-zinc-400 hover:text-[#1a3a5c] transition-colors bg-white border border-zinc-200 p-2 hover:bg-zinc-50"
+            className="absolute top-4 right-4 text-zinc-400 hover:text-[#1a3a5c] transition-colors bg-transparent border border-white/10 p-2 hover:bg-white/5"
             title="Edit Profile"
           >
             <Pencil size={18} />
@@ -136,7 +136,7 @@ export default function ProfileClient({
         {!isEditing ? (
           <div className="flex flex-col md:flex-row gap-8 items-start">
             {/* Avatar */}
-            <div className="w-28 h-28 bg-zinc-100 border border-zinc-200 flex-shrink-0 flex items-center justify-center text-[#1a3a5c] text-5xl font-medium overflow-hidden">
+            <div className="w-28 h-28 bg-white/10 border border-white/10 flex-shrink-0 flex items-center justify-center text-[#1a3a5c] text-5xl font-medium overflow-hidden">
               {imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={imageUrl} alt="Profile Avatar" className="w-full h-full object-cover" />
@@ -148,7 +148,7 @@ export default function ProfileClient({
             {/* Info */}
             <div className="flex-1">
               <div className="flex items-center gap-4 mb-2">
-                <h1 className="text-3xl font-medium text-zinc-900 tracking-tight">{displayName}</h1>
+                <h1 className="text-3xl font-medium text-white tracking-tight">{displayName}</h1>
                 {!isEditing && p?.openToWork && (
                   <span className="bg-emerald-50 text-emerald-600 border border-emerald-200 px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full shadow-sm">
                     Open to Work
@@ -157,7 +157,7 @@ export default function ProfileClient({
               </div>
 
               {/* Meta row */}
-              <div className="flex flex-wrap gap-3 mb-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">
+              <div className="flex flex-wrap gap-3 mb-4 text-xs font-bold text-zinc-400 uppercase tracking-wider">
                 {p?.country && (
                   <span className="flex items-center gap-1.5">
                     <MapPin size={13} className="text-zinc-400" />
@@ -180,7 +180,7 @@ export default function ProfileClient({
               </div>
 
               {/* Bio */}
-              <p className="text-zinc-600 mb-5 max-w-xl text-sm leading-relaxed">
+              <p className="text-zinc-400 mb-5 max-w-xl text-sm leading-relaxed">
                 {p?.bio || "A brilliant problem solver working on exciting challenges."}
               </p>
 
@@ -188,7 +188,7 @@ export default function ProfileClient({
               {p?.skills && Array.isArray(p.skills) && p.skills.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-5">
                   {p.skills.map((skill: string) => (
-                    <span key={skill} className="text-xs font-bold text-zinc-600 bg-zinc-50 border border-zinc-200 px-2.5 py-1 uppercase tracking-wider">
+                    <span key={skill} className="text-xs font-bold text-zinc-400 bg-white/5 border border-white/10 px-2.5 py-1 uppercase tracking-wider">
                       {skill}
                     </span>
                   ))}
@@ -196,12 +196,12 @@ export default function ProfileClient({
               )}
 
               {/* Links & Stats */}
-              <div className="flex flex-wrap gap-3 pt-4 border-t border-zinc-100">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 bg-zinc-50 border border-zinc-200 px-3 py-1.5 uppercase tracking-wider">
+              <div className="flex flex-wrap gap-3 pt-4 border-t border-white/5">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 uppercase tracking-wider">
                   <Trophy className="w-3.5 h-3.5 text-[#1a3a5c]" />
                   {p?.totalScore || 0} Score
                 </div>
-                <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 bg-zinc-50 border border-zinc-200 px-3 py-1.5 uppercase tracking-wider">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 uppercase tracking-wider">
                   <Calendar className="w-3.5 h-3.5 text-zinc-400" />
                   Joined {p?.joinedAt ? new Date(p.joinedAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Recently"}
                 </div>
@@ -226,7 +226,7 @@ export default function ProfileClient({
                     href={p.githubUrl || `https://github.com/${p.githubUsername}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 bg-zinc-50 border border-zinc-200 px-3 py-1.5 hover:border-[#1a3a5c] hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
+                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 hover:border-[#1a3a5c] hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
                   >
                     <GitBranch className="w-3.5 h-3.5" /> GitHub
                   </a>
@@ -238,7 +238,7 @@ export default function ProfileClient({
                     href={p.linkedinUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 bg-zinc-50 border border-zinc-200 px-3 py-1.5 hover:border-[#1a3a5c] hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
+                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 hover:border-[#1a3a5c] hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
                   >
                     <ExternalLink className="w-3.5 h-3.5" /> LinkedIn
                   </a>
@@ -250,7 +250,7 @@ export default function ProfileClient({
                     href={p.portfolioUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 bg-zinc-50 border border-zinc-200 px-3 py-1.5 hover:border-[#1a3a5c] hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
+                    className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 hover:border-[#1a3a5c] hover:text-[#1a3a5c] transition-colors uppercase tracking-wider"
                   >
                     <Globe className="w-3.5 h-3.5" /> Portfolio
                   </a>
@@ -258,7 +258,7 @@ export default function ProfileClient({
 
                 {/* Phone — only shown to org viewers or the owner */}
                 {p?.phone && (isOwner || viewerRole === "organization" || viewerRole === "company") && (
-                  <span className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 bg-zinc-50 border border-zinc-200 px-3 py-1.5 uppercase tracking-wider">
+                  <span className="flex items-center gap-1.5 text-xs font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1.5 uppercase tracking-wider">
                     <Phone className="w-3.5 h-3.5 text-zinc-400" /> {p.phone}
                   </span>
                 )}
@@ -268,12 +268,12 @@ export default function ProfileClient({
         ) : (
           /* Edit Form */
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="flex items-center justify-between mb-4 pb-4 border-b border-zinc-200">
-              <h2 className="text-lg font-medium text-zinc-900">Edit Profile</h2>
+            <div className="flex items-center justify-between mb-4 pb-4 border-b border-white/10">
+              <h2 className="text-lg font-medium text-white">Edit Profile</h2>
               <button
                 type="button"
                 onClick={() => setIsEditing(false)}
-                className="text-zinc-400 hover:text-zinc-900 transition-colors"
+                className="text-zinc-400 hover:text-white transition-colors"
               >
                 <X size={20} />
               </button>
@@ -339,7 +339,7 @@ export default function ProfileClient({
               <div>
                 <label className={labelStyles}>Phone Number</label>
                 <div className="flex gap-0">
-                  <select name="countryCode" defaultValue={p?.countryCode || ""} className="bg-white border border-zinc-300 border-r-0 px-2 py-2.5 text-sm text-zinc-900 focus:outline-none min-w-[80px]">
+                  <select name="countryCode" defaultValue={p?.countryCode || ""} className="bg-transparent border border-white/20 border-r-0 px-2 py-2.5 text-sm text-white focus:outline-none min-w-[80px]">
                     <option value="">+</option>
                     {COUNTRIES_WITH_CODES.filter(c => c.dial).map(({ code, dial }) => (
                       <option key={code} value={dial}>{dial}</option>
@@ -355,25 +355,25 @@ export default function ProfileClient({
               <input name="skills" type="text" defaultValue={Array.isArray(p?.skills) ? p.skills.join(", ") : ""} className={inputStyles} placeholder="React, Python, AWS" />
             </div>
 
-            <div className="flex items-center gap-3 bg-zinc-50 border border-zinc-200 p-4">
+            <div className="flex items-center gap-3 bg-white/5 border border-white/10 p-4">
               <input 
                 type="checkbox" 
                 id="openToWork" 
                 name="openToWork" 
                 defaultChecked={!!p?.openToWork}
-                className="w-4 h-4 text-[#1a3a5c] border-zinc-300 rounded focus:ring-[#1a3a5c]"
+                className="w-4 h-4 text-[#1a3a5c] border-white/20 rounded focus:ring-[#1a3a5c]"
               />
-              <label htmlFor="openToWork" className="text-sm font-medium text-zinc-700">
+              <label htmlFor="openToWork" className="text-sm font-medium text-zinc-300">
                 I am open to job opportunities and contract work
               </label>
             </div>
 
-            <div className="flex gap-3 justify-end pt-4 border-t border-zinc-200">
+            <div className="flex gap-3 justify-end pt-4 border-t border-white/10">
               <button
                 type="button"
                 onClick={() => setIsEditing(false)}
                 disabled={loading}
-                className="px-5 py-2.5 text-sm font-medium text-zinc-600 bg-zinc-50 border border-zinc-200 hover:bg-zinc-100 transition-colors"
+                className="px-5 py-2.5 text-sm font-medium text-zinc-400 bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
               >
                 Cancel
               </button>
@@ -392,7 +392,7 @@ export default function ProfileClient({
 
       {/* Education Card — only when not editing and institution/degree exists */}
       {!isEditing && (p?.collegeOrInstitution || p?.degree) && (
-        <div className="bg-white border border-zinc-200 p-6">
+        <div className="bg-transparent border border-white/10 p-6">
           <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4 flex items-center gap-2">
             <GraduationCap size={14} /> Education
           </h2>
@@ -400,19 +400,19 @@ export default function ProfileClient({
             {p?.collegeOrInstitution && (
               <div>
                 <div className="text-xs text-zinc-400 uppercase tracking-wider font-bold mb-1">Institution</div>
-                <div className="font-medium text-zinc-900 text-sm">{p.collegeOrInstitution}</div>
+                <div className="font-medium text-white text-sm">{p.collegeOrInstitution}</div>
               </div>
             )}
             {p?.degree && (
               <div>
                 <div className="text-xs text-zinc-400 uppercase tracking-wider font-bold mb-1">Degree</div>
-                <div className="font-medium text-zinc-900 text-sm">{p.degree}</div>
+                <div className="font-medium text-white text-sm">{p.degree}</div>
               </div>
             )}
             {p?.graduationYear && (
               <div>
                 <div className="text-xs text-zinc-400 uppercase tracking-wider font-bold mb-1">Graduation</div>
-                <div className="font-medium text-zinc-900 text-sm">{p.graduationYear}</div>
+                <div className="font-medium text-white text-sm">{p.graduationYear}</div>
               </div>
             )}
           </div>
@@ -421,15 +421,15 @@ export default function ProfileClient({
 
       {/* Submissions History (Project Gallery) */}
       <div>
-        <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-3 flex items-center justify-between">
+        <h2 className="text-xl font-medium text-white mb-6 border-b border-white/10 pb-3 flex items-center justify-between">
           Project Gallery
-          <span className="text-sm font-normal text-zinc-500">{submissions.length} project{submissions.length !== 1 ? "s" : ""}</span>
+          <span className="text-sm font-normal text-zinc-400">{submissions.length} project{submissions.length !== 1 ? "s" : ""}</span>
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {submissions.length === 0 ? (
-            <div className="col-span-full bg-white border border-dashed border-zinc-200 p-12 text-center">
+            <div className="col-span-full bg-transparent border border-dashed border-white/10 p-12 text-center">
               <LinkIcon size={24} className="mx-auto text-zinc-300 mb-3" />
-              <p className="text-zinc-500 text-sm font-medium">No projects yet</p>
+              <p className="text-zinc-400 text-sm font-medium">No projects yet</p>
               <p className="text-zinc-400 text-xs mt-1">Browse challenges and submit your first solution to build your record.</p>
               <Link href="/challenges" className="inline-block mt-4 text-xs font-bold text-[#1a3a5c] uppercase tracking-wider hover:underline">
                 Browse Challenges →
@@ -451,7 +451,7 @@ export default function ProfileClient({
               }
 
               return (
-                <div key={`${sub.problemId}-${sub.submittedAt}`} className="bg-white border border-zinc-200 flex flex-col hover:border-[#1a3a5c] transition-colors shadow-sm overflow-hidden">
+                <div key={`${sub.problemId}-${sub.submittedAt}`} className="bg-transparent border border-white/10 flex flex-col hover:border-[#1a3a5c] transition-colors shadow-sm overflow-hidden">
                   
                   {/* Video Embed or Fallback Header */}
                   {embedUrl ? (
@@ -464,7 +464,7 @@ export default function ProfileClient({
                       />
                     </div>
                   ) : (
-                    <div className="h-32 bg-zinc-100 flex items-center justify-center border-b border-zinc-200">
+                    <div className="h-32 bg-white/10 flex items-center justify-center border-b border-white/10">
                       <Trophy size={32} className="text-zinc-300" />
                     </div>
                   )}
@@ -472,20 +472,20 @@ export default function ProfileClient({
                   <div className="p-6 flex-1 flex flex-col">
                     <div className="flex justify-between items-start gap-4 mb-4">
                       <div>
-                        <Link href={`/problems/${sub.problemId}`} className="text-lg font-semibold text-zinc-900 hover:text-[#1a3a5c] transition-colors line-clamp-1">
+                        <Link href={`/problems/${sub.problemId}`} className="text-lg font-semibold text-white hover:text-[#1a3a5c] transition-colors line-clamp-1">
                           {(sub.repoName as string) || "View Submission"}
                         </Link>
-                        <p className="text-xs text-zinc-500 mt-1 uppercase tracking-wider font-bold">
+                        <p className="text-xs text-zinc-400 mt-1 uppercase tracking-wider font-bold">
                           {new Date(sub.submittedAt as string).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                         </p>
                       </div>
-                      <div className="text-center px-3 py-1.5 bg-zinc-50 border border-zinc-200 shrink-0">
+                      <div className="text-center px-3 py-1.5 bg-white/5 border border-white/10 shrink-0">
                         <div className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">Score</div>
-                        <div className="font-semibold text-sm text-zinc-900">{sub.score as number}</div>
+                        <div className="font-semibold text-sm text-white">{sub.score as number}</div>
                       </div>
                     </div>
 
-                    <p className="text-sm text-zinc-600 mb-6 flex-1 line-clamp-3">
+                    <p className="text-sm text-zinc-400 mb-6 flex-1 line-clamp-3">
                       {sub.writeup as string}
                     </p>
 
@@ -499,13 +499,13 @@ export default function ProfileClient({
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-zinc-100">
+                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
                       {Boolean(sub.evaluationStatus && sub.evaluationStatus !== "PENDING") && (
                         <span className={`inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-1 ${
                           sub.evaluationStatus === "HIRED" ? "bg-green-100 text-green-700 border border-green-200" :
                           sub.evaluationStatus === "CONTRACT_OFFERED" ? "bg-blue-100 text-blue-700 border border-blue-200" :
                           sub.evaluationStatus === "INTERVIEW_REQUESTED" ? "bg-yellow-100 text-yellow-700 border border-yellow-200" :
-                          "bg-zinc-100 text-zinc-600 border border-zinc-200"
+                          "bg-white/10 text-zinc-400 border border-white/10"
                         }`}>
                           {String(sub.evaluationStatus).replace(/_/g, " ")}
                         </span>
@@ -513,11 +513,11 @@ export default function ProfileClient({
                       
                       <div className="flex gap-3 ml-auto">
                         {Boolean(sub.demoUrl) && (
-                          <a href={sub.demoUrl as string} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-[#1a3a5c] uppercase tracking-wider transition-colors">
+                          <a href={sub.demoUrl as string} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#1a3a5c] uppercase tracking-wider transition-colors">
                             <Globe size={14} /> Demo
                           </a>
                         )}
-                        <a href={sub.githubUrl as string} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-[#1a3a5c] uppercase tracking-wider transition-colors">
+                        <a href={sub.githubUrl as string} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-[#1a3a5c] uppercase tracking-wider transition-colors">
                           <GitBranch size={14} /> Code
                         </a>
                       </div>

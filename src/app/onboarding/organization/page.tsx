@@ -40,15 +40,15 @@ export default async function OrganizationOnboardingPage() {
 
   const defaultEmail = user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress || "";
 
-  const inputStyles = "w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm";
-  const labelStyles = "block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider";
+  const inputStyles = "w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm";
+  const labelStyles = "block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider";
 
   return (
-    <div className="min-h-screen bg-zinc-50 py-12 px-6">
+    <div className="min-h-screen bg-transparent/5 py-12 px-6">
       <div className="max-w-2xl w-full mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-medium text-zinc-900 tracking-tight">Organization Profile</h1>
-          <p className="text-zinc-500 text-sm mt-2">
+          <h1 className="text-3xl font-medium text-white tracking-tight">Organization Profile</h1>
+          <p className="text-zinc-400 text-sm mt-2">
             Register your company, startup, or government program to post challenges and start hiring vetted talent.
           </p>
         </div>
@@ -56,8 +56,8 @@ export default async function OrganizationOnboardingPage() {
         <form action={submitOrganizationOnboarding} className="space-y-0">
 
           {/* Section 1: Identity */}
-          <div className="bg-white border border-zinc-200 p-8 mb-6">
-            <h2 className="text-base font-semibold text-zinc-900 mb-6 pb-3 border-b border-zinc-200 uppercase tracking-wider text-xs text-zinc-500">
+          <div className="bg-transparent border border-white/10 p-8 mb-6">
+            <h2 className="text-base font-semibold text-white mb-6 pb-3 border-b border-white/10 uppercase tracking-wider text-xs text-zinc-400">
               Organization Identity
             </h2>
             <div className="space-y-5">
@@ -121,8 +121,8 @@ export default async function OrganizationOnboardingPage() {
           </div>
 
           {/* Section 2: Contact */}
-          <div className="bg-white border border-zinc-200 p-8 mb-6">
-            <h2 className="text-xs font-semibold text-zinc-500 mb-6 pb-3 border-b border-zinc-200 uppercase tracking-wider">
+          <div className="bg-transparent border border-white/10 p-8 mb-6">
+            <h2 className="text-xs font-semibold text-zinc-400 mb-6 pb-3 border-b border-white/10 uppercase tracking-wider">
               Contact & Location
             </h2>
             <div className="space-y-5">
@@ -164,8 +164,8 @@ export default async function OrganizationOnboardingPage() {
           </div>
 
           {/* Section 3: Online Presence */}
-          <div className="bg-white border border-zinc-200 p-8 mb-6">
-            <h2 className="text-xs font-semibold text-zinc-500 mb-6 pb-3 border-b border-zinc-200 uppercase tracking-wider">
+          <div className="bg-transparent border border-white/10 p-8 mb-6">
+            <h2 className="text-xs font-semibold text-zinc-400 mb-6 pb-3 border-b border-white/10 uppercase tracking-wider">
               Online Presence
             </h2>
             <div className="space-y-5">

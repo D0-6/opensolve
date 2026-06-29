@@ -70,7 +70,7 @@ function MessageDrawer({
   };
 
   return (
-    <div className="fixed bottom-8 right-8 w-96 bg-white border border-zinc-200 shadow-2xl z-50 flex flex-col" style={{ height: "440px" }}>
+    <div className="fixed bottom-8 right-8 w-96 bg-transparent border border-white/10 shadow-2xl z-50 flex flex-col" style={{ height: "440px" }}>
       <div className="flex items-center justify-between px-4 py-3 bg-[#1a3a5c] text-white">
         <div>
           <div className="text-sm font-semibold">Message Candidate</div>
@@ -79,7 +79,7 @@ function MessageDrawer({
         <button onClick={onClose}><X size={18} className="text-blue-200 hover:text-white" /></button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-zinc-50">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-transparent/5">
         {messages.length === 0 ? (
           <div className="text-center text-xs text-zinc-400 pt-10">
             No messages yet. Start the conversation!
@@ -90,7 +90,7 @@ function MessageDrawer({
               <div className={`max-w-[80%] px-3 py-2 text-sm rounded-sm ${
                 msg.senderId === user?.id
                   ? "bg-[#1a3a5c] text-white"
-                  : "bg-white border border-zinc-200 text-zinc-900"
+                  : "bg-transparent border border-white/10 text-white"
               }`}>
                 <div className="text-[10px] font-bold mb-1 opacity-60 uppercase tracking-wider">{msg.senderName}</div>
                 {msg.text}
@@ -100,13 +100,13 @@ function MessageDrawer({
         )}
       </div>
 
-      <div className="flex items-center gap-2 p-3 border-t border-zinc-200 bg-white">
+      <div className="flex items-center gap-2 p-3 border-t border-white/10 bg-transparent">
         <input
           value={text}
           onChange={e => setText(e.target.value)}
           onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()}
           placeholder="Type a message..."
-          className="flex-1 text-sm border border-zinc-200 px-3 py-2 focus:outline-none focus:border-[#1a3a5c] transition-colors"
+          className="flex-1 text-sm border border-white/10 px-3 py-2 focus:outline-none focus:border-[#1a3a5c] transition-colors"
         />
         <button
           onClick={handleSend}
@@ -193,7 +193,7 @@ export default function EvaluationActions({
 
         <button
           onClick={() => setMsgOpen(true)}
-          className="px-6 py-2.5 font-medium text-sm flex items-center justify-center gap-2 border border-zinc-300 text-zinc-700 hover:bg-zinc-50 transition-colors"
+          className="px-6 py-2.5 font-medium text-sm flex items-center justify-center gap-2 border border-white/20 text-zinc-300 hover:bg-transparent/5 transition-colors"
         >
           <MessageCircle size={16} /> Message Candidate
         </button>
@@ -216,29 +216,29 @@ export default function EvaluationActions({
 
       {scoreModalOpen && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white max-w-md w-full p-6 shadow-xl border border-zinc-200">
-            <h3 className="font-bold text-lg text-zinc-900 mb-4 flex items-center gap-2">
+          <div className="bg-transparent max-w-md w-full p-6 shadow-xl border border-white/10">
+            <h3 className="font-bold text-lg text-white mb-4 flex items-center gap-2">
               <Target size={20} className="text-[#1a3a5c]" /> Judging Rubric
             </h3>
-            <p className="text-sm text-zinc-500 mb-6">Score this submission on a scale of 1 to 10 for each category.</p>
+            <p className="text-sm text-zinc-400 mb-6">Score this submission on a scale of 1 to 10 for each category.</p>
 
             <div className="space-y-4 mb-8">
               <div>
-                <label className="flex justify-between text-sm font-bold text-zinc-700 mb-2 uppercase tracking-wider">
+                <label className="flex justify-between text-sm font-bold text-zinc-300 mb-2 uppercase tracking-wider">
                   <span>Innovation</span>
                   <span className="text-[#1a3a5c]">{scores.innovation} / 10</span>
                 </label>
                 <input type="range" min="1" max="10" value={scores.innovation} onChange={e => setScores({ ...scores, innovation: parseInt(e.target.value) })} className="w-full accent-[#1a3a5c]" />
               </div>
               <div>
-                <label className="flex justify-between text-sm font-bold text-zinc-700 mb-2 uppercase tracking-wider">
+                <label className="flex justify-between text-sm font-bold text-zinc-300 mb-2 uppercase tracking-wider">
                   <span>Technical Difficulty</span>
                   <span className="text-[#1a3a5c]">{scores.technical} / 10</span>
                 </label>
                 <input type="range" min="1" max="10" value={scores.technical} onChange={e => setScores({ ...scores, technical: parseInt(e.target.value) })} className="w-full accent-[#1a3a5c]" />
               </div>
               <div>
-                <label className="flex justify-between text-sm font-bold text-zinc-700 mb-2 uppercase tracking-wider">
+                <label className="flex justify-between text-sm font-bold text-zinc-300 mb-2 uppercase tracking-wider">
                   <span>Design & UX</span>
                   <span className="text-[#1a3a5c]">{scores.design} / 10</span>
                 </label>
@@ -247,7 +247,7 @@ export default function EvaluationActions({
             </div>
 
             <div className="flex gap-3 justify-end">
-              <button onClick={() => setScoreModalOpen(false)} className="px-4 py-2 text-sm font-medium text-zinc-500 hover:text-zinc-800 transition-colors">
+              <button onClick={() => setScoreModalOpen(false)} className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-zinc-200 transition-colors">
                 Cancel
               </button>
               <button

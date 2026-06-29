@@ -42,16 +42,16 @@ export default async function TeamFormationPage({ params }: { params: Promise<{ 
   const currentMembers = Array.isArray(application.teamMembers) ? application.teamMembers : [];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-transparent">
       <div className="max-w-4xl mx-auto px-6 py-12 md:py-20">
         
-        <Link href={`/problems/${id}`} className="inline-flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-zinc-900 mb-8 transition-colors">
+        <Link href={`/problems/${id}`} className="inline-flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white mb-8 transition-colors">
           <ArrowLeft size={16} /> Back to Problem
         </Link>
 
-        <h1 className="text-3xl font-medium text-zinc-900 mb-2 tracking-tight">Form Your Team</h1>
-        <p className="text-zinc-500 mb-8 max-w-2xl">
-          You have successfully applied to work on <strong className="text-zinc-800">{problem.title}</strong>. 
+        <h1 className="text-3xl font-medium text-white mb-2 tracking-tight">Form Your Team</h1>
+        <p className="text-zinc-400 mb-8 max-w-2xl">
+          You have successfully applied to work on <strong className="text-zinc-200">{problem.title}</strong>. 
           You can now optionally invite other registered builders to join your team before you submit the final solution.
         </p>
 

@@ -40,12 +40,12 @@ export default async function OrgDashboard() {
   }));
 
   return (
-    <div className="min-h-screen bg-white pt-24 pb-24 px-6 w-full">
+    <div className="min-h-screen bg-transparent pt-24 pb-24 px-6 w-full">
       <div className="w-full max-w-[125rem] mx-auto px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-zinc-200 pb-12 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-white/10 pb-12 gap-6">
           <div>
-            <h1 className="text-3xl md:text-5xl tracking-tight text-zinc-900 font-medium">Hiring Pipeline</h1>
-            <p className="text-zinc-500 text-base mt-2">Manage active challenges, evaluate team submissions, and extend offers.</p>
+            <h1 className="text-3xl md:text-5xl tracking-tight text-white font-medium">Hiring Pipeline</h1>
+            <p className="text-zinc-400 text-base mt-2">Manage active challenges, evaluate team submissions, and extend offers.</p>
           </div>
           <Link href="/organizations/new" className="btn-primary px-6 py-3 font-medium shrink-0">
             Post New Challenge
@@ -53,25 +53,25 @@ export default async function OrgDashboard() {
         </div>
 
         {dashboardData.length === 0 ? (
-          <div className="border border-zinc-200 border-dashed p-16 text-center bg-zinc-50">
+          <div className="border border-white/10 border-dashed p-16 text-center bg-transparent/5">
             <Briefcase size={32} className="mx-auto text-zinc-300 mb-4" />
-            <h2 className="text-lg font-medium text-zinc-900 mb-1">No active challenges</h2>
-            <p className="text-zinc-500 text-sm">Post a challenge to start receiving submissions from top talent.</p>
+            <h2 className="text-lg font-medium text-white mb-1">No active challenges</h2>
+            <p className="text-zinc-400 text-sm">Post a challenge to start receiving submissions from top talent.</p>
           </div>
         ) : (
           <div className="space-y-16">
             {dashboardData.map(problem => (
-              <div key={problem.problemId} className="border border-zinc-200 bg-white">
+              <div key={problem.problemId} className="border border-white/10 bg-transparent">
                 {/* Challenge Header */}
-                <div className="bg-zinc-50 border-b border-zinc-200 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="bg-transparent/5 border-b border-white/10 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                   <div>
-                    <h2 className="text-xl font-semibold text-zinc-900">{problem.title}</h2>
-                    <div className="flex flex-wrap gap-4 mt-2 text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                    <h2 className="text-xl font-semibold text-white">{problem.title}</h2>
+                    <div className="flex flex-wrap gap-4 mt-2 text-xs font-bold text-zinc-400 uppercase tracking-wider">
                       <span className="flex items-center gap-1.5"><Users size={14}/> {problem.submissions.length} Submissions</span>
                       <span className="flex items-center gap-1.5"><Award size={14}/> {problem.prizeType?.replace("_", " ")}</span>
                     </div>
                   </div>
-                  <Link href={`/problems/${problem.problemId}`} className="text-zinc-500 text-sm font-medium hover:text-[#1a3a5c] transition-colors whitespace-nowrap">
+                  <Link href={`/problems/${problem.problemId}`} className="text-zinc-400 text-sm font-medium hover:text-[#1a3a5c] transition-colors whitespace-nowrap">
                     View Public Page &rarr;
                   </Link>
                 </div>
@@ -81,12 +81,12 @@ export default async function OrgDashboard() {
                   <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Candidate Pipeline</h3>
                   
                   {problem.prizeAmount > 0 && !problem.isPaid ? (
-                    <div className="py-12 px-6 border border-zinc-200 bg-zinc-50 flex flex-col items-center justify-center text-center space-y-4 rounded-sm">
-                      <div className="w-12 h-12 bg-white border border-zinc-200 rounded-full flex items-center justify-center text-zinc-400 mb-2">
+                    <div className="py-12 px-6 border border-white/10 bg-transparent/5 flex flex-col items-center justify-center text-center space-y-4 rounded-sm">
+                      <div className="w-12 h-12 bg-transparent border border-white/10 rounded-full flex items-center justify-center text-zinc-400 mb-2">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                       </div>
-                      <h4 className="text-lg font-semibold text-zinc-900">Submissions Locked</h4>
-                      <p className="text-zinc-500 max-w-md text-sm">
+                      <h4 className="text-lg font-semibold text-white">Submissions Locked</h4>
+                      <p className="text-zinc-400 max-w-md text-sm">
                         You have {problem.submissions.length} submission{problem.submissions.length === 1 ? "" : "s"} waiting. Pay the prize amount to unlock candidate code, writeups, and evaluations. Payment is due 5 days before the deadline.
                       </p>
                       <div className="pt-4">
@@ -98,19 +98,19 @@ export default async function OrgDashboard() {
                       Awaiting submissions...
                     </div>
                   ) : (
-                    <div className="flex flex-col border-t border-zinc-200">
+                    <div className="flex flex-col border-t border-white/10">
                       {problem.submissions.map((sub: any) => (
-                        <div key={sub.rankKey} className="border-b border-zinc-200 py-6 px-4 -mx-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 hover:bg-zinc-50 transition-colors">
+                        <div key={sub.rankKey} className="border-b border-white/10 py-6 px-4 -mx-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 hover:bg-transparent/5 transition-colors">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-3 mb-2">
-                              <h4 className="font-semibold text-lg text-zinc-900 truncate">{sub.studentName}</h4>
-                              {sub.teamId && <span className="text-[10px] bg-zinc-200 text-zinc-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">Team</span>}
-                              <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-100 border border-zinc-300 text-zinc-600 font-bold uppercase tracking-widest">{sub.evaluationStatus || "PENDING"}</span>
+                              <h4 className="font-semibold text-lg text-white truncate">{sub.studentName}</h4>
+                              {sub.teamId && <span className="text-[10px] bg-zinc-200 text-zinc-300 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">Team</span>}
+                              <span className="text-[10px] px-2 py-0.5 rounded bg-transparent/10 border border-white/20 text-zinc-400 font-bold uppercase tracking-widest">{sub.evaluationStatus || "PENDING"}</span>
                             </div>
-                            <p className="text-sm text-zinc-600 line-clamp-2 mb-3">{sub.writeup}</p>
+                            <p className="text-sm text-zinc-400 line-clamp-2 mb-3">{sub.writeup}</p>
                             <div className="flex items-center gap-6 text-sm font-medium">
-                              <a href={sub.githubUrl} target="_blank" className="text-zinc-500 flex items-center gap-1.5 hover:text-[#1a3a5c] transition-colors"><FileText size={16}/> View Code</a>
-                              {sub.demoUrl && <a href={sub.demoUrl} target="_blank" className="text-zinc-500 flex items-center gap-1.5 hover:text-[#1a3a5c] transition-colors"><ExternalLink size={16}/> Live Demo</a>}
+                              <a href={sub.githubUrl} target="_blank" className="text-zinc-400 flex items-center gap-1.5 hover:text-[#1a3a5c] transition-colors"><FileText size={16}/> View Code</a>
+                              {sub.demoUrl && <a href={sub.demoUrl} target="_blank" className="text-zinc-400 flex items-center gap-1.5 hover:text-[#1a3a5c] transition-colors"><ExternalLink size={16}/> Live Demo</a>}
                             </div>
                           </div>
 

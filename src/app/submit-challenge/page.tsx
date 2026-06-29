@@ -31,8 +31,8 @@ export default function SubmitChallengePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const inputStyles = "w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-all text-sm";
-  const labelStyles = "block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider";
+  const inputStyles = "w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-all text-sm";
+  const labelStyles = "block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,18 +71,18 @@ export default function SubmitChallengePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white pt-28 pb-16 px-6">
+    <div className="min-h-screen bg-transparent pt-28 pb-16 px-6">
       <div className="w-full max-w-3xl mx-auto">
 
         {/* Header */}
-        <div className="mb-10 border-b border-zinc-200 pb-8">
+        <div className="mb-10 border-b border-white/10 pb-8">
           <div className="flex items-center gap-4 mb-3">
             <div className="w-12 h-12 border border-purple-200 bg-purple-50 flex items-center justify-center text-purple-700 text-xl">
               🕵️
             </div>
             <div>
-              <h1 className="text-3xl font-medium text-zinc-900 tracking-tight">Scout a Challenge</h1>
-              <p className="text-zinc-500 text-sm mt-0.5">Find a real bounty on the internet and share it with the OpenSolve community.</p>
+              <h1 className="text-3xl font-medium text-white tracking-tight">Scout a Challenge</h1>
+              <p className="text-zinc-400 text-sm mt-0.5">Find a real bounty on the internet and share it with the OpenSolve community.</p>
             </div>
           </div>
         </div>
@@ -104,10 +104,10 @@ export default function SubmitChallengePage() {
         </div>
 
         {/* How it works */}
-        <div className="bg-zinc-50 border border-zinc-200 p-5 mb-8 flex items-start gap-3">
-          <Info size={18} className="text-zinc-500 mt-0.5 shrink-0" />
-          <div className="text-sm text-zinc-600">
-            <strong className="text-zinc-900">How it works:</strong> Find a real technical challenge or bounty from a company, hackathon, or government agency. Paste the link and fill in the details. Once our team approves it, it will appear on OpenSolve with your name as the discoverer. If a solver wins prize money from that challenge, you automatically receive <strong>5% of the winnings</strong> as a scout bounty.
+        <div className="bg-transparent/5 border border-white/10 p-5 mb-8 flex items-start gap-3">
+          <Info size={18} className="text-zinc-400 mt-0.5 shrink-0" />
+          <div className="text-sm text-zinc-400">
+            <strong className="text-white">How it works:</strong> Find a real technical challenge or bounty from a company, hackathon, or government agency. Paste the link and fill in the details. Once our team approves it, it will appear on OpenSolve with your name as the discoverer. If a solver wins prize money from that challenge, you automatically receive <strong>5% of the winnings</strong> as a scout bounty.
           </div>
         </div>
 
@@ -119,8 +119,8 @@ export default function SubmitChallengePage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          <div className="bg-white border border-zinc-200 p-8 space-y-6">
-            <h2 className="text-sm font-bold text-zinc-500 uppercase tracking-wider border-b border-zinc-200 pb-3">Challenge Source</h2>
+          <div className="bg-transparent border border-white/10 p-8 space-y-6">
+            <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-wider border-b border-white/10 pb-3">Challenge Source</h2>
 
             <div>
               <label className={labelStyles}>Original Challenge URL *</label>
@@ -207,8 +207,8 @@ export default function SubmitChallengePage() {
             </div>
           </div>
 
-          <div className="bg-white border border-zinc-200 p-8 space-y-6">
-            <h2 className="text-sm font-bold text-zinc-500 uppercase tracking-wider border-b border-zinc-200 pb-3">Challenge Details</h2>
+          <div className="bg-transparent border border-white/10 p-8 space-y-6">
+            <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-wider border-b border-white/10 pb-3">Challenge Details</h2>
 
             <div>
               <label className={labelStyles}>

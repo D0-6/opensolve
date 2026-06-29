@@ -2,12 +2,12 @@ import { SignIn } from "@clerk/nextjs";
 
 export default function SignInPage() {
   return (
-    <div className="min-h-screen bg-zinc-50 flex flex-col items-center justify-center py-10 px-6">
+    <div className="min-h-screen bg-white/5 flex flex-col items-center justify-center py-10 px-6">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-medium tracking-tight mb-2 text-zinc-900">
+        <h1 className="text-3xl font-medium tracking-tight mb-2 text-white">
           Welcome back
         </h1>
-        <p className="text-zinc-500 text-sm">
+        <p className="text-zinc-400 text-sm">
           Sign in to access your dashboard and submissions
         </p>
       </div>

@@ -87,19 +87,19 @@ export default async function StudentDashboard() {
   }, null);
 
   return (
-    <div className="w-full max-w-[125rem] mx-auto px-6 pt-24 pb-24 bg-white min-h-screen">
+    <div className="w-full max-w-[125rem] mx-auto px-6 pt-24 pb-24 bg-transparent min-h-screen">
 
       {/* Welcome header */}
-      <div className="mb-12 border-b border-zinc-200 pb-12">
+      <div className="mb-12 border-b border-white/10 pb-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
           <div>
-            <div className="inline-flex items-center gap-2 bg-zinc-50 border border-zinc-200 rounded-full px-3 py-1.5 w-fit text-xs font-semibold text-zinc-600 mb-4 uppercase tracking-wide">
+            <div className="inline-flex items-center gap-2 bg-transparent/5 border border-white/10 rounded-full px-3 py-1.5 w-fit text-xs font-semibold text-zinc-400 mb-4 uppercase tracking-wide">
               <Zap size={14} /> Student Dashboard
             </div>
-            <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-zinc-900 leading-tight">
+            <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-white leading-tight">
               Welcome back, {firstName} 👋
             </h1>
-            <p className="text-zinc-500 text-base mt-2">
+            <p className="text-zinc-400 text-base mt-2">
               Keep building. Every submission moves you closer to your next opportunity.
             </p>
           </div>
@@ -107,7 +107,7 @@ export default async function StudentDashboard() {
         </div>
 
         {/* Stats row */}
-        <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-zinc-200 border border-zinc-200">
+        <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-zinc-200 border border-white/10">
           {[
             { icon: <Trophy size={16} />, label: "Total Score", value: totalScore },
             { icon: <GitBranch size={16} />, label: "Submissions", value: submissions.length },
@@ -118,11 +118,11 @@ export default async function StudentDashboard() {
               value: bestSubmission ? Number(bestSubmission.score) : "—",
             },
           ].map(({ icon, label, value }) => (
-            <div key={label} className="p-6 flex-1 bg-zinc-50">
-              <div className="flex items-center gap-2 mb-2 text-xs font-bold text-zinc-500 uppercase tracking-wider">
+            <div key={label} className="p-6 flex-1 bg-transparent/5">
+              <div className="flex items-center gap-2 mb-2 text-xs font-bold text-zinc-400 uppercase tracking-wider">
                 {icon} {label}
               </div>
-              <div className="text-3xl font-medium text-zinc-900">{value}</div>
+              <div className="text-3xl font-medium text-white">{value}</div>
             </div>
           ))}
         </div>
@@ -132,42 +132,42 @@ export default async function StudentDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
         <Link
           href="/challenges"
-          className="border border-zinc-200 bg-white p-6 flex flex-col gap-4 group hover:bg-zinc-50 transition-colors"
+          className="border border-white/10 bg-transparent p-6 flex flex-col gap-4 group hover:bg-transparent/5 transition-colors"
         >
-          <div className="w-10 h-10 border border-zinc-200 text-zinc-600 flex items-center justify-center bg-white group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors">
+          <div className="w-10 h-10 border border-white/10 text-zinc-400 flex items-center justify-center bg-transparent group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors">
             <Search size={18} />
           </div>
           <div>
-            <div className="font-medium text-zinc-900 text-lg mb-1">Browse Challenges</div>
-            <div className="text-sm text-zinc-500">Find your next problem to solve</div>
+            <div className="font-medium text-white text-lg mb-1">Browse Challenges</div>
+            <div className="text-sm text-zinc-400">Find your next problem to solve</div>
           </div>
           <ArrowRight size={18} className="text-zinc-400 mt-auto group-hover:translate-x-1 transition-transform" />
         </Link>
 
         <Link
           href={`/profile/${userId}`}
-          className="border border-zinc-200 bg-white p-6 flex flex-col gap-4 group hover:bg-zinc-50 transition-colors"
+          className="border border-white/10 bg-transparent p-6 flex flex-col gap-4 group hover:bg-transparent/5 transition-colors"
         >
-          <div className="w-10 h-10 border border-zinc-200 text-zinc-600 flex items-center justify-center bg-white group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors">
+          <div className="w-10 h-10 border border-white/10 text-zinc-400 flex items-center justify-center bg-transparent group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors">
             <Star size={18} />
           </div>
           <div>
-            <div className="font-medium text-zinc-900 text-lg mb-1">My Public Profile</div>
-            <div className="text-sm text-zinc-500">View how companies see you</div>
+            <div className="font-medium text-white text-lg mb-1">My Public Profile</div>
+            <div className="text-sm text-zinc-400">View how companies see you</div>
           </div>
           <ArrowRight size={18} className="text-zinc-400 mt-auto group-hover:translate-x-1 transition-transform" />
         </Link>
 
         <Link
           href="/leaderboard"
-          className="border border-zinc-200 bg-white p-6 flex flex-col gap-4 group hover:bg-zinc-50 transition-colors"
+          className="border border-white/10 bg-transparent p-6 flex flex-col gap-4 group hover:bg-transparent/5 transition-colors"
         >
-          <div className="w-10 h-10 border border-zinc-200 text-zinc-600 flex items-center justify-center bg-white group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors">
+          <div className="w-10 h-10 border border-white/10 text-zinc-400 flex items-center justify-center bg-transparent group-hover:text-[#1a3a5c] group-hover:border-[#1a3a5c] transition-colors">
             <Trophy size={18} />
           </div>
           <div>
-            <div className="font-medium text-zinc-900 text-lg mb-1">Global Leaderboard</div>
-            <div className="text-sm text-zinc-500">See where you rank against all builders</div>
+            <div className="font-medium text-white text-lg mb-1">Global Leaderboard</div>
+            <div className="text-sm text-zinc-400">See where you rank against all builders</div>
           </div>
           <ArrowRight size={18} className="text-zinc-400 mt-auto group-hover:translate-x-1 transition-transform" />
         </Link>
@@ -176,11 +176,11 @@ export default async function StudentDashboard() {
           href="/submit-challenge"
           className="border border-purple-200 bg-purple-50 p-6 flex flex-col gap-4 group hover:bg-purple-100 transition-colors"
         >
-          <div className="w-10 h-10 border border-purple-200 text-purple-600 flex items-center justify-center bg-white group-hover:bg-purple-700 group-hover:text-white transition-colors text-lg">
+          <div className="w-10 h-10 border border-purple-200 text-purple-600 flex items-center justify-center bg-transparent group-hover:bg-purple-700 group-hover:text-white transition-colors text-lg">
             🕵️
           </div>
           <div>
-            <div className="font-medium text-zinc-900 text-lg mb-1">Scout a Challenge</div>
+            <div className="font-medium text-white text-lg mb-1">Scout a Challenge</div>
             <div className="text-sm text-purple-600">Find bounties &amp; earn Scout Points</div>
           </div>
           <ArrowRight size={18} className="text-purple-400 mt-auto group-hover:translate-x-1 transition-transform" />
@@ -189,19 +189,19 @@ export default async function StudentDashboard() {
 
       {/* === APPLICATIONS SECTION === */}
       <div className="mb-16">
-        <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2 flex items-center gap-2">
+        <h2 className="text-xl font-medium text-white mb-6 border-b border-white/10 pb-2 flex items-center gap-2">
           <Clock size={20} className="text-zinc-400" /> My Applications
         </h2>
 
         {applications.length === 0 ? (
-          <div className="border border-dashed border-zinc-200 p-10 text-center text-zinc-500">
+          <div className="border border-dashed border-white/10 p-10 text-center text-zinc-400">
             <FileText size={28} className="mx-auto mb-3 text-zinc-300" />
-            <p className="font-medium text-zinc-700 mb-1">No applications yet</p>
+            <p className="font-medium text-zinc-300 mb-1">No applications yet</p>
             <p className="text-sm mb-4">Apply to a challenge to start tracking your progress.</p>
             <Link href="/challenges" className="btn-primary px-5 py-2 text-sm inline-block">Browse Challenges</Link>
           </div>
         ) : (
-          <div className="flex flex-col border-t border-zinc-200">
+          <div className="flex flex-col border-t border-white/10">
             {applications.map(app => {
               const problem = problemCache[String(app.problemId)];
               const hasSubmission = submissions.some(s => s.problemId === app.problemId);
@@ -210,12 +210,12 @@ export default async function StudentDashboard() {
               return (
                 <div
                   key={`${app.problemId}-${app.appliedAt}`}
-                  className="border-b border-zinc-100 py-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:bg-zinc-50 px-4 -mx-4 transition-colors"
+                  className="border-b border-white/5 py-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:bg-transparent/5 px-4 -mx-4 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <Link
                       href={`/problems/${app.problemId}`}
-                      className="font-semibold text-zinc-900 hover:text-[#1a3a5c] transition-colors text-base block truncate"
+                      className="font-semibold text-white hover:text-[#1a3a5c] transition-colors text-base block truncate"
                     >
                       {problem ? String(problem.title) : `Problem ${String(app.problemId).slice(-8)}`}
                     </Link>
@@ -245,21 +245,21 @@ export default async function StudentDashboard() {
 
       {/* === SUBMISSIONS SECTION === */}
       <div>
-        <h2 className="text-xl font-medium text-zinc-900 mb-6 border-b border-zinc-200 pb-2 flex items-center gap-2">
+        <h2 className="text-xl font-medium text-white mb-6 border-b border-white/10 pb-2 flex items-center gap-2">
           <GitBranch size={20} className="text-zinc-400" /> Recent Submissions
         </h2>
 
         {submissions.length === 0 ? (
-          <div className="border border-dashed border-zinc-200 p-12 text-center text-zinc-500">
+          <div className="border border-dashed border-white/10 p-12 text-center text-zinc-400">
             <Trophy size={32} className="mx-auto mb-4 opacity-50 text-zinc-300" />
-            <p className="font-medium text-zinc-900 text-lg mb-1">No submissions yet</p>
+            <p className="font-medium text-white text-lg mb-1">No submissions yet</p>
             <p className="text-sm mb-6">Start solving problems to build your portfolio.</p>
             <Link href="/challenges" className="btn-primary px-6 py-2.5 font-medium text-sm">
               Browse Problems
             </Link>
           </div>
         ) : (
-          <div className="flex flex-col border-t border-zinc-200">
+          <div className="flex flex-col border-t border-white/10">
             {submissions.map(sub => {
               const problem = problemCache[String(sub.problemId)];
               const evalStatus = sub.evaluationStatus as string || "PENDING";
@@ -270,12 +270,12 @@ export default async function StudentDashboard() {
               return (
                 <div
                   key={`${sub.problemId}-${sub.submittedAt}`}
-                  className="border-b border-zinc-100 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:bg-zinc-50 px-4 -mx-4 transition-colors group"
+                  className="border-b border-white/5 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:bg-transparent/5 px-4 -mx-4 transition-colors group"
                 >
                   <div className="flex-1 min-w-0">
                     <Link
                       href={`/problems/${sub.problemId}`}
-                      className="font-semibold text-zinc-900 hover:text-[#1a3a5c] transition-colors text-lg block truncate"
+                      className="font-semibold text-white hover:text-[#1a3a5c] transition-colors text-lg block truncate"
                     >
                       {problem ? String(problem.title) : `Challenge #${String(sub.problemId).slice(-8)}`}
                     </Link>
@@ -288,7 +288,7 @@ export default async function StudentDashboard() {
 
                   <div className="flex items-center gap-3 flex-wrap">
                     <EvalStatusBadge status={evalStatus} />
-                    <div className="bg-white border border-zinc-200 px-3 py-1.5 font-bold text-zinc-900 text-sm">
+                    <div className="bg-transparent border border-white/10 px-3 py-1.5 font-bold text-white text-sm">
                       Score: {sub.score ?? "—"}
                     </div>
                     {sub.githubUrl && (
@@ -296,7 +296,7 @@ export default async function StudentDashboard() {
                         href={String(sub.githubUrl)}
                         target="_blank"
                         rel="noreferrer"
-                        className="w-9 h-9 border border-zinc-200 bg-white flex items-center justify-center text-zinc-500 hover:text-zinc-900 hover:border-zinc-400 transition-colors"
+                        className="w-9 h-9 border border-white/10 bg-transparent flex items-center justify-center text-zinc-400 hover:text-white hover:border-zinc-400 transition-colors"
                         title="View Repository"
                       >
                         <GitBranch size={15} />

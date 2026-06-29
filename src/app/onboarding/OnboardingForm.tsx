@@ -20,15 +20,15 @@ export default function OnboardingForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <label className="flex items-start gap-3 p-4 border border-zinc-200 rounded-sm bg-white cursor-pointer hover:bg-zinc-50 transition-colors">
+      <label className="flex items-start gap-3 p-4 border border-white/10 rounded-sm bg-transparent cursor-pointer hover:bg-transparent/5 transition-colors">
         <input 
           type="checkbox" 
           required 
           checked={accepted}
           onChange={(e) => setAccepted(e.target.checked)}
-          className="mt-1 w-5 h-5 text-[#1a3a5c] border-zinc-300 focus:ring-[#1a3a5c] rounded-sm"
+          className="mt-1 w-5 h-5 text-[#1a3a5c] border-white/20 focus:ring-[#1a3a5c] rounded-sm"
         />
-        <span className="text-sm text-zinc-700 font-medium leading-relaxed">
+        <span className="text-sm text-zinc-300 font-medium leading-relaxed">
           I confirm that I have read and agree to the OpenSolve Terms of Service and Privacy Policy. I agree that any platform funds are subject to the 99.5% payout and 0.5% platform fee structure.
         </span>
       </label>

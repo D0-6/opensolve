@@ -70,27 +70,27 @@ export default async function StudentOnboardingPage() {
   const defaultName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
   const defaultEmail = user.emailAddresses.find(e => e.id === user.primaryEmailAddressId)?.emailAddress || "";
 
-  const inputStyles = "w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm";
-  const labelStyles = "block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider";
-  const sectionHeader = "text-xs font-semibold text-zinc-500 mb-5 pb-3 border-b border-zinc-200 uppercase tracking-wider";
+  const inputStyles = "w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-colors text-sm";
+  const labelStyles = "block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider";
+  const sectionHeader = "text-xs font-semibold text-zinc-400 mb-5 pb-3 border-b border-white/10 uppercase tracking-wider";
 
   return (
-    <div className="min-h-screen bg-zinc-50 py-12 px-6">
+    <div className="min-h-screen bg-transparent/5 py-12 px-6">
       <div className="max-w-2xl w-full mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-medium text-zinc-900 tracking-tight">Complete Your Builder Profile</h1>
-          <p className="text-zinc-500 text-sm mt-2">
+          <h1 className="text-3xl font-medium text-white tracking-tight">Complete Your Builder Profile</h1>
+          <p className="text-zinc-400 text-sm mt-2">
             Fill in your details so organizations can find you, contact you, and evaluate your candidacy. This takes about 2 minutes.
           </p>
           {defaultEmail && (
-            <p className="text-xs text-zinc-400 mt-1">Signed in as <span className="font-semibold text-zinc-600">{defaultEmail}</span></p>
+            <p className="text-xs text-zinc-400 mt-1">Signed in as <span className="font-semibold text-zinc-400">{defaultEmail}</span></p>
           )}
         </div>
 
         <form action={submitStudentOnboarding} className="space-y-6">
 
           {/* Section 1: Personal */}
-          <div className="bg-white border border-zinc-200 p-8">
+          <div className="bg-transparent border border-white/10 p-8">
             <h2 className={sectionHeader}>Personal Information</h2>
             <div className="space-y-5">
               <div>
@@ -120,7 +120,7 @@ export default async function StudentOnboardingPage() {
           </div>
 
           {/* Section 2: Education */}
-          <div className="bg-white border border-zinc-200 p-8">
+          <div className="bg-transparent border border-white/10 p-8">
             <h2 className={sectionHeader}>Education</h2>
             <div className="space-y-5">
               <div>
@@ -158,7 +158,7 @@ export default async function StudentOnboardingPage() {
           </div>
 
           {/* Section 3: Links */}
-          <div className="bg-white border border-zinc-200 p-8">
+          <div className="bg-transparent border border-white/10 p-8">
             <h2 className={sectionHeader}>Online Presence</h2>
             <div className="space-y-5">
               <div>
@@ -196,7 +196,7 @@ export default async function StudentOnboardingPage() {
           </div>
 
           {/* Section 4: Contact & Location */}
-          <div className="bg-white border border-zinc-200 p-8">
+          <div className="bg-transparent border border-white/10 p-8">
             <h2 className={sectionHeader}>Contact & Location</h2>
             <div className="space-y-5">
               <div>
@@ -216,7 +216,7 @@ export default async function StudentOnboardingPage() {
                   <select
                     id="countryCode"
                     name="countryCode"
-                    className="bg-white border border-zinc-300 border-r-0 px-3 py-3 text-zinc-900 focus:outline-none focus:border-[#1a3a5c] text-sm w-auto min-w-[100px]"
+                    className="bg-transparent border border-white/20 border-r-0 px-3 py-3 text-white focus:outline-none focus:border-[#1a3a5c] text-sm w-auto min-w-[100px]"
                   >
                     <option value="">Dial</option>
                     {COUNTRIES_WITH_CODES.filter(c => c.dial).map(({ name, code, dial }) => (
@@ -236,7 +236,7 @@ export default async function StudentOnboardingPage() {
           </div>
 
           {/* Section 5: Skills */}
-          <div className="bg-white border border-zinc-200 p-8">
+          <div className="bg-transparent border border-white/10 p-8">
             <h2 className={sectionHeader}>Skills</h2>
             <div>
               <label htmlFor="skills" className={labelStyles}>

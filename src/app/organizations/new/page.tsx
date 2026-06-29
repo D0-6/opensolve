@@ -136,26 +136,26 @@ export default function ProfessionalPostChallenge() {
     }
   };
 
-  const inputStyles = "w-full bg-white border border-zinc-300 px-4 py-3 text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-all text-sm";
-  const labelStyles = "block text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider";
+  const inputStyles = "w-full bg-transparent border border-white/20 px-4 py-3 text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#1a3a5c] transition-all text-sm";
+  const labelStyles = "block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider";
 
   if (!isLoaded || !user || (user.publicMetadata?.role !== "organization" && user.publicMetadata?.role !== "company")) {
-    return <div className="min-h-screen bg-white flex items-center justify-center"><Loader2 size={32} className="animate-spin text-zinc-400" /></div>;
+    return <div className="min-h-screen bg-transparent flex items-center justify-center"><Loader2 size={32} className="animate-spin text-zinc-400" /></div>;
   }
 
   return (
-    <div className="min-h-screen bg-white pt-28 pb-16 px-6">
+    <div className="min-h-screen bg-transparent pt-28 pb-16 px-6">
       <div className="w-full max-w-[125rem] mx-auto">
 
         {/* Header */}
-        <div className="mb-10 border-b border-zinc-200 pb-8">
+        <div className="mb-10 border-b border-white/10 pb-8">
           <div className="flex items-center gap-4 mb-3">
-            <div className="w-12 h-12 border border-zinc-200 bg-zinc-50 flex items-center justify-center text-zinc-600">
+            <div className="w-12 h-12 border border-white/10 bg-transparent/5 flex items-center justify-center text-zinc-400">
               <Building2 size={24} />
             </div>
             <div>
-              <h1 className="text-3xl font-medium text-zinc-900 tracking-tight">Post a Challenge</h1>
-              <p className="text-zinc-500 text-sm mt-0.5">Define a real problem, set your outcome, and attract vetted builders.</p>
+              <h1 className="text-3xl font-medium text-white tracking-tight">Post a Challenge</h1>
+              <p className="text-zinc-400 text-sm mt-0.5">Define a real problem, set your outcome, and attract vetted builders.</p>
             </div>
           </div>
         </div>
@@ -172,10 +172,10 @@ export default function ProfessionalPostChallenge() {
           <div className="lg:col-span-2 space-y-8">
 
             {/* Section 1: Challenge Details */}
-            <section className="bg-white border border-zinc-200 p-8">
-              <div className="flex items-center gap-2 mb-6 pb-3 border-b border-zinc-200">
+            <section className="bg-transparent border border-white/10 p-8">
+              <div className="flex items-center gap-2 mb-6 pb-3 border-b border-white/10">
                 <FileText size={18} className="text-[#1a3a5c]" />
-                <h2 className="text-base font-semibold text-zinc-900">Challenge Details</h2>
+                <h2 className="text-base font-semibold text-white">Challenge Details</h2>
               </div>
               <div className="space-y-6">
                 <div>
@@ -257,12 +257,12 @@ export default function ProfessionalPostChallenge() {
             </section>
 
             {/* Section 2: Required Skills */}
-            <section className="bg-white border border-zinc-200 p-8">
-              <div className="flex items-center gap-2 mb-6 pb-3 border-b border-zinc-200">
+            <section className="bg-transparent border border-white/10 p-8">
+              <div className="flex items-center gap-2 mb-6 pb-3 border-b border-white/10">
                 <Tag size={18} className="text-[#1a3a5c]" />
-                <h2 className="text-base font-semibold text-zinc-900">Required Skills</h2>
+                <h2 className="text-base font-semibold text-white">Required Skills</h2>
               </div>
-              <p className="text-sm text-zinc-500 mb-4">Tag skills builders need. This helps surface the challenge to the right talent.</p>
+              <p className="text-sm text-zinc-400 mb-4">Tag skills builders need. This helps surface the challenge to the right talent.</p>
 
               <div className="flex gap-3 mb-4">
                 <input
@@ -285,7 +285,7 @@ export default function ProfessionalPostChallenge() {
               {requiredSkills.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {requiredSkills.map(skill => (
-                    <span key={skill} className="flex items-center gap-1.5 bg-zinc-100 border border-zinc-200 text-zinc-700 text-xs font-bold uppercase tracking-wider px-3 py-1.5">
+                    <span key={skill} className="flex items-center gap-1.5 bg-transparent/10 border border-white/10 text-zinc-300 text-xs font-bold uppercase tracking-wider px-3 py-1.5">
                       {skill}
                       <button type="button" onClick={() => handleRemoveSkill(skill)} className="text-zinc-400 hover:text-red-500 transition-colors ml-1">
                         <X size={12} />
@@ -297,21 +297,21 @@ export default function ProfessionalPostChallenge() {
             </section>
 
             {/* Section 3: Resources */}
-            <section className="bg-white border border-zinc-200 p-8">
-              <div className="flex items-center justify-between mb-6 pb-3 border-b border-zinc-200">
+            <section className="bg-transparent border border-white/10 p-8">
+              <div className="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
                 <div className="flex items-center gap-2">
                   <LinkIcon size={18} className="text-[#1a3a5c]" />
-                  <h2 className="text-base font-semibold text-zinc-900">Datasets & Resources</h2>
+                  <h2 className="text-base font-semibold text-white">Datasets & Resources</h2>
                 </div>
                 <button
                   type="button"
                   onClick={handleAddLink}
-                  className="text-xs font-bold text-zinc-600 bg-zinc-50 border border-zinc-200 px-3 py-1.5 hover:bg-zinc-100 transition-colors flex items-center gap-1"
+                  className="text-xs font-bold text-zinc-400 bg-transparent/5 border border-white/10 px-3 py-1.5 hover:bg-transparent/10 transition-colors flex items-center gap-1"
                 >
                   <Plus size={14} /> Add Link
                 </button>
               </div>
-              <p className="text-sm text-zinc-500 mb-4">Provide links to datasets, documentation, APIs, or GitHub repos builders will need.</p>
+              <p className="text-sm text-zinc-400 mb-4">Provide links to datasets, documentation, APIs, or GitHub repos builders will need.</p>
               <div className="space-y-3">
                 {resourceLinks.map((link, index) => (
                   <div key={index} className="flex gap-3">
@@ -326,7 +326,7 @@ export default function ProfessionalPostChallenge() {
                       <button
                         type="button"
                         onClick={() => handleRemoveLink(index)}
-                        className="p-3 border border-zinc-200 text-zinc-500 hover:text-red-500 hover:border-red-200 transition-colors bg-white"
+                        className="p-3 border border-white/10 text-zinc-400 hover:text-red-500 hover:border-red-200 transition-colors bg-transparent"
                       >
                         <X size={18} />
                       </button>
@@ -337,12 +337,12 @@ export default function ProfessionalPostChallenge() {
             </section>
 
             {/* Section 4: Country Restrictions */}
-            <section className="bg-white border border-zinc-200 p-8">
-              <div className="flex items-center gap-2 mb-6 pb-3 border-b border-zinc-200">
+            <section className="bg-transparent border border-white/10 p-8">
+              <div className="flex items-center gap-2 mb-6 pb-3 border-b border-white/10">
                 <Globe size={18} className="text-[#1a3a5c]" />
-                <h2 className="text-base font-semibold text-zinc-900">Country Eligibility</h2>
+                <h2 className="text-base font-semibold text-white">Country Eligibility</h2>
               </div>
-              <p className="text-sm text-zinc-500 mb-5">
+              <p className="text-sm text-zinc-400 mb-5">
                 Leave all unchecked to allow global submissions. Select specific countries to restrict eligibility (e.g. for regulatory reasons or local hiring).
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -356,7 +356,7 @@ export default function ProfessionalPostChallenge() {
                       className={`text-left px-3 py-2.5 text-xs font-medium border transition-all ${
                         isSelected
                           ? "border-[#1a3a5c] bg-[#1a3a5c]/5 text-[#1a3a5c] font-bold"
-                          : "border-zinc-200 text-zinc-600 hover:border-zinc-400"
+                          : "border-white/10 text-zinc-400 hover:border-zinc-400"
                       }`}
                     >
                       {name}
@@ -369,8 +369,8 @@ export default function ProfessionalPostChallenge() {
 
           {/* Sidebar: Logistics */}
           <div>
-            <div className="bg-zinc-50 border border-zinc-200 p-6 sticky top-24 space-y-6">
-              <h3 className="text-base font-semibold text-zinc-900 flex items-center gap-2 pb-3 border-b border-zinc-200">
+            <div className="bg-transparent/5 border border-white/10 p-6 sticky top-24 space-y-6">
+              <h3 className="text-base font-semibold text-white flex items-center gap-2 pb-3 border-b border-white/10">
                 <Briefcase size={18} className="text-[#1a3a5c]" /> Outcome & Logistics
               </h3>
 
@@ -404,7 +404,7 @@ export default function ProfessionalPostChallenge() {
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-0">Prize Breakdown (Optional)</label>
+                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-0">Prize Breakdown (Optional)</label>
                   <button
                     type="button"
                     onClick={() => setPrizeBreakdown([...prizeBreakdown, { place: "", amount: "", label: "" }])}
@@ -442,7 +442,7 @@ export default function ProfessionalPostChallenge() {
                         <button
                           type="button"
                           onClick={() => setPrizeBreakdown(prizeBreakdown.filter((_, i) => i !== idx))}
-                          className="p-2 border border-zinc-200 bg-white text-zinc-400 hover:text-red-500 hover:border-red-200 transition-colors"
+                          className="p-2 border border-white/10 bg-transparent text-zinc-400 hover:text-red-500 hover:border-red-200 transition-colors"
                         >
                           <X size={14} />
                         </button>
@@ -501,7 +501,7 @@ export default function ProfessionalPostChallenge() {
                 <p className="text-xs text-zinc-400 mt-1">Add a Discord, Slack, or forum link for builders to get mentored.</p>
               </div>
 
-              <div className="pt-4 border-t border-zinc-200">
+              <div className="pt-4 border-t border-white/10">
                 <button
                   type="submit"
                   disabled={loading}
