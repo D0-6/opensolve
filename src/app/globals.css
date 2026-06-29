@@ -28,9 +28,6 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
     @apply bg-background text-foreground;
     background-color: #050505;
@@ -38,17 +35,29 @@
   }
   
   input, textarea, select {
-    @apply bg-background text-foreground border-border;
+    @apply bg-background text-foreground;
+    border-color: rgba(255, 255, 255, 0.1);
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-6 py-2;
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 shadow h-10 px-6 py-2;
+    background-color: #ffffff;
+    color: #050505;
+  }
+  .btn-primary:hover {
+    background-color: #f4f4f5;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground h-10 px-6 py-2;
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 border shadow-sm h-10 px-6 py-2;
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: transparent;
+    color: #ffffff;
+  }
+  .btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.05);
   }
 }
 
