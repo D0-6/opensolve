@@ -144,7 +144,7 @@ export default function EvaluationActions({
   const [scoreModalOpen, setScoreModalOpen] = useState(false);
   const [scores, setScores] = useState({ innovation: 5, technical: 5, design: 5 });
 
-  const handleAction = async (action: "HIRE" | "CONTRACT" | "INTERVIEW" | "REJECT" | "SCORE", rubricScores?: Record<string, number>) => {
+  const handleAction = async (action: "HIRE" | "CONTRACT" | "INTERVIEW" | "REJECT" | "SCORE" | "INTERNSHIP" | "AWARD_PRIZE", rubricScores?: Record<string, number>) => {
     setLoading(true);
     setError("");
     try {
