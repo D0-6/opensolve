@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
 import { QueryCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
@@ -30,8 +30,8 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ problemId: string }> }
 ) {
-  const { userId } = await auth();
-  if (!userId) {
+  const user = await currentUser();
+  if (!user) {
     return NextResponse.json({ error: "Sign in to ask a question" }, { status: 401 });
   }
 
@@ -48,10 +48,13 @@ export async function POST(
     const now = new Date().toISOString();
     const sk = `${now}#${questionId}`;
 
+    const askerName = user.fullName || user.firstName || user.username || "Anonymous";
+
     const newThread = {
       problemId,
       sk,
-      askedBy: userId,
+      askedBy: user.id,
+      askerName,
       questionText: body.questionText.trim().substring(0, 1000),
       answers: [],
       upvotes: 0,

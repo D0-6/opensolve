@@ -48,7 +48,7 @@ export default function PostAnnouncementButton({ problemId }: { problemId: strin
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-6">
           <form
             onSubmit={handleSubmit}
-            className="bg-transparent w-full max-w-lg shadow-2xl border border-white/10"
+            className="bg-[#050505] w-full max-w-lg shadow-2xl border border-white/10"
           >
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
               <h3 className="font-semibold text-white flex items-center gap-2">

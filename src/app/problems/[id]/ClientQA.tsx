@@ -6,6 +6,7 @@ import { MessageSquare, Send } from "lucide-react";
 interface QAThread {
   sk: string;
   askedBy: string;
+  askerName?: string;
   questionText: string;
   answers?: unknown[];
 }
@@ -15,9 +16,6 @@ export default function ClientQA({ problemId }: { problemId: string }) {
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-
-  // In a real app we'd get this from session context
-  const MOCK_USER_ID = "mock-user-id"; 
 
   const fetchThreads = async () => {
     try {
@@ -40,15 +38,21 @@ export default function ClientQA({ problemId }: { problemId: string }) {
     if (!question.trim()) return;
     setSubmitting(true);
     try {
-      await fetch(`/api/qa/${problemId}`, {
+      const res = await fetch(`/api/qa/${problemId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ askedBy: MOCK_USER_ID, questionText: question })
+        body: JSON.stringify({ questionText: question })
       });
+      if (!res.ok) {
+        const errorData = await res.json();
+        alert(errorData.error || "Failed to post question. Please make sure you are signed in.");
+        return;
+      }
       setQuestion("");
       await fetchThreads();
     } catch (err) {
       console.error(err);
+      alert("Network error. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -70,9 +74,9 @@ export default function ClientQA({ problemId }: { problemId: string }) {
         ) : (
           threads.map((thread) => (
             <div key={thread.sk} className="bg-white/5 p-4 border border-white/10">
-              <div className="font-semibold text-white text-sm mb-1">User {thread.askedBy.substring(0,6)}</div>
+              <div className="font-semibold text-white text-sm mb-1">{thread.askerName || `User ${thread.askedBy.substring(0,6)}`}</div>
               <p className="text-sm text-zinc-300">{thread.questionText}</p>
-              {thread.answers?.length > 0 && (
+              {thread.answers && thread.answers.length > 0 && (
                 <div className="mt-3 pl-3 border-l-2 border-blue-400 text-xs text-zinc-400 font-medium">
                   {thread.answers.length} reply
                 </div>
@@ -94,7 +98,7 @@ export default function ClientQA({ problemId }: { problemId: string }) {
         <button 
           type="submit"
           disabled={submitting || !question.trim()}
-          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-blue-600 text-white disabled:opacity-50 hover:bg-[#112740] transition-colors"
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-blue-600 text-white disabled:opacity-50 hover:bg-blue-500 transition-colors"
         >
           <Send className="w-4 h-4" />
         </button>
