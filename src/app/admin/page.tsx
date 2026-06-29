@@ -13,10 +13,10 @@ export default async function AdminDashboard() {
   const pendingModeration = allProblems.filter(p => p.source === "COMMUNITY" && !p.verified);
 
   const cards = [
-    { title: "Total Users", value: stats.totalStudents, icon: Users, color: "text-blue-500", bg: "bg-blue-50" },
-    { title: "Total Organizations", value: stats.totalOrgs, icon: Briefcase, color: "text-indigo-500", bg: "bg-indigo-50" },
-    { title: "Active Challenges", value: stats.activeProblems, icon: LinkIcon, color: "text-emerald-500", bg: "bg-emerald-50" },
-    { title: "Total Prize Pool", value: `$${stats.totalPrizePool.toLocaleString()}`, icon: Trophy, color: "text-amber-500", bg: "bg-amber-50" },
+    { title: "Total Users", value: stats.totalStudents, icon: Users, color: "text-blue-400", bg: "bg-white/5 border border-white/10" },
+    { title: "Total Organizations", value: stats.totalOrgs, icon: Briefcase, color: "text-blue-400", bg: "bg-white/5 border border-white/10" },
+    { title: "Active Challenges", value: stats.activeProblems, icon: LinkIcon, color: "text-blue-400", bg: "bg-white/5 border border-white/10" },
+    { title: "Total Prize Pool", value: `$${stats.totalPrizePool.toLocaleString()}`, icon: Trophy, color: "text-blue-400", bg: "bg-white/5 border border-white/10" },
   ];
 
   return (
@@ -48,7 +48,7 @@ export default async function AdminDashboard() {
             <h2 className="text-lg font-semibold text-white">Moderation Action Required</h2>
           </div>
           {pendingModeration.length > 0 && (
-            <span className="px-2.5 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full">
+            <span className="px-2.5 py-1 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold rounded-full">
               {pendingModeration.length} Pending
             </span>
           )}
@@ -57,7 +57,7 @@ export default async function AdminDashboard() {
         <div className="p-6">
           {pendingModeration.length === 0 ? (
             <div className="text-center py-10">
-              <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-100">
+              <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/20">
                 <span className="text-2xl">🎉</span>
               </div>
               <p className="text-zinc-400 font-medium">Inbox zero!</p>

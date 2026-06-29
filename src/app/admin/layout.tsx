@@ -16,7 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-transparent/5 flex flex-col md:flex-row">
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-[#0a192f] text-zinc-400 flex flex-col shrink-0 min-h-[100dvh]">
+      <aside className="w-full md:w-64 bg-[#050505] text-zinc-400 flex flex-col shrink-0 min-h-[100dvh] border-r border-white/10">
         <div className="h-16 flex items-center px-6 border-b border-white/10">
           <Link href="/" className="font-bold text-lg text-white flex items-center gap-2">
             <span className="material-symbols-outlined text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>hexagon</span>
