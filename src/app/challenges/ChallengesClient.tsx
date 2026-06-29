@@ -80,14 +80,25 @@ export default function ChallengesClient({
     // Global only (hide country-restricted)
     if (countryOnly) res = res.filter(p => !Array.isArray(p.allowedCountries) || p.allowedCountries.length === 0);
 
-    // Sort
-    if (sortBy === "deadline") {
-      res.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
-    } else if (sortBy === "prize") {
-      res.sort((a, b) => (Number(b.prizeAmount) || 0) - (Number(a.prizeAmount) || 0));
-    } else if (sortBy === "newest") {
-      res.sort((a, b) => new Date(b.postedAt || "").getTime() - new Date(a.postedAt || "").getTime());
-    }
+    // Sort: Always push closed challenges (past deadline) to the bottom
+    res.sort((a, b) => {
+      const now = Date.now();
+      const aClosed = new Date(a.deadline).getTime() < now;
+      const bClosed = new Date(b.deadline).getTime() < now;
+      
+      if (aClosed !== bClosed) {
+        return aClosed ? 1 : -1;
+      }
+      
+      if (sortBy === "deadline") {
+        return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+      } else if (sortBy === "prize") {
+        return (Number(b.prizeAmount) || 0) - (Number(a.prizeAmount) || 0);
+      } else if (sortBy === "newest") {
+        return new Date(b.postedAt || "").getTime() - new Date(a.postedAt || "").getTime();
+      }
+      return 0;
+    });
 
     return res;
   }, [problems, query, source, domain, prizeType, sortBy, countryOnly]);
