@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { docClient } from "@/lib/dynamodb";
-import { UpdateCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, TransactWriteCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 const TABLE_NAME = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
+const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
 
 export async function POST(request: Request) {
   const { userId, sessionClaims } = await auth();
@@ -12,9 +13,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Strict RBAC check at the API level (even though middleware blocks it)
-  const role = (sessionClaims?.metadata as Record<string, string> | undefined)?.role
-    || (sessionClaims?.publicMetadata as Record<string, string> | undefined)?.role;
+  // Standardized RBAC check using Clerk's publicMetadata
+  const role = (sessionClaims?.publicMetadata as Record<string, string> | undefined)?.role;
 
   if (role !== "admin") {
     return NextResponse.json({ error: "Forbidden - Admins only" }, { status: 403 });
@@ -27,23 +27,84 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing problemId or action" }, { status: 400 });
     }
 
+    // Fetch the problem first to check its current status and get scout data
+    const problemRes = await docClient.send(new GetCommand({
+      TableName: TABLE_NAME,
+      Key: { problemId },
+      ConsistentRead: true
+    }));
+
+    const problem = problemRes.Item;
+    if (!problem) {
+      return NextResponse.json({ error: "Problem not found" }, { status: 404 });
+    }
+
     if (action === "APPROVE") {
+      if (problem.status === "OPEN") {
+        return NextResponse.json({ error: "Problem is already open" }, { status: 400 });
+      }
+
+      const transactItems: any[] = [];
+
+      // 1. Approve the problem
+      transactItems.push({
+        Update: {
+          TableName: TABLE_NAME,
+          Key: { problemId },
+          UpdateExpression: "SET verified = :verified, #status = :status",
+          ConditionExpression: "attribute_exists(problemId)",
+          ExpressionAttributeNames: { "#status": "status" },
+          ExpressionAttributeValues: { ":verified": true, ":status": "OPEN" }
+        }
+      });
+
+      // 2. Award scout points if this was scouted
+      if (problem.scoutId) {
+        transactItems.push({
+          Update: {
+            TableName: PROFILES_TABLE,
+            Key: { userId: problem.scoutId },
+            UpdateExpression: "ADD scoutPoints :pts, scoutSubmissions :one",
+            ExpressionAttributeValues: { ":pts": 100, ":one": 1 }
+          }
+        });
+      }
+
+      // 3. Increment Platform Stats (Active Problems)
+      const shardId1 = Math.floor(Math.random() * 10);
+      transactItems.push({
+        Update: {
+          TableName: TABLE_NAME,
+          Key: { problemId: `GLOBAL_METADATA#${shardId1}` },
+          UpdateExpression: "ADD activeProblems :val",
+          ExpressionAttributeValues: { ":val": 1 }
+        }
+      });
+
+      // 4. Increment Platform Stats (Prize Pool)
+      if (problem.prizeAmount > 0) {
+        const shardId2 = Math.floor(Math.random() * 10);
+        transactItems.push({
+          Update: {
+            TableName: TABLE_NAME,
+            Key: { problemId: `GLOBAL_METADATA#${shardId2}` },
+            UpdateExpression: "ADD totalPrizePool :prize",
+            ExpressionAttributeValues: { ":prize": problem.prizeAmount }
+          }
+        });
+      }
+
+      await docClient.send(new TransactWriteCommand({ TransactItems: transactItems }));
+
+    } else if (action === "REJECT") {
+      // Soft-delete to preserve audit trail
       await docClient.send(new UpdateCommand({
         TableName: TABLE_NAME,
         Key: { problemId },
-        UpdateExpression: "SET verified = :verified, #status = :status",
-        ExpressionAttributeNames: {
-          "#status": "status"
-        },
-        ExpressionAttributeValues: {
-          ":verified": true,
-          ":status": "OPEN" // Make sure it's active
-        }
-      }));
-    } else if (action === "REJECT") {
-      await docClient.send(new DeleteCommand({
-        TableName: TABLE_NAME,
-        Key: { problemId }
+        UpdateExpression: "SET #status = :status",
+        ConditionExpression: "attribute_exists(problemId)",
+        ExpressionAttributeNames: { "#status": "status" },
+        ExpressionAttributeValues: { ":status": "REJECTED" }
       }));
     } else {
       return NextResponse.json({ error: "Invalid action" }, { status: 400 });

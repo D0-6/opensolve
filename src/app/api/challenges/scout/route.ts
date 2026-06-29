@@ -2,9 +2,8 @@ import { NextResponse } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { docClient } from "@/lib/dynamodb";
-import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
-import { incrementPlatformStat, incrementScoutPoints } from "@/lib/data";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const TABLE_NAME = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
@@ -31,7 +30,7 @@ const scoutSchema = z.object({
  *   - scoutId, scoutName — the submitting user's profile reference
  *   - scoutBountyPercent = 5 — finder's fee percentage
  * 
- * On submission, the scout immediately earns 100 Scout Points on their profile.
+ * Scout points and platform stats are awarded via transactions when an Admin APPROVES the challenge.
  */
 export async function POST(request: Request) {
   const { userId } = await auth();
@@ -57,6 +56,19 @@ export async function POST(request: Request) {
 
     const body = validation.data;
     const { title, domain, description, requirements, sourceUrl, prizeAmount, prizeType, deadline, maxTeamSize } = body;
+
+    // Deduplication Check
+    const dedupRes = await docClient.send(new QueryCommand({
+      TableName: TABLE_NAME,
+      IndexName: "sourceUrl-index",
+      KeyConditionExpression: "sourceUrl = :url",
+      ExpressionAttributeValues: { ":url": sourceUrl.trim() },
+      Limit: 1
+    }));
+    
+    if (dedupRes.Items && dedupRes.Items.length > 0) {
+      return NextResponse.json({ error: "This challenge has already been scouted or submitted." }, { status: 409 });
+    }
 
     // Get scout's display name
     const scoutUser = await currentUser();
@@ -94,16 +106,7 @@ export async function POST(request: Request) {
 
     await docClient.send(new PutCommand({ TableName: TABLE_NAME, Item: problem }));
 
-    // Immediately reward the scout with 100 Scout Points
-    await incrementScoutPoints(userId, 100);
-    
-    // Update Platform stats
-    await incrementPlatformStat("activeProblems", 1);
-    if (problem.prizeAmount > 0) {
-      await incrementPlatformStat("totalPrizePool", problem.prizeAmount);
-    }
-
-    return NextResponse.json({ problem, scoutPoints: 100 }, { status: 201 });
+    return NextResponse.json({ problem, message: "Challenge submitted for review. Scout points will be awarded upon approval." }, { status: 201 });
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Failed to submit challenge";
     console.error("Scout challenge submission error:", error);

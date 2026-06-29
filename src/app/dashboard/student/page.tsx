@@ -56,23 +56,7 @@ export default async function StudentDashboard() {
     );
     applications = queryRes.Items || [];
   } catch (err: unknown) {
-    if (err instanceof Error && err.name === "ValidationException") {
-      console.warn("userId-index not available on Applications table, falling back to ScanCommand.");
-      try {
-        const scanRes = await docClient.send(
-          new ScanCommand({
-            TableName: APPLICATIONS_TABLE,
-            FilterExpression: "userId = :uid",
-            ExpressionAttributeValues: { ":uid": userId },
-          })
-        );
-        applications = scanRes.Items || [];
-      } catch (scanErr: unknown) {
-        console.error("[CRITICAL] Fallback scan also failed for applications:", scanErr instanceof Error ? scanErr.message : scanErr);
-      }
-    } else {
-      console.error("[CRITICAL] Unexpected error querying applications:", err instanceof Error ? err.message : err);
-    }
+    console.error("[CRITICAL] Unexpected error querying applications:", err instanceof Error ? err.message : err);
   }
 
   applications = applications.sort(

@@ -28,18 +28,15 @@ export default async function LeaderboardPage({
     // Instead of scanning the entire table, we Query the GSI. 
     // Note: A true production leaderboard uses a materialized view / CRON job to aggregate scores daily into a Profiles table.
     // For this tier, Querying the GSI is significantly cheaper and faster than a full table scan.
-    let lastKey = undefined;
-    do {
-      const res = await docClient.send(new QueryCommand({
-        TableName: SUBMISSIONS_TABLE,
-        IndexName: "entityType-score-index",
-        KeyConditionExpression: "entityType = :type",
-        ExpressionAttributeValues: { ":type": "SUBMISSION" },
-        ExclusiveStartKey: lastKey
-      }));
-      if (res.Items) allSubmissions.push(...res.Items);
-      lastKey = res.LastEvaluatedKey;
-    } while (lastKey);
+    const res = await docClient.send(new QueryCommand({
+      TableName: SUBMISSIONS_TABLE,
+      IndexName: "entityType-score-index",
+      KeyConditionExpression: "entityType = :type",
+      ExpressionAttributeValues: { ":type": "SUBMISSION" },
+      Limit: 100,
+      ScanIndexForward: false
+    }));
+    if (res.Items) allSubmissions.push(...res.Items);
   } catch (err: unknown) {
     console.error("[CRITICAL] Leaderboard submissions scan error:", err instanceof Error ? err.message : err);
   }
@@ -77,20 +74,17 @@ export default async function LeaderboardPage({
   // ========== SCOUTS TAB ==========
   let scoutedProblems: Record<string, unknown>[] = [];
   try {
-    let lastKey = undefined;
-    do {
-      const res = await docClient.send(new QueryCommand({
-        TableName: PROBLEMS_TABLE,
-        IndexName: "entityType-deadline-index",
-        KeyConditionExpression: "entityType = :type",
-        FilterExpression: "#src = :community AND attribute_exists(scoutId)",
-        ExpressionAttributeNames: { "#src": "source" },
-        ExpressionAttributeValues: { ":type": "PROBLEM", ":community": "COMMUNITY" },
-        ExclusiveStartKey: lastKey
-      }));
-      if (res.Items) scoutedProblems.push(...res.Items);
-      lastKey = res.LastEvaluatedKey;
-    } while (lastKey);
+    const res = await docClient.send(new QueryCommand({
+      TableName: PROBLEMS_TABLE,
+      IndexName: "entityType-deadline-index",
+      KeyConditionExpression: "entityType = :type",
+      FilterExpression: "#src = :community AND attribute_exists(scoutId)",
+      ExpressionAttributeNames: { "#src": "source" },
+      ExpressionAttributeValues: { ":type": "PROBLEM", ":community": "COMMUNITY" },
+      Limit: 100,
+      ScanIndexForward: false
+    }));
+    if (res.Items) scoutedProblems.push(...res.Items);
   } catch (err: unknown) {
     console.error("[CRITICAL] Leaderboard problem fetch error (builders tab):", err instanceof Error ? err.message : err);
   }

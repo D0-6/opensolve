@@ -16,7 +16,7 @@ const EVALUATIONS_TABLE = process.env.DYNAMODB_TABLE_EVALUATIONS || "OpenSolve_E
 const EvaluateSchema = z.object({
   problemId: z.string().min(1),
   rankKey: z.string().min(1),
-  action: z.enum(['HIRE', 'CONTRACT', 'INTERVIEW', 'REJECT', 'SCORE', 'INTERNSHIP', 'AWARD_PRIZE']),
+  action: z.enum(['HIRE', 'CONTRACT', 'INTERVIEW', 'REJECT', 'INTERNSHIP', 'AWARD_PRIZE']),
   submitterName: z.string().min(1).optional().default('Student'),
   studentUserId: z.string().min(1).optional(),
   rubricScores: z.object({
@@ -101,19 +101,13 @@ export async function POST(request: Request) {
       notificationMessage = `The organization reviewing "${problemRes.Item.title}" has passed on your submission.`;
       emailSubject = `Update on your submission: ${problemRes.Item.title}`;
       emailBody = `Hello ${submitterName},\n\nThe organization has reviewed your submission but has decided to pass at this time.`;
-    } else if (action === "SCORE") {
-      status = "SCORED";
-      notificationTitle = "📊 Submission Scored";
-      notificationMessage = `Your submission for "${problemRes.Item.title}" has been scored by judges!`;
-      emailSubject = `📊 Submission Scored: ${problemRes.Item.title}`;
-      emailBody = `Hello ${submitterName},\n\nYour solution has been officially scored by the judging panel!`;
     } else {
       return NextResponse.json({ error: "Invalid action" }, { status: 400 });
     }
 
     // Org Responsiveness check (Item 8)
     // If within 30 days of problem deadline, we increment the org's responsiveness score
-    if (postedByOrgId && action !== "SCORE") {
+    if (postedByOrgId) {
       const deadline = new Date(problemRes.Item.deadline);
       const thirtyDaysAfter = new Date(deadline.getTime() + 30 * 24 * 60 * 60 * 1000);
       if (new Date() <= thirtyDaysAfter && new Date() >= deadline) {
@@ -138,17 +132,7 @@ export async function POST(request: Request) {
       ExpressionAttributeValues: { ":status": status }
     }));
 
-    if (action === "SCORE" && rubricScores) {
-      await docClient.send(new PutCommand({
-        TableName: EVALUATIONS_TABLE,
-        Item: {
-          submissionKey: `${problemId}#${rankKey}`,
-          judgeId: userId,
-          scores: rubricScores,
-          createdAt: new Date().toISOString()
-        }
-      }));
-    }
+    // removed manual SCORE logging as it is handled by the evaluator.ts engine
 
     // Write in-app notification for the student
     const notificationId = uuidv4();

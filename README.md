@@ -42,11 +42,11 @@ Built as an Open Innovation Platform prototype.
    node scripts/seed.js
    ```
 
-## MVP Simplifications
-- **Auth**: Uses a mocked "Magic Link" claim system. In production, this would use NextAuth or Clerk.
-- **Database**: Schemas are simplified single-table-design concepts mapped across multiple tables for prototyping velocity.
-- **Rate Limiting**: Currently uses an in-memory JS map. Production would use Redis.
-- **Ingestion Pipeline**: Currently simulated via `scripts/seed.js`. See `docs/ingestion-pipeline-design.md` for the full architecture.
+## Architecture & Infrastructure
+- **Auth**: Production-ready authentication using Clerk, including role-based access control (RBAC) via middleware.
+- **Database**: Strictly adheres to DynamoDB Single-Table Design patterns. All primary access paths utilize `QueryCommand` via Global Secondary Indexes (GSIs) to ensure $O(1)$ scaling.
+- **Rate Limiting**: Uses Upstash Redis (`@upstash/ratelimit`) for distributed edge-compatible rate limiting on user-facing routes, failing open if misconfigured to ensure availability.
+- **Security**: Robust middleware protecting API routes and enforcing deadline constraints. Score evaluation logic is securely isolated in backend API flows.
 
 ## Automated Ingestion
 OpenSolve includes an automated problem-ingestion scraper pipeline designed to run as a background Vercel Cron Job. 

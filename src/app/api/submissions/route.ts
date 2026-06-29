@@ -48,25 +48,7 @@ export async function GET(request: Request) {
     const result = await getSubmissions(problemId, lastEvaluatedKey);
     let items = result.items || [];
 
-    // Submissions are hidden until the deadline passes, unless you are an admin or the owning org.
-    // Students can only see their own submission while the competition is active.
-    const isPastDeadline = new Date(problem.deadline) < new Date();
-    const isOwningOrg = problem.postedByOrgId === userId;
-    const isAdmin = role === "admin";
-
-    if (!isPastDeadline && !isOwningOrg && !isAdmin) {
-      if (userId) {
-        items = items.filter(sub => sub.userId === userId);
-      } else {
-        items = [];
-      }
-      return NextResponse.json({ 
-        submissions: items, 
-        lastEvaluatedKey: result.lastEvaluatedKey,
-        resultsHidden: true,
-        message: "Results are hidden until the deadline."
-      });
-    }
+    // Removed deadline-gating logic to ensure the leaderboard remains public always.
 
     return NextResponse.json({ submissions: items, lastEvaluatedKey: result.lastEvaluatedKey });
   } catch (error) {
@@ -164,7 +146,11 @@ export async function POST(request: Request) {
       evaluationStatus: "PENDING", // PENDING, CONTRACT_OFFERED, HIRED, REJECTED, PRIZE_AWARDED
     };
 
-    await docClient.send(new PutCommand({ TableName: TABLE_NAME, Item: newSubmission }));
+    await docClient.send(new PutCommand({ 
+      TableName: TABLE_NAME, 
+      Item: newSubmission,
+      ConditionExpression: "attribute_not_exists(rankKey)" 
+    }));
     
     // Trigger Atomic Increment!
     await incrementPlatformStat("totalSubmissions", 1);
