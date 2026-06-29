@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
 
 const TABLE_NAME = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
@@ -11,7 +11,7 @@ export async function GET(
   const { id } = await params;
 
   try {
-    const result = await docClient.send(new GetCommand({
+    const result = await getDocClient().send(new GetCommand({
       TableName: TABLE_NAME,
       Key: { problemId: id }
     }));

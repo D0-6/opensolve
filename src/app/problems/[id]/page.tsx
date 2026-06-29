@@ -4,7 +4,7 @@ import { Trophy, GitBranch, Globe, ExternalLink, Activity, ArrowRight, Upload, B
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
 import ClientLeaderboard from "./ClientLeaderboard";
 import ClientQA from "./ClientQA";
@@ -49,7 +49,7 @@ export default async function ProblemDetail({ params }: { params: Promise<{ id: 
   if (problem.scoutId) {
     try {
       const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
-      const scoutRes = await docClient.send(new GetCommand({
+      const scoutRes = await getDocClient().send(new GetCommand({
         TableName: PROFILES_TABLE,
         Key: { userId: problem.scoutId }
       }));

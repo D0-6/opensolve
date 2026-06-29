@@ -1,7 +1,7 @@
 import { scrapeYCRFS } from "./yc-rfs";
 import { scrapeUKInnovation } from "./uk-innovation";
 import { scrapeSprind } from "./sprind";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { PutCommand, QueryCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 
@@ -36,7 +36,7 @@ export async function runIngestion() {
 
         let exists = false;
         try {
-          const queryResult = await docClient.send(new QueryCommand({
+          const queryResult = await getDocClient().send(new QueryCommand({
             TableName: TABLE_NAME,
             IndexName: "sourceUrl-index",
             KeyConditionExpression: "sourceUrl = :url",
@@ -49,7 +49,7 @@ export async function runIngestion() {
         } catch (e: unknown) {
           // If GSI does not exist, fallback to Scan
           console.warn(`Query on sourceUrl-index failed, falling back to Scan for ${p.sourceUrl}. Ensure GSI is created!`);
-          const scanResult = await docClient.send(new ScanCommand({
+          const scanResult = await getDocClient().send(new ScanCommand({
             TableName: TABLE_NAME,
             FilterExpression: "sourceUrl = :url and title = :title",
             ExpressionAttributeValues: {
@@ -66,7 +66,7 @@ export async function runIngestion() {
           skipped++;
         } else {
           const problemId = uuidv4();
-          await docClient.send(new PutCommand({
+          await getDocClient().send(new PutCommand({
             TableName: TABLE_NAME,
             Item: {
               ...p,

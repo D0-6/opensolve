@@ -1,4 +1,4 @@
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { QueryCommand, GetCommand, UpdateCommand, BatchGetCommand } from "@aws-sdk/lib-dynamodb";
 
 import { Problem, Submission } from "@/types";
@@ -50,7 +50,7 @@ export async function getProblems(source?: string, domain?: string, lastEvaluate
     command.input.ExclusiveStartKey = lastEvaluatedKey;
   }
 
-  const result = await docClient.send(command);
+  const result = await getDocClient().send(command);
   return {
     items: (result.Items || []) as Problem[],
     lastEvaluatedKey: result.LastEvaluatedKey,
@@ -58,7 +58,7 @@ export async function getProblems(source?: string, domain?: string, lastEvaluate
 }
 
 export async function getProblem(id: string): Promise<Problem | null> {
-  const result = await docClient.send(new GetCommand({
+  const result = await getDocClient().send(new GetCommand({
     TableName: PROBLEMS_TABLE,
     Key: { problemId: id },
     ConsistentRead: true
@@ -78,7 +78,7 @@ export async function getSubmissions(problemId: string, lastEvaluatedKey?: Recor
   }
 
   const command = new QueryCommand(input);
-  const result = await docClient.send(command);
+  const result = await getDocClient().send(command);
   return {
     items: (result.Items || []) as Submission[],
     lastEvaluatedKey: result.LastEvaluatedKey
@@ -87,7 +87,7 @@ export async function getSubmissions(problemId: string, lastEvaluatedKey?: Recor
 
 export async function getEvaluations(problemId: string, rankKey: string): Promise<any[]> {
   const submissionKey = `${problemId}#${rankKey}`;
-  const result = await docClient.send(new QueryCommand({
+  const result = await getDocClient().send(new QueryCommand({
     TableName: EVALUATIONS_TABLE,
     KeyConditionExpression: "submissionKey = :sk",
     ExpressionAttributeValues: { ":sk": submissionKey },
@@ -97,7 +97,7 @@ export async function getEvaluations(problemId: string, rankKey: string): Promis
 }
 
 export async function getUserSubmissions(userId: string): Promise<Submission[]> {
-  const result = await docClient.send(new QueryCommand({
+  const result = await getDocClient().send(new QueryCommand({
     TableName: SUBMISSIONS_TABLE,
     IndexName: "userId-submittedAt-index",
     KeyConditionExpression: "userId = :uid",
@@ -113,7 +113,7 @@ export async function incrementScoutPoints(scoutUserId: string, points: number =
     throw new Error("Invalid points value for incrementScoutPoints");
   }
   const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
-  await docClient.send(new UpdateCommand({
+  await getDocClient().send(new UpdateCommand({
     TableName: PROFILES_TABLE,
     Key: { userId: scoutUserId },
     UpdateExpression: "ADD scoutPoints :pts, scoutSubmissions :one",
@@ -122,7 +122,7 @@ export async function incrementScoutPoints(scoutUserId: string, points: number =
 }
 
 export async function getOrganization(orgId: string) {
-  const result = await docClient.send(new GetCommand({
+  const result = await getDocClient().send(new GetCommand({
     TableName: ORGS_TABLE,
     Key: { orgId },
     ConsistentRead: true
@@ -148,7 +148,7 @@ const SHARD_COUNT = 10;
 export async function getPlatformStats(): Promise<PlatformStats> {
   const keys = Array.from({ length: SHARD_COUNT }).map((_, i) => ({ problemId: `GLOBAL_METADATA#${i}` }));
   
-  const result = await docClient.send(new BatchGetCommand({
+  const result = await getDocClient().send(new BatchGetCommand({
     RequestItems: {
       [PROBLEMS_TABLE]: {
         Keys: keys,
@@ -187,7 +187,7 @@ export async function incrementPlatformStat(
   }
 
   const shardId = Math.floor(Math.random() * SHARD_COUNT);
-  await docClient.send(new UpdateCommand({
+  await getDocClient().send(new UpdateCommand({
     TableName: PROBLEMS_TABLE,
     Key: { problemId: `GLOBAL_METADATA#${shardId}` },
     UpdateExpression: "ADD #field :val",

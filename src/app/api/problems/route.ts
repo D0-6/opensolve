@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { checkRateLimit } from "@/lib/rate-limit";
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
     if (body.judgingCriteria) newProblem.judgingCriteria = body.judgingCriteria;
     if (Array.isArray(body.prizeBreakdown)) newProblem.prizeBreakdown = body.prizeBreakdown;
 
-    await docClient.send(new PutCommand({
+    await getDocClient().send(new PutCommand({
       TableName: TABLE_NAME,
       Item: newProblem
     }));

@@ -1,7 +1,7 @@
 "use server";
 
 import { currentUser } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { PutCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
 import { redirect } from "next/navigation";
 
@@ -16,7 +16,7 @@ export async function submitApplication(problemId: string, formData: FormData) {
   const experience = formData.get("experience") as string;
   const timeline = formData.get("timeline") as string;
 
-  const profileRes = await docClient.send(new GetCommand({
+  const profileRes = await getDocClient().send(new GetCommand({
     TableName: PROFILES_TABLE,
     Key: { userId: user.id }
   }));
@@ -24,7 +24,7 @@ export async function submitApplication(problemId: string, formData: FormData) {
   const profile = profileRes.Item;
   if (!profile) throw new Error("Profile not complete. Please complete onboarding.");
 
-  const problemRes = await docClient.send(new GetCommand({
+  const problemRes = await getDocClient().send(new GetCommand({
     TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
     Key: { problemId }
   }));
@@ -45,7 +45,7 @@ export async function submitApplication(problemId: string, formData: FormData) {
     appliedAt: new Date().toISOString(),
   };
 
-  await docClient.send(
+  await getDocClient().send(
     new PutCommand({
       TableName: APPLICATIONS_TABLE,
       Item: applicationItem,

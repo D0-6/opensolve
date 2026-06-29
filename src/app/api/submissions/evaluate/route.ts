@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { UpdateCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { sendEmail } from "@/lib/email";
 import { v4 as uuidv4 } from "uuid";
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     }
     const { problemId, rankKey, action, submitterName, studentUserId, rubricScores } = parsed.data;
 
-    const problemRes = await docClient.send(new GetCommand({
+    const problemRes = await getDocClient().send(new GetCommand({
       TableName: PROBLEMS_TABLE,
       Key: { problemId }
     }));
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
       const thirtyDaysAfter = new Date(deadline.getTime() + 30 * 24 * 60 * 60 * 1000);
       if (new Date() <= thirtyDaysAfter && new Date() >= deadline) {
         try {
-          await docClient.send(new UpdateCommand({
+          await getDocClient().send(new UpdateCommand({
             TableName: process.env.DYNAMODB_TABLE_ORGANIZATIONS || "OpenSolve_Organizations",
             Key: { orgId: postedByOrgId },
             UpdateExpression: "ADD evaluationsMetDeadline :inc",
@@ -125,7 +125,7 @@ export async function POST(request: Request) {
     }
 
     // Update Submission Status
-    await docClient.send(new UpdateCommand({
+    await getDocClient().send(new UpdateCommand({
       TableName: TABLE_NAME,
       Key: { problemId, rankKey },
       UpdateExpression: "SET evaluationStatus = :status",
@@ -137,7 +137,7 @@ export async function POST(request: Request) {
     // Write in-app notification for the student
     const notificationId = uuidv4();
     const now = new Date().toISOString();
-    await docClient.send(new PutCommand({
+    await getDocClient().send(new PutCommand({
       TableName: NOTIFICATIONS_TABLE,
       Item: {
         userId: studentUserId,

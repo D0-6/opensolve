@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { redirect } from "next/navigation";
 import { Briefcase, Users, FileText, ExternalLink, Mail, CheckCircle2, Award } from "lucide-react";
@@ -16,7 +16,7 @@ export default async function OrgDashboard() {
 
   // Fetch problems posted by this org (Using a GSI would be better in prod, but for MVP/demo we scan or query if GSI exists)
   // Let's assume we fetch all problems and filter for now to guarantee it works without complex GSI setup
-  const problemsRes = await docClient.send(new QueryCommand({
+  const problemsRes = await getDocClient().send(new QueryCommand({
     TableName: PROBLEMS_TABLE,
     IndexName: "status-deadline-index",
     KeyConditionExpression: "#status = :status",
@@ -28,7 +28,7 @@ export default async function OrgDashboard() {
 
   // For each problem, fetch its submissions
   const dashboardData = await Promise.all(orgProblems.map(async (problem) => {
-    const subsRes = await docClient.send(new QueryCommand({
+    const subsRes = await getDocClient().send(new QueryCommand({
       TableName: SUBMISSIONS_TABLE,
       KeyConditionExpression: "problemId = :pid",
       ExpressionAttributeValues: { ":pid": problem.problemId }

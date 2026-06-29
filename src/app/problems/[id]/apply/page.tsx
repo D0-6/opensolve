@@ -1,7 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { getProblem } from "@/lib/data";
 import { notFound, redirect } from "next/navigation";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
 import Link from "next/link";
 import { ArrowLeft, User, Briefcase, GraduationCap, GitBranch } from "lucide-react";
@@ -26,7 +26,7 @@ export default async function ApplyPage({ params }: { params: Promise<{ id: stri
   // Check if they already applied
   let existingApp = null;
   try {
-    const res = await docClient.send(new GetCommand({
+    const res = await getDocClient().send(new GetCommand({
       TableName: APPLICATIONS_TABLE,
       Key: { problemId: id, userId: user.id }
     }));
@@ -43,7 +43,7 @@ export default async function ApplyPage({ params }: { params: Promise<{ id: stri
   // Fetch their profile for the read-only snapshot review
   let profile = null;
   try {
-    const res = await docClient.send(new GetCommand({
+    const res = await getDocClient().send(new GetCommand({
       TableName: PROFILES_TABLE,
       Key: { userId: user.id }
     }));

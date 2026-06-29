@@ -1,7 +1,7 @@
 "use server";
 
 import { currentUser } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { redirect } from "next/navigation";
 import { randomUUID } from "crypto";
@@ -45,7 +45,7 @@ export async function submitOrganizationOnboarding(formData: FormData) {
     createdAt: new Date().toISOString(),
   };
 
-  await docClient.send(
+  await getDocClient().send(
     new PutCommand({
       TableName: ORG_TABLE,
       Item: orgItem,

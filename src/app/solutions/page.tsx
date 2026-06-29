@@ -1,4 +1,4 @@
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { QueryCommand, ScanCommand, GetCommand, BatchGetCommand } from "@aws-sdk/lib-dynamodb";
 import Link from "next/link";
 import { GitBranch, Play, Trophy, ExternalLink, Layers } from "lucide-react";
@@ -33,7 +33,7 @@ export default async function SolutionsPage({ searchParams }: {
       }
     }
 
-    const res = await docClient.send(new QueryCommand({
+    const res = await getDocClient().send(new QueryCommand({
       TableName: SUBMISSIONS_TABLE,
       IndexName: "entityType-score-index",
       KeyConditionExpression: "entityType = :type",
@@ -63,7 +63,7 @@ export default async function SolutionsPage({ searchParams }: {
   const top50ProblemIds = problemIds.slice(0, 50);
   if (top50ProblemIds.length > 0) {
     try {
-      const res = await docClient.send(new BatchGetCommand({
+      const res = await getDocClient().send(new BatchGetCommand({
         RequestItems: {
           [PROBLEMS_TABLE]: {
             Keys: top50ProblemIds.map(pid => ({ problemId: pid }))

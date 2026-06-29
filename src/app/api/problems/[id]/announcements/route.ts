@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { GetCommand, UpdateCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 
@@ -25,7 +25,7 @@ export async function POST(
   }
 
   // Verify the org owns this problem
-  const problemRes = await docClient.send(new GetCommand({
+  const problemRes = await getDocClient().send(new GetCommand({
     TableName: PROBLEMS_TABLE,
     Key: { problemId },
   }));
@@ -54,7 +54,7 @@ export async function POST(
   };
 
   // Append to announcements list on the problem item
-  await docClient.send(new UpdateCommand({
+  await getDocClient().send(new UpdateCommand({
     TableName: PROBLEMS_TABLE,
     Key: { problemId },
     UpdateExpression: "SET announcements = list_append(if_not_exists(announcements, :emptyList), :newAnnouncement)",
@@ -77,7 +77,7 @@ export async function GET(
 ) {
   const { id: problemId } = await params;
 
-  const problemRes = await docClient.send(new GetCommand({
+  const problemRes = await getDocClient().send(new GetCommand({
     TableName: PROBLEMS_TABLE,
     Key: { problemId },
   }));

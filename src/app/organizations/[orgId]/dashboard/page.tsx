@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { ExternalLink, Play, Trophy, Users, Briefcase, PlusCircle, FileText, Code2, MapPin, Search } from "lucide-react";
 import Link from "next/link";
 import { currentUser } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
 import EvaluationActions from "@/app/organizations/dashboard/EvaluationActions";
 import PostAnnouncementButton from "@/app/organizations/dashboard/PostAnnouncementButton";
@@ -95,7 +95,7 @@ export default async function OrgDashboard({ params, searchParams }: { params: P
   // Fetch profiles for the talent pool
   const talentProfiles = await Promise.all(Array.from(userMap.entries()).map(async ([uId, meta]) => {
     try {
-      const res = await docClient.send(new GetCommand({ TableName: PROFILES_TABLE, Key: { userId: uId } }));
+      const res = await getDocClient().send(new GetCommand({ TableName: PROFILES_TABLE, Key: { userId: uId } }));
       return { userId: uId, meta, profile: res.Item || null };
     } catch(e) {
       return { userId: uId, meta, profile: null };

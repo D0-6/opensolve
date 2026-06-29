@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { QueryCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
       // Admins can read anything
     } else if (role === "organization" || role === "company") {
       const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
-      const problemRes = await docClient.send(new GetCommand({
+      const problemRes = await getDocClient().send(new GetCommand({
         TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
         Key: { problemId }
       }));
@@ -44,7 +44,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const res = await docClient.send(new QueryCommand({
+    const res = await getDocClient().send(new QueryCommand({
       TableName: MESSAGES_TABLE,
       KeyConditionExpression: "threadId = :tid",
       ExpressionAttributeValues: { ":tid": threadId },
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
     || (sessionClaims?.publicMetadata as Record<string, string> | undefined)?.role;
 
   const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
-  const problemRes = await docClient.send(new GetCommand({
+  const problemRes = await getDocClient().send(new GetCommand({
     TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
     Key: { problemId }
   }));
@@ -122,7 +122,7 @@ export async function POST(request: Request) {
     text: text.trim().substring(0, 2000),
   };
 
-  await docClient.send(new PutCommand({ TableName: MESSAGES_TABLE, Item: message }));
+  await getDocClient().send(new PutCommand({ TableName: MESSAGES_TABLE, Item: message }));
 
   // Write a notification for the recipient
   const { createNotification } = await import("@/lib/notifications");

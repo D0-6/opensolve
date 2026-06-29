@@ -1,7 +1,7 @@
 "use server";
 
 import { currentUser } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { UpdateCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { revalidatePath } from "next/cache";
 import { TeamMember } from "@/types";
@@ -13,7 +13,7 @@ export async function searchUsers(query: string) {
   if (!query || query.length < 3) return [];
   
   // Basic scan for demo purposes. In production, use GSI or ElasticSearch.
-  const res = await docClient.send(new ScanCommand({
+  const res = await getDocClient().send(new ScanCommand({
     TableName: PROFILES_TABLE,
     FilterExpression: "contains(#name, :q) OR contains(githubUsername, :q) OR contains(collegeOrInstitution, :q)",
     ExpressionAttributeNames: { "#name": "name" },
@@ -46,7 +46,7 @@ export async function addTeammate(problemId: string, teammateId: string, teammat
     // Exploit Patch 3: Verify the user hasn't already submitted a solution to this problem independently
     const SUBMISSIONS_TABLE = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
     const { QueryCommand } = await import("@aws-sdk/lib-dynamodb");
-    const subRes = await docClient.send(new QueryCommand({
+    const subRes = await getDocClient().send(new QueryCommand({
       TableName: SUBMISSIONS_TABLE,
       KeyConditionExpression: "problemId = :pid",
       ExpressionAttributeValues: { ":pid": problemId }
@@ -58,7 +58,7 @@ export async function addTeammate(problemId: string, teammateId: string, teammat
 
     // Add the teammate to the teamMembers array of the application, ensuring it does not exceed maxTeamSize atomically.
     // The maxTeamSize check must account for the creator (+1)
-    await docClient.send(new UpdateCommand({
+    await getDocClient().send(new UpdateCommand({
       TableName: APPLICATIONS_TABLE,
       Key: { problemId, userId: user.id },
       UpdateExpression: "SET teamMembers = list_append(if_not_exists(teamMembers, :emptyList), :newMember)",
@@ -87,7 +87,7 @@ export async function removeTeammate(problemId: string, teammateId: string, curr
 
   const newMembers = currentMembers.filter(m => m.userId !== teammateId);
 
-  await docClient.send(new UpdateCommand({
+  await getDocClient().send(new UpdateCommand({
     TableName: APPLICATIONS_TABLE,
     Key: { problemId, userId: user.id },
     UpdateExpression: "SET teamMembers = :newMembers",

@@ -1,4 +1,4 @@
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { UpdateCommand, DeleteCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 
 const TABLE_NAME = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
@@ -82,7 +82,7 @@ export async function evaluateSubmissionAsynchronously({
     // but the current data model encodes score into the sort key for O(1) leaderboard sorting.
     
     const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
-    const getRes = await docClient.send(new GetCommand({
+    const getRes = await getDocClient().send(new GetCommand({
       TableName: TABLE_NAME,
       Key: { problemId, rankKey: oldRankKey }
     }));
@@ -101,7 +101,7 @@ export async function evaluateSubmissionAsynchronously({
 
     const { TransactWriteCommand } = await import("@aws-sdk/lib-dynamodb");
     
-    await docClient.send(new TransactWriteCommand({
+    await getDocClient().send(new TransactWriteCommand({
       TransactItems: [
         {
           Delete: {

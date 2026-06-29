@@ -1,6 +1,6 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { ScanCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { getUserSubmissions } from "@/lib/data";
 import Link from "next/link";
@@ -46,7 +46,7 @@ export default async function StudentDashboard() {
   // Fetch applications (BUG-10: Use GSI Query with fallback to Scan for resilience)
   let applications: Record<string, unknown>[] = [];
   try {
-    const queryRes = await docClient.send(
+    const queryRes = await getDocClient().send(
       new QueryCommand({
         TableName: APPLICATIONS_TABLE,
         IndexName: "userId-index",
@@ -73,7 +73,7 @@ export default async function StudentDashboard() {
   const problemCache: Record<string, Record<string, unknown>> = {};
   for (const pid of allProblemIds.slice(0, 40)) {
     try {
-      const res = await docClient.send(new GetCommand({ TableName: PROBLEMS_TABLE, Key: { problemId: pid } }));
+      const res = await getDocClient().send(new GetCommand({ TableName: PROBLEMS_TABLE, Key: { problemId: pid } }));
       if (res.Item) problemCache[pid] = res.Item;
     } catch (err: unknown) {
       console.error("[CRITICAL] Error fetching problem for dashboard:", err instanceof Error ? err.message : err);

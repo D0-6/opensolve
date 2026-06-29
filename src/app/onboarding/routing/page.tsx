@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
 
 const PROFILES_TABLE = process.env.DYNAMODB_TABLE_PROFILES || "OpenSolve_Profiles";
@@ -23,7 +23,7 @@ export default async function OnboardingRoutingPage() {
     // Check if they have a profile in DynamoDB
     let hasProfile = false;
     try {
-      const result = await docClient.send(
+      const result = await getDocClient().send(
         new GetCommand({
           TableName: PROFILES_TABLE,
           Key: { userId: user.id },

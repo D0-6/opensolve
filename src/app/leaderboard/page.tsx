@@ -1,4 +1,4 @@
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { QueryCommand, ScanCommand, GetCommand, BatchGetCommand } from "@aws-sdk/lib-dynamodb";
 import Link from "next/link";
 import { Trophy, GitBranch, Globe, ExternalLink, Medal, Search } from "lucide-react";
@@ -28,7 +28,7 @@ export default async function LeaderboardPage({
     // Instead of scanning the entire table, we Query the GSI. 
     // Note: A true production leaderboard uses a materialized view / CRON job to aggregate scores daily into a Profiles table.
     // For this tier, Querying the GSI is significantly cheaper and faster than a full table scan.
-    const res = await docClient.send(new QueryCommand({
+    const res = await getDocClient().send(new QueryCommand({
       TableName: SUBMISSIONS_TABLE,
       IndexName: "entityType-score-index",
       KeyConditionExpression: "entityType = :type",
@@ -74,7 +74,7 @@ export default async function LeaderboardPage({
   // ========== SCOUTS TAB ==========
   let scoutedProblems: Record<string, unknown>[] = [];
   try {
-    const res = await docClient.send(new QueryCommand({
+    const res = await getDocClient().send(new QueryCommand({
       TableName: PROBLEMS_TABLE,
       IndexName: "entityType-deadline-index",
       KeyConditionExpression: "entityType = :type",
@@ -118,7 +118,7 @@ export default async function LeaderboardPage({
   const scoutIds = Object.keys(scoutAgg).slice(0, 30);
   if (scoutIds.length > 0) {
     try {
-      const res = await docClient.send(new BatchGetCommand({
+      const res = await getDocClient().send(new BatchGetCommand({
         RequestItems: {
           [PROFILES_TABLE]: {
             Keys: scoutIds.map(id => ({ userId: id }))
@@ -147,7 +147,7 @@ export default async function LeaderboardPage({
   const profiles: Record<string, Record<string, unknown>> = {};
   if (profileIds.length > 0) {
     try {
-      const res = await docClient.send(new BatchGetCommand({
+      const res = await getDocClient().send(new BatchGetCommand({
         RequestItems: {
           [PROFILES_TABLE]: {
             Keys: profileIds.map(id => ({ userId: id }))

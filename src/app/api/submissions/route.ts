@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { QueryCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getSubmissions, incrementPlatformStat } from "@/lib/data";
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
       || (sessionClaims?.publicMetadata as Record<string, string> | undefined)?.role;
 
     const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
-    const problemRes = await docClient.send(new GetCommand({
+    const problemRes = await getDocClient().send(new GetCommand({
       TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
       Key: { problemId }
     }));
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
     // Always fetch their application to prove they went through the gating flow
     const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
 
-    const problemRes = await docClient.send(new GetCommand({
+    const problemRes = await getDocClient().send(new GetCommand({
       TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
       Key: { problemId }
     }));
@@ -111,7 +111,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "The deadline for this problem has passed." }, { status: 403 });
     }
 
-    const appRes = await docClient.send(new GetCommand({
+    const appRes = await getDocClient().send(new GetCommand({
       TableName: APPLICATIONS_TABLE,
       Key: { problemId, userId }
     }));
@@ -146,7 +146,7 @@ export async function POST(request: Request) {
       evaluationStatus: "PENDING", // PENDING, CONTRACT_OFFERED, HIRED, REJECTED, PRIZE_AWARDED
     };
 
-    await docClient.send(new PutCommand({ 
+    await getDocClient().send(new PutCommand({ 
       TableName: TABLE_NAME, 
       Item: newSubmission,
       ConditionExpression: "attribute_not_exists(rankKey)" 

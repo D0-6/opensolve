@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { checkRateLimit } from "@/lib/rate-limit";
 
@@ -49,7 +49,7 @@ export async function POST(
       ReturnValues: "ALL_NEW"
     });
 
-    const result = await docClient.send(command);
+    const result = await getDocClient().send(command);
 
     if (result.Attributes && result.Attributes.askedBy) {
       const { sendEmail } = await import("@/lib/email");

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { checkRateLimit } from "@/lib/rate-limit";
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     const { title, domain, description, requirements, sourceUrl, prizeAmount, prizeType, deadline, maxTeamSize } = body;
 
     // Deduplication Check
-    const dedupRes = await docClient.send(new QueryCommand({
+    const dedupRes = await getDocClient().send(new QueryCommand({
       TableName: TABLE_NAME,
       IndexName: "sourceUrl-index",
       KeyConditionExpression: "sourceUrl = :url",
@@ -104,7 +104,7 @@ export async function POST(request: Request) {
       scoutBountyPercent: 5, // 5% of prize money goes to the scout
     };
 
-    await docClient.send(new PutCommand({ TableName: TABLE_NAME, Item: problem }));
+    await getDocClient().send(new PutCommand({ TableName: TABLE_NAME, Item: problem }));
 
     return NextResponse.json({ problem, message: "Challenge submitted for review. Scout points will be awarded upon approval." }, { status: 201 });
   } catch (error: unknown) {

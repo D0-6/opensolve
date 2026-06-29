@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { QueryCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { checkRateLimit } from "@/lib/rate-limit";
@@ -14,7 +14,7 @@ export async function GET(
   const { problemId } = await params;
 
   try {
-    const result = await docClient.send(new QueryCommand({
+    const result = await getDocClient().send(new QueryCommand({
       TableName: TABLE_NAME,
       KeyConditionExpression: "problemId = :pid",
       ExpressionAttributeValues: { ":pid": problemId },
@@ -57,7 +57,7 @@ export async function POST(
       upvotes: 0,
     };
 
-    await docClient.send(new PutCommand({ TableName: TABLE_NAME, Item: newThread }));
+    await getDocClient().send(new PutCommand({ TableName: TABLE_NAME, Item: newThread }));
 
     return NextResponse.json({ thread: newThread }, { status: 201 });
   } catch (error) {

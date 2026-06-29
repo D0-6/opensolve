@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { PutCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { checkRateLimit } from "@/lib/rate-limit";
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const result = await docClient.send(new GetCommand({
+    const result = await getDocClient().send(new GetCommand({
       TableName: TABLE_NAME,
       Key: { orgId }
     }));
@@ -62,7 +62,7 @@ export async function POST(request: Request) {
       joinedAt: now
     };
 
-    await docClient.send(new PutCommand({
+    await getDocClient().send(new PutCommand({
       TableName: TABLE_NAME,
       Item: newOrg
     }));

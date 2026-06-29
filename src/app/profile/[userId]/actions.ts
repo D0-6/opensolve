@@ -1,7 +1,7 @@
 "use server";
 
 import { currentUser } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { revalidatePath } from "next/cache";
 
@@ -35,7 +35,7 @@ export async function updateProfile(formData: FormData) {
     ? githubUrl.replace(/^https?:\/\/(www\.)?github\.com\//, "").split("/")[0]
     : null;
 
-  await docClient.send(
+  await getDocClient().send(
     new UpdateCommand({
       TableName: PROFILES_TABLE,
       Key: { userId: user.id },

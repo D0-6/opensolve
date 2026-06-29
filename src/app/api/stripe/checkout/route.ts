@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import Stripe from "stripe";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_dummy", {
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     }
 
     // Verify the problem belongs to this organization
-    const res = await docClient.send(
+    const res = await getDocClient().send(
       new GetCommand({
         TableName: PROBLEMS_TABLE,
         Key: { problemId },

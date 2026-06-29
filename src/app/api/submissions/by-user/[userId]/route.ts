@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 const TABLE_NAME = process.env.DYNAMODB_TABLE_SUBMISSIONS || "OpenSolve_Submissions";
@@ -27,7 +27,7 @@ export async function GET(
       ExpressionAttributeValues: { ":uid": userId },
     });
 
-    const result = await docClient.send(command);
+    const result = await getDocClient().send(command);
     return NextResponse.json({ submissions: result.Items });
   } catch (error) {
     console.error("Error fetching user submissions:", error);

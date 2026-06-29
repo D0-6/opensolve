@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_dummy", {
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     if (problemId) {
       // Update the problem status to OPEN and mark as FUNDED
       try {
-        await docClient.send(
+        await getDocClient().send(
           new UpdateCommand({
             TableName: PROBLEMS_TABLE,
             Key: { problemId },

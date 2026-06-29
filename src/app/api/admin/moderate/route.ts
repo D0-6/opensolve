@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { GetCommand, TransactWriteCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 const TABLE_NAME = process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems";
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     }
 
     // Fetch the problem first to check its current status and get scout data
-    const problemRes = await docClient.send(new GetCommand({
+    const problemRes = await getDocClient().send(new GetCommand({
       TableName: TABLE_NAME,
       Key: { problemId },
       ConsistentRead: true
@@ -92,11 +92,11 @@ export async function POST(request: Request) {
         });
       }
 
-      await docClient.send(new TransactWriteCommand({ TransactItems: transactItems }));
+      await getDocClient().send(new TransactWriteCommand({ TransactItems: transactItems }));
 
     } else if (action === "REJECT") {
       // Soft-delete to preserve audit trail
-      await docClient.send(new UpdateCommand({
+      await getDocClient().send(new UpdateCommand({
         TableName: TABLE_NAME,
         Key: { problemId },
         UpdateExpression: "SET #status = :status",

@@ -1,4 +1,4 @@
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 
@@ -34,6 +34,6 @@ export async function createNotification({
     read: false,
   };
 
-  await docClient.send(new PutCommand({ TableName: TABLE, Item: item }));
+  await getDocClient().send(new PutCommand({ TableName: TABLE, Item: item }));
   return item;
 }

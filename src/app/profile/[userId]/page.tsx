@@ -1,4 +1,4 @@
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import ProfileClient from "./ProfileClient";
@@ -21,7 +21,7 @@ export default async function UserProfile({ params }: { params: Promise<{ userId
   let viewerRole = "";
 
   try {
-    const res = await docClient.send(new GetCommand({ TableName: PROFILES_TABLE, Key: { userId } }));
+    const res = await getDocClient().send(new GetCommand({ TableName: PROFILES_TABLE, Key: { userId } }));
     profile = res.Item;
   } catch (err) {
     console.error(err);

@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { ScanCommand } from "@aws-sdk/lib-dynamodb";
 
 export const dynamic = 'force-dynamic';
@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://opensolve.talent";
   
   // Fetch problems for dynamic routing indexing
-  const res = await docClient.send(new ScanCommand({
+  const res = await getDocClient().send(new ScanCommand({
     TableName: process.env.DYNAMODB_TABLE_PROBLEMS || "OpenSolve_Problems",
   }));
   

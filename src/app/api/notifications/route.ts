@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { docClient } from "@/lib/dynamodb";
+import { getDocClient } from "@/lib/dynamodb";
 import { QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 const TABLE = process.env.DYNAMODB_TABLE_NOTIFICATIONS || "OpenSolve_Notifications";
@@ -11,7 +11,7 @@ export async function GET() {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const res = await docClient.send(new QueryCommand({
+    const res = await getDocClient().send(new QueryCommand({
       TableName: TABLE,
       KeyConditionExpression: "userId = :uid",
       ExpressionAttributeValues: { ":uid": userId },
@@ -35,7 +35,7 @@ export async function PATCH(request: Request) {
   if (!createdAt) return NextResponse.json({ error: "Missing createdAt" }, { status: 400 });
 
   try {
-    await docClient.send(new UpdateCommand({
+    await getDocClient().send(new UpdateCommand({
       TableName: TABLE,
       Key: { userId, createdAt },
       UpdateExpression: "SET #r = :true",
